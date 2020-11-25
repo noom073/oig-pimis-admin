@@ -224,7 +224,7 @@
             let caret = $(".child").parent('li.list-subject').children('div.d-flex').children('.has-child').children('.caret');
             $(".child").removeClass('d-none');
             caret.removeClass("fa-angle-right");
-            caret.addClass("fa-angle-down");           
+            caret.addClass("fa-angle-down");
         });
 
 
@@ -233,6 +233,56 @@
             $(".child").addClass('d-none');
             caret.removeClass("fa-angle-down");
             caret.addClass("fa-angle-right");
+        });
+
+
+        $(document).on('click', ".create-btn", function() {
+            let parentID = $(this).data('subject-id');
+            let parentLevelID = $(this).data('subject-level');
+            $("#create-sub-subject-form").data('parent-level-id', parentLevelID);
+
+            let parentSubject = subjects.filter(r => r.SUBJECT_ID == parentID);
+            let inspection = inspections.filter(r => r.INSPE_ID == $("#inspection-list").val());
+
+            let parentSubjectOption = '';
+            parentSubject.forEach(r => parentSubjectOption = `<option value="${r.SUBJECT_ID}">${r.SUBJECT_NAME}</option>`);
+            $("#subject-parent-create-sub-subject-form").html(parentSubjectOption);
+
+            let inspectionOption = '';
+            inspection.forEach(r => inspectionOption = `<option value="${r.INSPE_ID}">${r.INSPE_NAME}</option>`);
+            $("#inspection-create-sub-subject-form").html(inspectionOption);
+
+            $("#add-sub-subject-modal").modal();
+        });
+
+
+        $("#create-sub-subject-form").submit(function(event) {
+            event.preventDefault();
+            let thisForm = $(this);
+            let subjectLevel = $(this).data('parent-level-id') + 1;
+            let formData = thisForm.serialize() + `&subjectLevel=${subjectLevel}`;
+
+            $.post({
+                url: '<?= site_url('controller_user/ajax_add_sub_subject') ?>',
+                data: formData,
+                dataType: 'json'
+            }).done(res => {
+                console.log(res);
+                if (res.status) {
+                    $("#result-create-sub-subject-form").prop('class', 'alert alert-success');
+                    $("#result-create-sub-subject-form").text(res.text);
+                } else {
+                    $("#result-create-sub-subject-form").prop('class', 'alert alert-danger');
+                    $("#result-create-sub-subject-form").text(res.text);
+                }
+                let inspectionID = $("#inspection-list").val();
+                drawSubjectList(inspectionID);
+                setTimeout(() => {
+                    $("#result-create-sub-subject-form").prop('class', '');
+                    $("#result-create-sub-subject-form").text('');
+                }, 5000);
+            }).fail((jhr, status, error) => console.error(jhr, status, error));
+            thisForm.trigger('reset');
         });
     });
 </script>

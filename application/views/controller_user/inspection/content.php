@@ -135,22 +135,22 @@
                         <form id="create-sub-subject-form">
                             <div class="form-group">
                                 <label>หัวข้อการตรวจ</label>
-                                <input type="text" class="form-control" name="subject_name" required>
+                                <input type="text" class="form-control" name="subjectName" id="subject-name-create-sub-subject-form" required>
                             </div>
 
                             <div class="form-group">
                                 <label>หัวข้อการตรวจหลัก</label>
-                                <select class="custom-select" name="subject_parent"></select>
+                                <select class="custom-select" name="subjectParent" id="subject-parent-create-sub-subject-form"></select>
                             </div>
 
                             <div class="form-group">
                                 <label>ประเภทการตรวจ</label>
-                                <select class="custom-select" name="inspectionID"></select>
+                                <select class="custom-select" name="inspectionID" id="inspection-create-sub-subject-form"></select>
                             </div>
 
                             <div class="form-group">
                                 <label>ลำดับ</label>
-                                <input type="number" class="form-control" name="subject_order" required>
+                                <input type="number" class="form-control" name="subjectOrder" id="subject-order-create-sub-subject-form" required>
                             </div>
 
                             <div id="result-create-sub-subject-form"></div>
