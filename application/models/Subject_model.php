@@ -51,4 +51,12 @@ class Subject_model extends CI_Model
         $query = $this->oracle->insert('PIMIS_SUBJECT');
         return $query;
     }
+
+    public function has_subject_exist($subjectID)
+    {
+        $this->oracle->where('SUBJECT_ID', $subjectID);
+        $query = $this->oracle->get('PIMIS_SUBJECT');
+        $hasSubjectExist = $query->num_rows() == 0 ? false : true;
+        return $hasSubjectExist;
+    }
 }

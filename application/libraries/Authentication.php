@@ -128,17 +128,17 @@ class Authentication
                 } else {
                     $result['status']   = false;
                     $result['text']     = 'ไม่พบสิทธิผู้ใช้นี้';
-                    $result['http_code']= 403;
+                    $result['http_code'] = 403;
                 }
             } else {
                 $result['status']   = false;
                 $result['text']     = 'TOKEN นี้ ไม่พบข้อมูลผู้ใช้';
-                $result['http_code']= $checkTokenReturn['http_code'];
+                $result['http_code'] = $checkTokenReturn['http_code'];
             }
         } else {
-            $result['status']         = false;
-            $result['text']            = 'Email หรือ Password ไม่ถูกต้อง';
-            $result['curldata']        = $checkADReturn; // return http code and curl data
+            $result['status']   = false;
+            $result['text']     = 'Email หรือ Password ไม่ถูกต้อง';
+            $result['curldata'] = $checkADReturn; // return http code and curl data
         }
 
         return $result;

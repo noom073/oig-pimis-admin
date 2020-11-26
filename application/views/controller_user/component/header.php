@@ -35,4 +35,8 @@
     .list-subject:hover{
         background-color: #f1f1f1;
     }
+
+    .child{
+        border: 1px solid #f1f1f1;
+    }
 </style>
