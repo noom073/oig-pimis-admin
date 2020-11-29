@@ -21,20 +21,21 @@ class Questionaire_model extends CI_Model
         return $result;
     }
 
-    public function get_subject_by_inspection($inspectionID)
+    public function get_inspections_date_data()
     {
-        $this->oracle->select('SUBJECT_ID, SUBJECT_NAME, SUBJECT_PARENT_ID, INSPECTION_ID, SUBJECT_ORDER, SUBJECT_LEVEL');
-        $this->oracle->where('INSPECTION_ID', $inspectionID);
-        $result = $this->oracle->get('PIMIS_SUBJECT');
+        $this->oracle->select("A.ID, A.SET, TO_CHAR(A.INS_DATE, 'YYYY-MM-DD') as INS_DATE,
+            TO_CHAR(A.FINISH_DATE, 'YYYY-MM-DD') as FINISH_DATE,
+            B.DEPARTMENT_NAME, B.STANDFOR ");
+        $this->oracle->join('PITS_UNIT B', 'A.INS_UNIT = B.ID');
+        $result = $this->oracle->get('PITS_PLAN A');
         return $result;
     }
 
-    public function get_subject_one($subjectID)
-    {
-        $this->oracle->select('SUBJECT_ID, SUBJECT_NAME, SUBJECT_PARENT_ID, INSPECTION_ID, SUBJECT_ORDER');
-        $this->oracle->where('SUBJECT_ID', $subjectID);
-        $result = $this->oracle->get('PIMIS_SUBJECT');
-        return $result;
-    }
-   
+    // public function get_a_subject($subjectID)
+    // {
+    //     $this->oracle->select('SUBJECT_ID, SUBJECT_NAME, SUBJECT_PARENT_ID, INSPECTION_ID, SUBJECT_ORDER');
+    //     $this->oracle->where('SUBJECT_ID', $subjectID);
+    //     $result = $this->oracle->get('PIMIS_SUBJECT');
+    //     return $result;
+    // }
 }

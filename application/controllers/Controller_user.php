@@ -117,6 +117,85 @@ class Controller_user extends CI_Controller
             ->set_output(json_encode($result));
     }
 
+    public function ajax_add_question()
+    {
+        $data['questionName']   = $this->input->post('questionName');
+        $data['questionOrder']  = $this->input->post('questionOrder');
+        $data['subjectID']      = $this->input->post('subjectID');
+
+        $insert = $this->question_model->add_question($data);
+        if ($insert) {
+            $result['status']   = true;
+            $result['text']     = 'บันทึกสำเร็จ';
+        } else {
+            $result['status']   = false;
+            $result['text']     = 'บันทึกไม่สำเร็จ';
+        }
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($result));
+    }
+    
+    public function questions()
+    {
+        $subjectID = $this->input->get('subject_id');
+        $hasChildSubject = $this->subject_model->has_child_subject($subjectID);
+        $hasSubjectExist = $this->subject_model->has_subject_exist($subjectID);
+        if (!$hasSubjectExist || $hasChildSubject) {
+            redirect('controller_user/subject');
+        } else {
+            $data['name']       = $this->session->nameth;
+            $data['userType']   = $this->session_services->get_user_type_name($this->session->usertype);
+            $data['subject']    = $this->subject_model->get_a_subject($subjectID)->row_array();
+            // $data['questions']  = $this->question_model->get_all_question($subjectID)->result_array();
+            $script['customScript'] = $this->load->view('controller_user/questions/script', $data, true);
+
+            $component['header']            = $this->load->view('controller_user/component/header', '', true);
+            $component['navbar']            = $this->load->view('controller_user/component/navbar', '', true);
+            $component['mainSideBar']       = $this->load->view('controller_user/component/sidebar', $data, true);
+            $component['mainFooter']        = $this->load->view('controller_user/component/footer_text', '', true);
+            $component['controllerSidebar'] = $this->load->view('controller_user/component/controller_sidebar', '', true);
+            $component['contentWrapper']    = $this->load->view('controller_user/questions/content', $data, true);
+            $component['jsScript']          = $this->load->view('controller_user/component/main_script', $script, true);
+
+            $this->load->view('controller_user/template', $component);            
+        }
+    }
+
+    public function ajax_edit_question()
+    {
+        $data['questionName']   = $this->input->post('questionName');
+        $data['questionOrder']  = $this->input->post('questionOrder');
+        $data['questionID']     = $this->input->post('questionID');
+        $update = $this->question_model->update_question($data);
+        if ($update) {
+            $result['status']   = true;
+            $result['text']     = 'บันทึกสำเร็จ';
+        } else {
+            $result['status']   = false;
+            $result['text']     = 'บันทึกไม่สำเร็จ';
+        }
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($result));
+    }
+
+    public function ajax_delete_question()
+    {
+        $questionID = $this->input->post('questionID');
+        $delete = $this->question_model->delete_question($questionID);
+        if ($delete) {
+            $result['status']   = true;
+            $result['text']     = 'ลบข้อมูลสำเร็จ';
+        } else {
+            $result['status']   = false;
+            $result['text']     = 'ลบข้อมูลไม่สำเร็จ';
+        }
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($result));
+    }
+
     public function inspection()
     {
         $data['name']       = $this->session->nameth;
@@ -133,31 +212,5 @@ class Controller_user extends CI_Controller
         $component['jsScript']          = $this->load->view('controller_user/component/main_script', $script, true);
 
         $this->load->view('controller_user/template', $component);
-    }
-
-    public function questions()
-    {
-        $subjectID = $this->input->get('subject_id');
-        $hasSubjectExist = $this->subject_model->has_subject_exist($subjectID);
-        if (!$hasSubjectExist) {
-            redirect('controller_user/subject');
-        } else {            
-            $data['name']       = $this->session->nameth;
-            $data['userType']   = $this->session_services->get_user_type_name($this->session->usertype);
-            $data['subject']    = $this->questionaire_model->get_subject_one($subjectID)->row_array();
-            $data['questions']  = $this->question_model->get_all_question($subjectID)->result_array();
-
-            $script['customScript'] = $this->load->view('controller_user/questions/script', '', true);
-
-            $component['header']            = $this->load->view('controller_user/component/header', '', true);
-            $component['navbar']            = $this->load->view('controller_user/component/navbar', '', true);
-            $component['mainSideBar']       = $this->load->view('controller_user/component/sidebar', $data, true);
-            $component['mainFooter']        = $this->load->view('controller_user/component/footer_text', '', true);
-            $component['controllerSidebar'] = $this->load->view('controller_user/component/controller_sidebar', '', true);
-            $component['contentWrapper']    = $this->load->view('controller_user/questions/content', $data, true);
-            $component['jsScript']          = $this->load->view('controller_user/component/main_script', $script, true);
-
-            $this->load->view('controller_user/template', $component);
-        }
     }
 }

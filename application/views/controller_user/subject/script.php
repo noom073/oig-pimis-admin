@@ -43,8 +43,9 @@
             let classDisplay = display === 'show' ? 'd-block' : 'd-none child';
             let html = `<ul class="${classDisplay}">`;
             array.forEach((r, index) => {
-                let listQuestionBtn = `<a href="<?= site_url('controller_user/questions') ?>?subject_id=${r.SUBJECT_ID}" target="_blank" class="btn btn-sm btn-primary">รายการคำถาม</a>`;
-                let createBtn = `<button class="btn btn-sm btn-outline-primary create-btn" data-subject-id="${r.SUBJECT_ID}" data-subject-level="${r.SUBJECT_LEVEL}">
+                let disableQuestionBtn = `<button title="ไม่มีข้อคำถาม" class="btn btn-sm btn-secondary " disabled>ข้อคำถาม</button>`;
+                let listQuestionBtn = `<a href="<?= site_url('controller_user/questions') ?>?subject_id=${r.SUBJECT_ID}" target="_blank" class="btn btn-sm btn-primary">ข้อคำถาม</a>`;
+                let createBtn = `<button title="เพิ่มหัวข้อการตรวจ" class="btn btn-sm btn-outline-primary create-btn" data-subject-id="${r.SUBJECT_ID}" data-subject-level="${r.SUBJECT_LEVEL}">
                                 <i class="fas fa-plus-circle"></i>
                             </button>`;
                 let editBtn = `<button class="btn btn-sm btn-primary edit-btn" data-subject-id="${r.SUBJECT_ID}">แก้ไข</button>`;
@@ -57,7 +58,7 @@
                                         <i class="caret fas fa-angle-right text-primary"></i>
                                         ${num}. ${r.SUBJECT_NAME}
                                     </span>                             
-                                    <div class="ml-auto">${createBtn} ${listQuestionBtn} ${editBtn} ${deleteBtn}</div>
+                                    <div class="ml-auto">${createBtn} ${disableQuestionBtn} ${editBtn} ${deleteBtn}</div>
                                 </div>
                                 ${treeView(r.child, 'none', num)}                            
                             </li>`;
@@ -78,7 +79,7 @@
         const getSubjects = inspectionID => {
             console.log('Loading Subjects');
             return $.post({
-                url: '<?= site_url('data_service/ajax_get_subject') ?>',
+                url: '<?= site_url('data_service/ajax_get_subjects') ?>',
                 data: {
                     inspectionID: inspectionID
                 },
@@ -156,7 +157,7 @@
         const getSubjectOne = subjectID => {
             console.log('Loading SubjectOne');
             return $.post({
-                url: '<?= site_url('data_service/ajax_get_subject_one') ?>',
+                url: '<?= site_url('data_service/ajax_get_a_subject') ?>',
                 data: {
                     subjectID: subjectID
                 },

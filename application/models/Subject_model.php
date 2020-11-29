@@ -56,7 +56,31 @@ class Subject_model extends CI_Model
     {
         $this->oracle->where('SUBJECT_ID', $subjectID);
         $query = $this->oracle->get('PIMIS_SUBJECT');
-        $hasSubjectExist = $query->num_rows() == 0 ? false : true;
+        $hasSubjectExist = $query->num_rows() > 0 ? true : false;
         return $hasSubjectExist;
+    }
+
+    public function has_child_subject($subjectID)
+    {
+        $this->oracle->where('SUBJECT_PARENT_ID', $subjectID);
+        $query = $this->oracle->get('PIMIS_SUBJECT');
+        $hasSubjectExist = $query->num_rows() > 0 ? true : false;
+        return $hasSubjectExist;
+    }
+
+    public function get_a_subject($subjectID)
+    {
+        $this->oracle->select('SUBJECT_ID, SUBJECT_NAME, SUBJECT_PARENT_ID, INSPECTION_ID, SUBJECT_ORDER');
+        $this->oracle->where('SUBJECT_ID', $subjectID);
+        $result = $this->oracle->get('PIMIS_SUBJECT');
+        return $result;
+    }
+
+    public function get_subject_by_inspection($inspectionID)
+    {
+        $this->oracle->select('SUBJECT_ID, SUBJECT_NAME, SUBJECT_PARENT_ID, INSPECTION_ID, SUBJECT_ORDER, SUBJECT_LEVEL');
+        $this->oracle->where('INSPECTION_ID', $inspectionID);
+        $result = $this->oracle->get('PIMIS_SUBJECT');
+        return $result;
     }
 }
