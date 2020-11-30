@@ -26,50 +26,63 @@
         <!-- Sidebar Menu -->
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <!-- Add icons to the links using the .nav-icon class
+               with font-awesome or any other icon font library -->
                 <li class="nav-item">
-                    <a href="<?= site_url('controller_user/index') ?>" id="controller-user-index" class="nav-link">
+                    <a href="<?= site_url('auditor/index') ?>" id="controller-user-index" class="nav-link">
                         <i class="nav-icon fas fa-home"></i>
                         <p>หน้าหลัก</p>
                     </a>
                 </li>
-                <li class="nav-header">ส่วนจัดการข้อมูล</li>
-                <li class="nav-item has-treeview" id="controller-user-headnav-manage-data">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-database"></i>
+                <li class="nav-header">ส่วนรายละเอียดการตรวจ</li>
+                <li class="nav-item has-treeview" id="auditor-inspection-section">
+                    <a href="#" class="nav-link" id="auditor-inspection-subject">
+                        <i class="nav-icon fas fa-file-signature"></i>
                         <p>
-                            การจัดการข้อมูล
+                            การตรวจราชการ
                             <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="<?= site_url('controller_user/subject') ?>" id="controller-user-inspection" class="nav-link">
-                                <i class="nav-icon far fa-question-circle"></i>
-                                <p>การจัดการคำถามประเมิน</p>
+                            <a href="<?= site_url('auditor/calendar') ?>" id="auditor-calendar" class="nav-link">
+                                <i class="nav-icon fas fa-calendar-alt"></i>
+                                <p>ปฏิทินการตรวจราชการ</p>
                             </a>
                         </li>
                     </ul>
                 </li>
-                <li class="nav-header">ส่วนสรุปผล</li>
-                <li class="nav-item has-treeview" id="controller-user-headnav-summarize">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-chart-line"></i>
+                <li class="nav-header">ส่วนรายงาน</li>
+                <li class="nav-item has-treeview" id="auditor-report-section">
+                    <a href="#" class="nav-link" id="auditor-report-subject">
+                        <i class="nav-icon fas fa-users"></i>
                         <p>
-                            ข้อมูลสรุป
+                            รายงานผลการตรวจ
                             <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="#" id="controller-user-xxx" class="nav-link">
-                                <i class="nav-icon far fa-file-alt"></i>
-                                <p>ดูรายงานผลการตรวจฯ</p>
+                            <a href="<?= site_url('admin/index') ?>" id="" class="nav-link">
+                                <i class="nav-icon fas fa-house-user"></i>
+                                <p>หน้าหลัก</p>
                             </a>
                         </li>
+                    </ul>
+                </li>
+                <li class="nav-item has-treeview">
+                    <a href="#" class="nav-link" id="auditor-summary-subject">
+                        <i class="nav-icon fas fa-users"></i>
+                        <p>
+                            สถิติผลการตรวจ
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="#" id="controller-user-xxxx" class="nav-link">
-                                <i class="nav-icon far fa-chart-bar"></i>
-                                <p>ดูสถิติผลการตรวจฯ</p>
+                            <a href="<?= site_url('admin/index') ?>" id="" class="nav-link">
+                                <i class="nav-icon fas fa-house-user"></i>
+                                <p>หน้าหลัก</p>
                             </a>
                         </li>
                     </ul>

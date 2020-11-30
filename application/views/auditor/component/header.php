@@ -27,16 +27,4 @@
 <link rel="stylesheet" href="<?= base_url('assets/admin_lte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') ?>">
 <link rel="stylesheet" href="<?= base_url('assets/admin_lte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') ?>">
 
-<style>
-    .has-child {
-        cursor: pointer;
-    }
-
-    .list-subject:hover{
-        background-color: #f1f1f1;
-    }
-
-    .child{
-        border: 1px solid #f1f1f1;
-    }
-</style>
+<?= $custom ?>

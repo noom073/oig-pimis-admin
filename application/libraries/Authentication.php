@@ -136,9 +136,9 @@ class Authentication
                 $result['http_code'] = $checkTokenReturn['http_code'];
             }
         } else {
-            $result['status']         = false;
-            $result['text']            = 'Email หรือ Password ไม่ถูกต้อง';
-            $result['curldata']        = $checkADReturn; // return http code and curl data
+            $result['status']   = false;
+            $result['text']     = 'Email หรือ Password ไม่ถูกต้อง';
+            $result['curldata'] = $checkADReturn; // return http code and curl data
         }
 
         return $result;
