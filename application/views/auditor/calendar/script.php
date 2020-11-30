@@ -21,16 +21,7 @@
 
         let Calendar = FullCalendar.Calendar;
         const calendarEl = document.getElementById('calendar');
-
-
         const drawCalendar = async () => {
-            // let calendarData = await getCalendarData().then(data => {
-            //     $("#load-calendar").addClass('invisible');
-            //     return data;
-            // }, () => {
-            //     console.error('fail');
-            // });
-
             calendar = new Calendar(calendarEl, {
                 height: 650,
                 plugins: ['bootstrap', 'interaction', 'dayGrid', 'timeGrid'],
@@ -46,11 +37,13 @@
                         url: '<?= site_url('data_service/ajax_inspection_data_calendar') ?>',
                         dataType: 'json'
                     }).done(function(res) {
-                        let events = res.map(r => ({
-                            title: r.title,
-                            start: r.start,
-                            end: r.end
-                        }));
+                        let events = res.map(r => {
+                            let data = {
+                                title: r.unitAcm,
+                                start: r.dateStart,
+                                end: r.dateEnd
+                            }
+                        });
                         success(events);
                     }).fail((jhr, status, error) => {
                         fail(error);
