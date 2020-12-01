@@ -68,7 +68,7 @@ class Auditor extends CI_Controller
 			$sideBar['name'] = $username;
 			$sideBar['userType'] = $userType;
 			$script['custom'] = $this->load->view('auditor/inspect/script', '', true);
-			$header['custom'] = '';
+			$header['custom'] = $this->load->view('auditor/inspect/custom_header', '', true);;
 
 			$inspections = $this->questionaire_model->get_inspections()->result_array();
 			$inspectionsDivide = array('odd' => [], 'even' => []);

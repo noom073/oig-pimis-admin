@@ -16,26 +16,39 @@
         };
 
 
-        const recursiveTree = data => {
-            console.log(data);
-            let html ='<ul>';
-            data.forEach(r => {
+        const generateTreeView = (data, rowNum = '') => {
+            let html = '<ul class="pl-2">';
+            data.forEach((r, index) => {
+                let number = `${rowNum}${index + 1}.`;
                 if (r.child) {
-                    html += `<li>${r.SUBJECT_NAME} ${recursiveTree(r.child)} +</li>`;
-                    console.log(r.SUBJECT_NAME, r.child);
+                    html += `<li>${number} ${r.SUBJECT_NAME} ${generateTreeView(r.child, number)}</li>`;
                 } else {
-                    // console.log(r.SUBJECT_NAME, '--');   
-                    html += `<li>${r.SUBJECT_NAME}</li>`;                 
+                    html += `<li>${number} ${r.SUBJECT_NAME}`;
+                    r.questions.forEach((question, index) => {
+                        html += `<div class="pl-3 d-flex my-2 question">
+                                    <div>${number+(index+1)}. ${question.Q_NAME} ?</div>
+                                    <div class="ml-auto">
+                                        <input type="radio" name="" id="">
+                                        <input type="radio" name="" id="">
+                                        <input type="radio" name="" id="">
+                                        <div>
+                                            <input type="file" name="" id="">
+                                        </div>
+                                    </div>
+                                </div>`;
+                    });
+                    html += `</li>`;
                 }
             });
-            html +='</ul>';
-            $("#xx").html(html);
+            html += '</ul>';
+            return html;
         };
 
 
         const drawQuestionForm = async inspectionID => {
             let questions = await getQuestionsAndSubject(inspectionID);
-            recursiveTree(questions);
+            let html = generateTreeView(questions);
+            $("#xx").html(html);
         };
 
 
