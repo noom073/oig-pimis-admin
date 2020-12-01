@@ -21,6 +21,12 @@ class Questionaire_model extends CI_Model
         return $result;
     }
 
+    public function get_inspections()
+    {
+        $query = $this->oracle->get('PIMIS_INSPECTIONS');
+        return $query;
+    }
+
     public function get_inspections_date_data()
     {
         $this->oracle->select("A.ID, A.SET, TO_CHAR(A.INS_DATE, 'YYYY-MM-DD') as INS_DATE,
@@ -31,11 +37,10 @@ class Questionaire_model extends CI_Model
         return $result;
     }
 
-    // public function get_a_subject($subjectID)
-    // {
-    //     $this->oracle->select('SUBJECT_ID, SUBJECT_NAME, SUBJECT_PARENT_ID, INSPECTION_ID, SUBJECT_ORDER');
-    //     $this->oracle->where('SUBJECT_ID', $subjectID);
-    //     $result = $this->oracle->get('PIMIS_SUBJECT');
-    //     return $result;
-    // }
+    public function get_plan($planID)
+    {
+        $this->oracle->where('ID', $planID);
+        $query = $this->oracle->get('PITS_PLAN');
+        return $query;
+    }
 }

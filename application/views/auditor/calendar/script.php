@@ -1,5 +1,6 @@
 <!-- fullCalendar 2.2.5 -->
 <script src="<?= base_url('assets/admin_lte/plugins/fullcalendar/main.min.js') ?>"></script>
+<script src="<?= base_url('assets/admin_lte/plugins/fullcalendar/locales/th.js') ?>"></script>
 <script src="<?= base_url('assets/admin_lte/plugins/fullcalendar-daygrid/main.min.js') ?>"></script>
 <script src="<?= base_url('assets/admin_lte/plugins/fullcalendar-timegrid/main.min.js') ?>"></script>
 <script src="<?= base_url('assets/admin_lte/plugins/fullcalendar-interaction/main.min.js') ?>"></script>
@@ -19,11 +20,12 @@
         };
 
 
-        let Calendar = FullCalendar.Calendar;
         const calendarEl = document.getElementById('calendar');
         const drawCalendar = async () => {
-            calendar = new Calendar(calendarEl, {
+            let calendar = new FullCalendar.Calendar(calendarEl, {
                 height: 650,
+                locale: 'th',
+                firstDay: 0,
                 plugins: ['bootstrap', 'interaction', 'dayGrid', 'timeGrid'],
                 header: {
                     left: 'prev,next today',
@@ -37,11 +39,15 @@
                         dataType: 'json'
                     }).done(function(res) {
                         let events = res.map(r => {
-                            let data = {
+                            let bgColor = r.squad == 1 ? '#FA7A35' : '#00A170';
+                            return {
                                 title: r.unitAcm,
                                 start: r.dateStart,
-                                end: r.dateEnd
-                            }
+                                end: r.dateEnd,
+                                url: '<?= site_url('auditor/inspect/?plan=') ?>'+r.planID,
+                                backgroundColor: bgColor,
+                                borderColor: 'white'
+                            };
                         });
                         success(events);
                     }).fail((jhr, status, error) => {
@@ -49,6 +55,9 @@
                         console.error(jhr, status, error);
                     });
                 },
+                eventClick: function(info) {
+                    console.log(info);
+                } ,
                 loading: isLoading => {
                     if (isLoading) {
                         $("#load-calendar").prop('class', 'visible');
