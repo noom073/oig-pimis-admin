@@ -36,11 +36,13 @@
                         url: '<?= site_url('data_service/ajax_inspection_data_calendar') ?>',
                         dataType: 'json'
                     }).done(function(res) {
-                        let events = res.map(r => ({
-                            title: r.unitAcm,
-                            start: r.dateStart,
-                            end: r.dateEnd
-                        }));
+                        let events = res.map(r => {
+                            let data = {
+                                title: r.unitAcm,
+                                start: r.dateStart,
+                                end: r.dateEnd
+                            }
+                        });
                         success(events);
                     }).fail((jhr, status, error) => {
                         fail(error);

@@ -86,10 +86,11 @@ class Data_service extends CI_Controller
     {
         $data = $this->questionaire_model->get_inspections_date_data()->result_array();
         $result = array_map(function($r) {
-            $array['deptName']  = $r['DEPARTMENT_NAME'];
+            $array['depName']   = $r['DEPARTMENT_NAME'];
             $array['unitAcm']   = $r['STANDFOR'];
             $array['dateStart'] = $r['INS_DATE'];
             $array['dateEnd']   = $r['FINISH_DATE'];
+            $array['squad']     = $r['SET'];
             return $array;
         }, $data);
 
