@@ -21,16 +21,26 @@ class Data_model extends CI_Model
             return $r['SUBJECT_PARENT_ID'] == $parentID;
         });
 
-        $result = [];
-        foreach ($array as $r) {
+        $result = array_map(function ($r) use ($dataArray) {
             $child = $this->draw_array_tree($dataArray, $r['SUBJECT_ID']);
             if ($child) {
-                $r['child'] = $child;
+                $r['child'] = array();
+                $r['child'] = array_merge($r['child'], $child);
             } else {
                 $r['questions'] = $this->question_model->get_questions($r['SUBJECT_ID'])->result_array();
-            }
-            array_push($result, $r);
-        }
+            }            
+            return $r;
+        }, $array);
+        // $result = array();
+        // foreach ($array as $r) {
+        //     $child = $this->draw_array_tree($dataArray, $r['SUBJECT_ID']);
+        //     if ($child) {
+        //         $r['child'] = $child;
+        //     } else {
+        //         $r['questions'] = $this->question_model->get_questions($r['SUBJECT_ID'])->result_array();
+        //     }
+        //     array_push($result, $r);
+        // }
 
         return $result;
     }

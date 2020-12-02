@@ -17,23 +17,20 @@
 
 
         const generateTreeView = (data, rowNum = '') => {
-            let html = '<ul class="pl-2">';
+            let html = '<ul class="pl-2 border-left">';
             data.forEach((r, index) => {
                 let number = `${rowNum}${index + 1}.`;
                 if (r.child) {
                     html += `<li>${number} ${r.SUBJECT_NAME} ${generateTreeView(r.child, number)}</li>`;
                 } else {
-                    html += `<li>${number} ${r.SUBJECT_NAME}`;
+                    html += `<li class="border-left">${number} ${r.SUBJECT_NAME}`;
                     r.questions.forEach((question, index) => {
                         html += `<div class="pl-3 d-flex my-2 question">
                                     <div>${number+(index+1)}. ${question.Q_NAME} ?</div>
                                     <div class="ml-auto">
-                                        <input type="radio" name="" id="">
-                                        <input type="radio" name="" id="">
-                                        <input type="radio" name="" id="">
-                                        <div>
-                                            <input type="file" name="" id="">
-                                        </div>
+                                        <input type="radio" name="score-${question.Q_ID}">
+                                        <input type="radio" name="score-${question.Q_ID}">
+                                        <input type="radio" name="score-${question.Q_ID}">
                                     </div>
                                 </div>`;
                     });
