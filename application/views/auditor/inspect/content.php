@@ -46,6 +46,9 @@
                             <h5>ฟอร์ม</h5>
                             <div>
                                 <div id="form-questionaire"></div>
+                                <div id="result-auditor-score" class="invisible">
+                                    รวม <span id="total-auditor-score"></span> คะแนน
+                                </div>
                             </div>
                         </div>
 

@@ -30,15 +30,15 @@
                                     <div class="ml-auto">
                                         <div>
                                             <label>Yes</label>
-                                            <input type="radio" name="score-${question.Q_ID}" value="1">                                        
+                                            <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="1">                                        
                                         </div>
                                         <div>
                                             <label>N/A</label>
-                                            <input type="radio" name="score-${question.Q_ID}" value="0.5">                                        
+                                            <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.5">                                        
                                         </div>
                                         <div>
                                             <label>No</label>
-                                            <input type="radio" name="score-${question.Q_ID}" value="0">                                        
+                                            <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0">                                        
                                         </div>
                                     </div>
                                 </div>`;
@@ -61,6 +61,16 @@
         $(".inspect").click(function() {
             let inspectionID = $(this).data('inspection-id');
             drawQuestionForm(inspectionID);
+        });
+
+        $(document).on('change', ".auditor-score", function() {
+            let countScore = 0;
+            $(".auditor-score:checked").each(function(el) {
+                let score = (+$(this).val());
+                countScore += score;
+            });
+            $("#result-auditor-score").removeClass('invisible');
+            $("#total-auditor-score").text(countScore);
         });
 
     });
