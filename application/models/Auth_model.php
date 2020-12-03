@@ -12,6 +12,7 @@ class Auth_model extends CI_Model {
         $this->oracle->select('a.USER_TYPE, b.TYPE_NAME');
         $this->oracle->join('PIMIS_USER_TYPE b', 'a.USER_TYPE = b.TYPE_ID');
         $this->oracle->where('a.EMAIL', $email);
+        $this->oracle->where('a.SYSTEM', 'pimis');
         $result = $this->oracle->get('PIMIS_USER a');
 
         return $result;

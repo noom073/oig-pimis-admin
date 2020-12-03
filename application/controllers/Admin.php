@@ -131,7 +131,7 @@ class Admin extends CI_Controller
 		$data['updater'] 	= $this->session->email;
 
 		$userDuplicate = $this->user_model->chk_user_for_update($data)->num_rows();
-		if ($userDuplicate == 1) {
+		if ($userDuplicate <= 1) {
 			$insert = $this->user_model->update_user($data);
 			if ($insert) {
 				$result['status'] = true;

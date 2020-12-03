@@ -14,6 +14,7 @@ class Question_model extends CI_Model
     {
         $this->oracle->where('SUBJECT_ID', $subjectID);
         $this->oracle->where('STATUS', 'y');
+        $this->oracle->order_by('Q_ORDER');
         $query = $this->oracle->get('PIMIS_QUESTION');
         return $query;
     }

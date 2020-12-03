@@ -21,7 +21,7 @@ class Data_model extends CI_Model
             return $r['SUBJECT_PARENT_ID'] == $parentID;
         });
 
-        $result = array_map(function ($r) use ($dataArray) {
+        $data = array_map(function ($r) use ($dataArray) {
             $child = $this->draw_array_tree($dataArray, $r['SUBJECT_ID']);
             if ($child) {
                 $r['child'] = array();
@@ -31,6 +31,7 @@ class Data_model extends CI_Model
             }            
             return $r;
         }, $array);
+        $result = array_merge(array(), $data);
         // $result = array();
         // foreach ($array as $r) {
         //     $child = $this->draw_array_tree($dataArray, $r['SUBJECT_ID']);

@@ -23,14 +23,23 @@
                 if (r.child) {
                     html += `<li>${number} ${r.SUBJECT_NAME} ${generateTreeView(r.child, number)}</li>`;
                 } else {
-                    html += `<li class="border-left">${number} ${r.SUBJECT_NAME}`;
+                    html += `<li class="pl-2 border-left">${number} ${r.SUBJECT_NAME}`;
                     r.questions.forEach((question, index) => {
-                        html += `<div class="pl-3 d-flex my-2 question">
+                        html += `<div class="pl-3 border-left d-flex my-2 question">
                                     <div>${number+(index+1)}. ${question.Q_NAME} ?</div>
                                     <div class="ml-auto">
-                                        <input type="radio" name="score-${question.Q_ID}">
-                                        <input type="radio" name="score-${question.Q_ID}">
-                                        <input type="radio" name="score-${question.Q_ID}">
+                                        <div>
+                                            <label>Yes</label>
+                                            <input type="radio" name="score-${question.Q_ID}" value="1">                                        
+                                        </div>
+                                        <div>
+                                            <label>N/A</label>
+                                            <input type="radio" name="score-${question.Q_ID}" value="0.5">                                        
+                                        </div>
+                                        <div>
+                                            <label>No</label>
+                                            <input type="radio" name="score-${question.Q_ID}" value="0">                                        
+                                        </div>
                                     </div>
                                 </div>`;
                     });
@@ -45,7 +54,7 @@
         const drawQuestionForm = async inspectionID => {
             let questions = await getQuestionsAndSubject(inspectionID);
             let html = generateTreeView(questions);
-            $("#xx").html(html);
+            $("#form-questionaire").html(html);
         };
 
 

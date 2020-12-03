@@ -45,31 +45,7 @@
                         <div>
                             <h5>ฟอร์ม</h5>
                             <div>
-                                <div>
-                                    <!-- <ul>
-                                        <li>1. xxxxx
-                                            <ul>
-                                                <li>1.1. subject
-                                                    <ul>
-                                                        <li class="d-flex">                                                            
-                                                           <div>1.1.1 question</div>
-                                                           <div class="ml-auto">
-                                                               <input type="radio" name="" id="">
-                                                               <input type="radio" name="" id="">
-                                                               <input type="radio" name="" id="">
-                                                               <div>
-                                                                   <input type="file" name="" id="">
-                                                               </div>
-                                                           </div>
-                                                        </li>
-                                                    </ul>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ul> -->
-                                </div>
-
-                                <div id="xx"></div>
+                                <div id="form-questionaire"></div>
                             </div>
                         </div>
 

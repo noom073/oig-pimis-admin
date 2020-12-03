@@ -80,6 +80,7 @@ class Subject_model extends CI_Model
     {
         $this->oracle->select('SUBJECT_ID, SUBJECT_NAME, SUBJECT_PARENT_ID, INSPECTION_ID, SUBJECT_ORDER, SUBJECT_LEVEL');
         $this->oracle->where('INSPECTION_ID', $inspectionID);
+        $this->oracle->order_by('SUBJECT_ORDER');
         $result = $this->oracle->get('PIMIS_SUBJECT');
         return $result;
     }

@@ -74,7 +74,7 @@ class Data_service extends CI_Controller
 
     public function ajax_get_questions_by_inspection()
     {
-        $inspectionID = $this->input->post('inspectionID');;
+        $inspectionID = $this->input->post('inspectionID');
         $subjects = $this->subject_model->get_subject_by_inspection($inspectionID)->result_array();
         $array = $this->data_model->make_array_tree($subjects);
         $this->output

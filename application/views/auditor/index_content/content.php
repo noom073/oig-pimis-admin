@@ -24,7 +24,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Admin</h5>
                     <p class="card-text">
-                        <a href="<?= site_url('admin/list_user') ?>">- รายชื่อผู้ใช้</a>
+                        <a href="<?= site_url('auditor/calendar') ?>">- ปฏิทินการตรวจราชการ</a>
                     </p>
                 </div>
             </div>

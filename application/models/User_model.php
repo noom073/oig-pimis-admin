@@ -16,6 +16,7 @@ class User_model extends CI_Model
             FROM PIMIS_USER a 
             JOIN PIMIS_USER_TYPE b 
                 ON a.USER_TYPE = b.TYPE_ID
+            WHERE a.SYSTEM LIKE 'pimis'
             ORDER BY a.TIME_UPDATE DESC";
         $result = $this->oracle->query($sql);
         return $result;
