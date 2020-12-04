@@ -58,7 +58,7 @@
                                         <i class="caret fas fa-angle-right text-primary"></i>
                                         ${num}. ${r.SUBJECT_NAME}
                                     </span>                             
-                                    <div class="ml-auto">${createBtn} ${disableQuestionBtn} ${editBtn} ${deleteBtn}</div>
+                                    <div class="ml-auto">${createBtn} ${listQuestionBtn} ${editBtn} ${deleteBtn}</div>
                                 </div>
                                 ${treeView(r.child, 'none', num)}                            
                             </li>`;

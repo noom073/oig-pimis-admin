@@ -21,25 +21,41 @@
             data.forEach((r, index) => {
                 let number = `${rowNum}${index + 1}.`;
                 if (r.child) {
-                    html += `<li>${number} ${r.SUBJECT_NAME} ${generateTreeView(r.child, number)}</li>`;
+                    let questions = '';
+                    r.questions.forEach((question, index) => {
+                        questions += `<div class="pl-3 border-left my-2 question">
+                                    <div>- ${question.Q_NAME} ?</div>
+                                    <div class="pl-5">
+                                        <label class="text-success">Yes</label>
+                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="1">   
+                                        &nbsp;&nbsp;                                   
+                                        <label class="text-info">N/A</label>
+                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.5">                                        
+                                        &nbsp;&nbsp; 
+                                        <label class="text-danger">No</label>
+                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0">                                        
+                                    </div>
+                                </div>`;
+                    });
+
+                    html += `<li>${number} ${r.SUBJECT_NAME} 
+                                ${questions}
+                                ${generateTreeView(r.child, number)}
+                            </li>`;
                 } else {
                     html += `<li class="pl-2 border-left">${number} ${r.SUBJECT_NAME}`;
                     r.questions.forEach((question, index) => {
-                        html += `<div class="pl-3 border-left d-flex my-2 question">
-                                    <div>${number+(index+1)}. ${question.Q_NAME} ?</div>
-                                    <div class="ml-auto">
-                                        <div>
-                                            <label>Yes</label>
-                                            <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="1">                                        
-                                        </div>
-                                        <div>
-                                            <label>N/A</label>
-                                            <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.5">                                        
-                                        </div>
-                                        <div>
-                                            <label>No</label>
-                                            <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0">                                        
-                                        </div>
+                        html += `<div class="pl-3 border-left my-2 question">
+                                    <div>- ${question.Q_NAME} ?</div>
+                                    <div class="pl-5">
+                                        <label class="text-success">Yes</label>
+                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="1">   
+                                        &nbsp;&nbsp;                                   
+                                        <label class="text-info">N/A</label>
+                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.5">                                        
+                                        &nbsp;&nbsp; 
+                                        <label class="text-danger">No</label>
+                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0">                                        
                                     </div>
                                 </div>`;
                     });

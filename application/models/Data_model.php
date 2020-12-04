@@ -26,9 +26,8 @@ class Data_model extends CI_Model
             if ($child) {
                 $r['child'] = array();
                 $r['child'] = array_merge($r['child'], $child);
-            } else {
-                $r['questions'] = $this->question_model->get_questions($r['SUBJECT_ID'])->result_array();
-            }            
+            }           
+            $r['questions'] = $this->question_model->get_questions($r['SUBJECT_ID'])->result_array();
             return $r;
         }, $array);
         $result = array_merge(array(), $data);

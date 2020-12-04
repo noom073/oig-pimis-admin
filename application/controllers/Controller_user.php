@@ -139,9 +139,10 @@ class Controller_user extends CI_Controller
     public function questions()
     {
         $subjectID = $this->input->get('subject_id');
-        $hasChildSubject = $this->subject_model->has_child_subject($subjectID);
+        // $hasChildSubject = $this->subject_model->has_child_subject($subjectID);
         $hasSubjectExist = $this->subject_model->has_subject_exist($subjectID);
-        if (!$hasSubjectExist || $hasChildSubject) {
+        // if (!$hasSubjectExist || $hasChildSubject) {
+        if (!$hasSubjectExist) {
             redirect('controller_user/subject');
         } else {
             $data['name']       = $this->session->nameth;
