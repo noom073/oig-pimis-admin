@@ -80,8 +80,20 @@ class Subject_model extends CI_Model
     {
         $this->oracle->select('SUBJECT_ID, SUBJECT_NAME, SUBJECT_PARENT_ID, INSPECTION_ID, SUBJECT_ORDER, SUBJECT_LEVEL');
         $this->oracle->where('INSPECTION_ID', $inspectionID);
+        $this->oracle->where('SUBJECT_STATUS', 'y');
         $this->oracle->order_by('SUBJECT_ORDER');
         $result = $this->oracle->get('PIMIS_SUBJECT');
         return $result;
+    }
+
+    public function delete_subject($subjectID)
+    {
+        $date = date("Y-m-d H:i:s");
+        $this->oracle->set('SUBJECT_STATUS', 'n');
+        $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
+        $this->oracle->set('USER_UPDATE', $this->session->email);
+        $this->oracle->where('SUBJECT_ID', $subjectID);
+        $query = $this->oracle->update('PIMIS_SUBJECT');
+        return $query;
     }
 }

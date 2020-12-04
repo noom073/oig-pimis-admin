@@ -119,7 +119,7 @@ class Controller_user extends CI_Controller
 
     public function ajax_add_question()
     {
-        $data['questionName']   = $this->input->post('questionName');
+        $data['questionName']   = $this->center_services->convert_th_num_to_arabic($this->input->post('questionName'));
         $data['questionOrder']  = $this->input->post('questionOrder');
         $data['subjectID']      = $this->input->post('subjectID');
 
@@ -135,7 +135,7 @@ class Controller_user extends CI_Controller
             ->set_content_type('application/json')
             ->set_output(json_encode($result));
     }
-    
+
     public function questions()
     {
         $subjectID = $this->input->get('subject_id');
@@ -159,13 +159,13 @@ class Controller_user extends CI_Controller
             $component['contentWrapper']    = $this->load->view('controller_user/questions/content', $data, true);
             $component['jsScript']          = $this->load->view('controller_user/component/main_script', $script, true);
 
-            $this->load->view('controller_user/template', $component);            
+            $this->load->view('controller_user/template', $component);
         }
     }
 
     public function ajax_edit_question()
     {
-        $data['questionName']   = $this->input->post('questionName');
+        $data['questionName']   = $this->center_services->convert_th_num_to_arabic($this->input->post('questionName'));
         $data['questionOrder']  = $this->input->post('questionOrder');
         $data['questionID']     = $this->input->post('questionID');
         $update = $this->question_model->update_question($data);
@@ -185,6 +185,22 @@ class Controller_user extends CI_Controller
     {
         $questionID = $this->input->post('questionID');
         $delete = $this->question_model->delete_question($questionID);
+        if ($delete) {
+            $result['status']   = true;
+            $result['text']     = 'ลบข้อมูลสำเร็จ';
+        } else {
+            $result['status']   = false;
+            $result['text']     = 'ลบข้อมูลไม่สำเร็จ';
+        }
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($result));
+    }
+
+    public function ajax_delete_subject()
+    {
+        $subjectID = $this->input->post('subjectID');
+        $delete = $this->subject_model->delete_subject($subjectID);
         if ($delete) {
             $result['status']   = true;
             $result['text']     = 'ลบข้อมูลสำเร็จ';

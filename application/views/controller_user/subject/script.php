@@ -285,5 +285,29 @@
             }).fail((jhr, status, error) => console.error(jhr, status, error));
             thisForm.trigger('reset');
         });
+
+
+        $(document).on('click', ".delete-btn", function() {
+            if (confirm('ยืนยันการลบหัวข้อ !')) {
+                let subjectID = $(this).data('subject-id');
+                console.log(subjectID);
+
+                $.post({
+                    url: '<?= site_url('controller_user/ajax_delete_subject') ?>',
+                    data: {
+                        subjectID: subjectID
+                    },
+                    dataType: 'json'
+                }).done(res => {
+                    console.log(res);
+                    alert(res.text);
+                    let inspectionID = $("#inspection-list").val();
+                    drawSubjectList(inspectionID);
+                }).fail((jhr, status, error) => console.error(jhr, status, error));
+                return true;
+            } else {
+                return false;
+            }
+        });
     });
 </script>

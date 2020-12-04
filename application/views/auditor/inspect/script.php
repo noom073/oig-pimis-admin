@@ -26,14 +26,14 @@
                         questions += `<div class="pl-3 border-left my-2 question">
                                     <div>- ${question.Q_NAME} ?</div>
                                     <div class="pl-5">
-                                        <label class="text-success">Yes</label>
                                         <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="1">   
+                                        <label class="text-success">Yes</label>
                                         &nbsp;&nbsp;                                   
+                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.5" checked>                                        
                                         <label class="text-info">N/A</label>
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.5">                                        
                                         &nbsp;&nbsp; 
-                                        <label class="text-danger">No</label>
                                         <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0">                                        
+                                        <label class="text-danger">No</label>
                                     </div>
                                 </div>`;
                     });
@@ -48,14 +48,14 @@
                         html += `<div class="pl-3 border-left my-2 question">
                                     <div>- ${question.Q_NAME} ?</div>
                                     <div class="pl-5">
-                                        <label class="text-success">Yes</label>
                                         <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="1">   
+                                        <label class="text-success">Yes</label>
                                         &nbsp;&nbsp;                                   
+                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.5" checked>                                        
                                         <label class="text-info">N/A</label>
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.5">                                        
                                         &nbsp;&nbsp; 
-                                        <label class="text-danger">No</label>
                                         <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0">                                        
+                                        <label class="text-danger">No</label>
                                     </div>
                                 </div>`;
                     });
@@ -74,19 +74,32 @@
         };
 
 
-        $(".inspect").click(function() {
-            let inspectionID = $(this).data('inspection-id');
-            drawQuestionForm(inspectionID);
-        });
-
-        $(document).on('change', ".auditor-score", function() {
+        const summaryScore = () => {
             let countScore = 0;
             $(".auditor-score:checked").each(function(el) {
                 let score = (+$(this).val());
                 countScore += score;
             });
+            return countScore;
+        };
+
+
+        const showScore = () => {
+            const score = summaryScore();
             $("#result-auditor-score").removeClass('invisible');
-            $("#total-auditor-score").text(countScore);
+            $("#total-auditor-score").text(score);
+        };
+
+
+        $(".inspect").click( async function() {
+            let inspectionID = $(this).data('inspection-id');
+            await drawQuestionForm(inspectionID);
+            showScore();
+        });
+
+
+        $(document).on('change', ".auditor-score", () => {
+            showScore();
         });
 
     });
