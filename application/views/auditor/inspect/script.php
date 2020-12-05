@@ -24,16 +24,16 @@
                     let questions = '';
                     r.questions.forEach((question, index) => {
                         questions += `<div class="pl-3 border-left my-2 question">
-                                    <div>- ${question.Q_NAME} ?</div>
+                                    <div class="question-name">- ${question.Q_NAME} ?</div>
                                     <div class="pl-5">
                                         <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="1">   
-                                        <label class="text-success">Yes</label>
+                                        <label class="text-success choice">Yes</label>
                                         &nbsp;&nbsp;                                   
                                         <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.5" checked>                                        
-                                        <label class="text-info">N/A</label>
+                                        <label class="text-info choice">N/A</label>
                                         &nbsp;&nbsp; 
                                         <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0">                                        
-                                        <label class="text-danger">No</label>
+                                        <label class="text-danger choice">No</label>
                                     </div>
                                 </div>`;
                     });
@@ -46,16 +46,16 @@
                     html += `<li class="pl-2 border-left">${number} ${r.SUBJECT_NAME}`;
                     r.questions.forEach((question, index) => {
                         html += `<div class="pl-3 border-left my-2 question">
-                                    <div>- ${question.Q_NAME} ?</div>
+                                    <div class="question-name">- ${question.Q_NAME} ?</div>
                                     <div class="pl-5">
                                         <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="1">   
-                                        <label class="text-success">Yes</label>
+                                        <label class="text-success choice">Yes</label>
                                         &nbsp;&nbsp;                                   
                                         <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.5" checked>                                        
-                                        <label class="text-info">N/A</label>
+                                        <label class="text-info choice">N/A</label>
                                         &nbsp;&nbsp; 
                                         <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0">                                        
-                                        <label class="text-danger">No</label>
+                                        <label class="text-danger choice">No</label>
                                     </div>
                                 </div>`;
                     });
@@ -86,20 +86,55 @@
 
         const showScore = () => {
             const score = summaryScore();
+            const questionAmount = $(".question-name").length;
+            console.log(questionAmount);
             $("#result-auditor-score").removeClass('invisible');
-            $("#total-auditor-score").text(score);
+            $("#total-auditor-score").text(`${score} คะแนน ; ทั้งหมด ${questionAmount} คะแนน`);
         };
 
 
-        $(".inspect").click( async function() {
+        $(".inspect-list").click(async function() {
             let inspectionID = $(this).data('inspection-id');
             await drawQuestionForm(inspectionID);
             showScore();
+            $(".inspect-list").removeClass('active');
+            $(this).addClass('active');
+            $("#auditor-inspect-form").data('inspection-id', inspectionID);
         });
 
 
         $(document).on('change', ".auditor-score", () => {
             showScore();
+        });
+
+
+        $(document).on('click', ".choice", function() {
+            $(this).prev('input[type="radio"]').prop('checked', true);
+            showScore();
+        });
+
+
+        $("#auditor-inspect-form").submit(function(event) {
+            event.preventDefault();
+            let thisForm = $(this);
+            let inspectionID = thisForm.data('inspection-id');
+            let planID = '<?= $planID ?>';
+            let formData = thisForm.serialize() + `&inspectionID=${inspectionID}&planID=${planID}`;
+            console.log(formData);
+
+            $.post({
+                url: '<?= site_url('auditor/ajax_auditor_add_inpect_score') ?>',
+                data: formData,
+                dataType: 'json'
+            }).done(res => {
+                console.log(res);
+                if (res.status) {
+                    alert('บันทึกข้อมูลสำเร็จ');
+                    window.location.replace('<?= site_url('auditor/calendar') ?>');
+                } else {
+                    alert('! บันทึกข้อมูลไม่สำเร็จ');
+                }
+            }).fail((jhr, status, error) => console.error(jhr, status, error));
         });
 
     });

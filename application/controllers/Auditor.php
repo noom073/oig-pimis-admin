@@ -67,7 +67,8 @@ class Auditor extends CI_Controller
 
 			$sideBar['name'] = $username;
 			$sideBar['userType'] = $userType;
-			$script['custom'] = $this->load->view('auditor/inspect/script', '', true);
+			$dataForScript['planID'] = $planID;
+			$script['custom'] = $this->load->view('auditor/inspect/script', $dataForScript, true);
 			$header['custom'] = $this->load->view('auditor/inspect/custom_header', '', true);;
 
 			$inspections = $this->questionaire_model->get_inspections()->result_array();
@@ -94,5 +95,19 @@ class Auditor extends CI_Controller
 			redirect('auditor/calendar');
 		}
 	}
-	
+
+	public function ajax_auditor_add_inpect_score()
+	{
+		$input = $this->input->post();
+		$data['inspectionID'] = $input['inspectionID'];
+		$data['planID'] = $input['planID'];
+		unset($input['inspectionID']); //clear inspectionID ในชุดข้อมูล ก่อนจะ loop array score
+		unset($input['planID']); //clear planID ในชุดข้อมูล ก่อนจะ loop array score
+		$data['scores'] = $input;
+		$result = $this->questionaire_model->insert_inspection_score($data);
+		
+		$this->output
+			->set_content_type('application/json')
+			->set_output(json_encode($result));
+	}
 }

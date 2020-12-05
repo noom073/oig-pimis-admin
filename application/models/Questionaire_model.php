@@ -43,4 +43,46 @@ class Questionaire_model extends CI_Model
         $query = $this->oracle->get('PITS_PLAN');
         return $query;
     }
+
+    public function insert_inspection_score($array)
+    {
+        $this->oracle->trans_begin();
+        $data['planID'] = $array['planID'];
+        $data['inspectionID'] = $array['inspectionID'];
+
+        $response = array();
+        foreach ($array['scores'] as $key => $val) {
+            $mixData = explode('-', $key);
+            $data['questionID'] = $mixData[1];
+            $data['score'] = $val;
+
+            $date = date("Y-m-d H:i:s");
+            $this->oracle->set("PLAN_ID", $data['planID']);
+            $this->oracle->set("INSPECTION_ID", $data['inspectionID']);
+            $this->oracle->set("QUESTION_ID", $data['questionID']);
+            $this->oracle->set("SCORE", $data['score']);
+            $this->oracle->set("TIME_UPDATE", "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
+            $this->oracle->set("USER_UPDATE", $this->session->email);
+            $insert = $this->oracle->insert('PIMIS_INSPECTION_SCORE_AUDITOR');
+            if ($insert) {
+                $result['status'] = true;
+                $result['text'] = $array;
+            } else {
+                $result['status'] = false;
+                $result['text'] = $array;
+            }
+            array_push($response, $result);
+        }
+
+        if ($this->oracle->trans_status() === FALSE) {
+            $this->oracle->trans_rollback();
+            $objects['status'] = false;
+            $objects['data'] = '';
+        } else {
+            $this->oracle->trans_commit();
+            $objects['status'] = true;
+            $objects['data'] = $response;
+        }
+        return $objects;
+    }
 }

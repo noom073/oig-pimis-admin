@@ -28,7 +28,7 @@
                             <div class="col-6">
                                 <div class="list-group">
                                     <?php foreach ($inspections['odd'] as $inspection) { ?>
-                                        <button type="button" class="list-group-item list-group-item-action inspect" data-inspection-id="<?= $inspection['INSPE_ID'] ?>"><?= $inspection['INSPE_NAME'] ?></button>
+                                        <button type="button" class="list-group-item list-group-item-action inspect-list" data-inspection-id="<?= $inspection['INSPE_ID'] ?>"><?= $inspection['INSPE_NAME'] ?></button>
                                     <?php } ?>
                                 </div>
                             </div>
@@ -36,7 +36,7 @@
                             <div class="col-6">
                                 <div class="list-group">
                                     <?php foreach ($inspections['even'] as $inspection) { ?>
-                                        <button type="button" class="list-group-item list-group-item-action inspect" data-inspection-id="<?= $inspection['INSPE_ID'] ?>"><?= $inspection['INSPE_NAME'] ?></button>
+                                        <button type="button" class="list-group-item list-group-item-action inspect-list" data-inspection-id="<?= $inspection['INSPE_ID'] ?>"><?= $inspection['INSPE_NAME'] ?></button>
                                     <?php } ?>
                                 </div>
                             </div>
@@ -45,9 +45,17 @@
                         <div>
                             <h5>ฟอร์ม</h5>
                             <div>
-                                <div id="form-questionaire"></div>
+                                <div class="mb-3">
+                                    <form id="auditor-inspect-form">
+                                        <div id="form-questionaire"></div>
+                                        <div>
+                                            <button class="btn btn-sm btn-primary">บันทึก</button>
+                                            <button class="btn btn-sm btn-light">ปิด</button>
+                                        </div>
+                                    </form>
+                                </div>
                                 <div id="result-auditor-score" class="invisible">
-                                    รวม <span id="total-auditor-score"></span> คะแนน
+                                    รวม <span id="total-auditor-score"></span>
                                 </div>
                             </div>
                         </div>
