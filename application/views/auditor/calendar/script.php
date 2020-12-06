@@ -44,7 +44,7 @@
                                 title: r.unitAcm,
                                 start: r.dateStart,
                                 end: r.dateEnd,
-                                url: '<?= site_url('auditor/inspect/?plan=') ?>'+r.planID,
+                                url: '<?= site_url('auditor/inspection_list/?plan=') ?>'+r.planID,
                                 backgroundColor: bgColor,
                                 borderColor: 'white'
                             };

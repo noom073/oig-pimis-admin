@@ -27,6 +27,13 @@ class Questionaire_model extends CI_Model
         return $query;
     }
 
+    public function get_a_inspection($inspectionID)
+    {
+        $this->oracle->where('INSPE_ID', $inspectionID);
+        $query = $this->oracle->get('PIMIS_INSPECTIONS');
+        return $query;
+    }
+
     public function get_inspections_date_data()
     {
         $this->oracle->select("A.ID, A.SET, TO_CHAR(A.INS_DATE, 'YYYY-MM-DD') as INS_DATE,
@@ -39,8 +46,13 @@ class Questionaire_model extends CI_Model
 
     public function get_plan($planID)
     {
-        $this->oracle->where('ID', $planID);
-        $query = $this->oracle->get('PITS_PLAN');
+        $sql = 'SELECT a.ID, a."SET", a.INS_UNIT, a.INS_DATE, a.FINISH_DATE,
+        b.DEPARTMENT_NAME, b.STANDFOR 
+        FROM PITS_PLAN a
+        INNER JOIN PITS_UNIT b
+            ON a.INS_UNIT = b.ID
+        WHERE a.ID = ?';
+        $query = $this->oracle->query($sql, array($planID));
         return $query;
     }
 
@@ -84,5 +96,18 @@ class Questionaire_model extends CI_Model
             $objects['data'] = $response;
         }
         return $objects;
+    }
+
+    public function get_inspections_with_inpected_check($planID)
+    {
+        $sql = "SELECT a.INSPE_ID, a.INSPE_NAME, b.INSPECTION_ID 
+        FROM PIMIS_INSPECTIONS a
+        LEFT JOIN PIMIS_INSPECTION_SCORE_AUDITOR b  
+            ON a.INSPE_ID = b.INSPECTION_ID 
+            AND b.PLAN_ID = ?
+        GROUP BY a.INSPE_ID, a.INSPE_NAME, b.INSPECTION_ID
+        ORDER BY a.INSPE_ID";
+        $query = $this->oracle->query($sql, array($planID));
+        return $query;
     }
 }

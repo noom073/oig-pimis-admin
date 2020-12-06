@@ -7,9 +7,10 @@
 
         const getQuestionsAndSubject = (inspectionID) => {
             return $.post({
-                url: '<?= site_url('data_service/ajax_get_questions_by_inspection') ?>',
+                url: '<?= site_url('data_service/ajax_get_questions_and_score') ?>',
                 data: {
-                    inspectionID: inspectionID
+                    inspectionID: inspectionID,
+                    plan: '<?= $planID ?>'
                 },
                 dataType: 'json'
             }).done().fail((jhr, status, error) => console.error(jhr, status, error));
@@ -27,13 +28,13 @@
                         questions += `<div class="pl-3 border-left my-2 question">
                                     <div>- ${question.Q_NAME} ?</div>
                                     <div class="pl-5">
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="1">   
+                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="1" ${question.SCORE == '1' ? 'checked':''}>   
                                         <label class="text-success choice">Yes</label>
                                         &nbsp;&nbsp;                                   
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.5" checked>                                        
+                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.5" ${question.SCORE == '.5' ? 'checked':''}>                                        
                                         <label class="text-info choice">N/A</label>
                                         &nbsp;&nbsp; 
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0">                                        
+                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0" ${question.SCORE == '0' ? 'checked':''}>                                        
                                         <label class="text-danger choice">No</label>
                                     </div>
                                 </div>`;
@@ -50,13 +51,13 @@
                         html += `<div class="pl-3 border-left my-2 question">
                                     <div>- ${question.Q_NAME} ?</div>
                                     <div class="pl-5">
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="1">   
+                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="1" ${question.SCORE == '1' ? 'checked':''}>   
                                         <label class="text-success choice">Yes</label>
                                         &nbsp;&nbsp;                                   
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.5" checked>                                        
+                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.5" ${question.SCORE == '.5' ? 'checked':''}>                                        
                                         <label class="text-info choice">N/A</label>
                                         &nbsp;&nbsp; 
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0">                                        
+                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0" ${question.SCORE == '0' ? 'checked':''}>                                        
                                         <label class="text-danger choice">No</label>
                                     </div>
                                 </div>`;
@@ -66,14 +67,6 @@
             });
             html += '</ul>';
             return html;
-        };
-
-
-        const drawQuestionForm = async inspectionID => {
-            questionsAmount = 0; // reset ค่าจำนวนคำถาม
-            let questions = await getQuestionsAndSubject(inspectionID);
-            let html = generateTreeView(questions);
-            $("#form-questionaire").html(html);
         };
 
 
@@ -94,15 +87,13 @@
         };
 
 
-        $(".inspect-list").click(async function() {
-            let inspectionID = $(this).data('inspection-id');
-            await drawQuestionForm(inspectionID);
+        const drawQuestionForm = async inspectionID => {
+            questionsAmount = 0; // reset ค่าจำนวนคำถาม
+            let questions = await getQuestionsAndSubject(inspectionID);
+            let html = generateTreeView(questions);
+            $("#form-questionaire").html(html);
             showScore();
-            $(".inspect-list").removeClass('active');
-            $(this).addClass('active');
-            $("#auditor-inspect-form").data('inspection-id', inspectionID);
-            $("#auditor-inspect-form").removeClass('d-none');
-        });
+        };
 
 
         $(document).on('change', ".auditor-score", () => {
@@ -116,27 +107,7 @@
         });
 
 
-        $("#auditor-inspect-form").submit(function(event) {
-            event.preventDefault();
-            let thisForm = $(this);
-            let inspectionID = thisForm.data('inspection-id');
-            let planID = '<?= $planID ?>';
-            let formData = thisForm.serialize() + `&inspectionID=${inspectionID}&planID=${planID}`;
-
-            $.post({
-                url: '<?= site_url('auditor/ajax_auditor_add_inpect_score') ?>',
-                data: formData,
-                dataType: 'json'
-            }).done(res => {
-                console.log(res);
-                if (res.status) {
-                    alert('บันทึกข้อมูลสำเร็จ');
-                    window.location.replace('<?= site_url('auditor/calendar') ?>');
-                } else {
-                    alert('! บันทึกข้อมูลไม่สำเร็จ');
-                }
-            }).fail((jhr, status, error) => console.error(jhr, status, error));
-        });
-
+        let inspectionID = '<?= $inspection['INSPE_ID'] ?>';
+        drawQuestionForm(inspectionID);
     });
 </script>

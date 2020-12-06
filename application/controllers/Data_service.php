@@ -99,4 +99,15 @@ class Data_service extends CI_Controller
             ->set_content_type('application/json')
             ->set_output(json_encode($result));
     }
+
+    public function ajax_get_questions_and_score()
+    {
+        $inspectionID = $this->input->post('inspectionID');
+        $planID = $this->input->post('plan');
+        $subjects = $this->subject_model->get_subject_by_inspection($inspectionID)->result_array();
+        $array = $this->data_model->make_tree_with_score($subjects, $planID);
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($array));
+    }
 }

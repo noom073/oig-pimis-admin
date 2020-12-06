@@ -37,38 +37,14 @@
                         <div class="row mb-2">
                             <div class="col-6">
                                 <div class="list-group">
-                                    <?php foreach ($inspections['odd'] as $inspection) { ?>
-                                        <?php if ($inspection['INSPECTION_ID'] == null) { ?>
-                                            <button type="button" class="list-group-item list-group-item-action inspect-list" data-inspection-id="<?= $inspection['INSPE_ID'] ?>"><?= $inspection['INSPE_NAME'] ?></button>
-                                        <?php } else { ?>
-                                            <a href="<?= site_url("auditor/inspected?plan={$plan['ID']}&inspectionID={$inspection['INSPE_ID']}")?>" class="list-group-item list-group-item-action" title="บันทึกข้อมูลแล้ว" data-inspection-id="<?= $inspection['INSPE_ID'] ?>">
-                                                <?= $inspection['INSPE_NAME'] ?>
-                                                <small class="d-block text-success">**บันทึกข้อมูลแล้ว</small>
-                                            </a>
-                                        <?php } ?>
-                                    <?php } ?>
-                                </div>
-                            </div>
-
-                            <div class="col-6">
-                                <div class="list-group">
-                                    <?php foreach ($inspections['even'] as $inspection) { ?>
-                                        <?php if ($inspection['INSPECTION_ID'] == null) { ?>
-                                            <button type="button" class="list-group-item list-group-item-action inspect-list" data-inspection-id="<?= $inspection['INSPE_ID'] ?>"><?= $inspection['INSPE_NAME'] ?></button>
-                                        <?php } else { ?>
-                                            <a href="<?= site_url("auditor/inspected?plan={$plan['ID']}&inspectionID={$inspection['INSPE_ID']}")?>" class="list-group-item list-group-item-action" title="บันทึกข้อมูลแล้ว" data-inspection-id="<?= $inspection['INSPE_ID'] ?>">
-                                                <?= $inspection['INSPE_NAME'] ?>
-                                                <small class="d-block text-success">**บันทึกข้อมูลแล้ว</small>
-                                            </a>
-                                        <?php } ?>
-                                    <?php } ?>
+                                    <button type="button" class="list-group-item list-group-item-action inspect-list"><?= $inspection['INSPE_NAME'] ?></button>
                                 </div>
                             </div>
                         </div>
 
                         <div>
-                            <div class="mb-3">
-                                <form id="auditor-inspect-form" class="d-none">
+                            <div>
+                                <form id="auditor-inspect-form">
                                     <h5>ฟอร์ม</h5>
                                     <div id="form-questionaire"></div>
                                     <div>

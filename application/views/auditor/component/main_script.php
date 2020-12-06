@@ -38,4 +38,4 @@
 <script src="<?= base_url('assets/admin_lte/plugins/datatables-responsive/js/dataTables.responsive.min.js') ?>"></script>
 <script src="<?= base_url('assets/admin_lte/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') ?>"></script>
 
-<?= $custom ?>
+<?= isset($custom) ? $custom : ''?>
