@@ -35,7 +35,7 @@
                     <h5 class="card-title"></h5>
                     <div class="card-text">
                         <div>
-                            <button class="btn btn-sm btn-primary" id="create-summary-btn">เพิ่มรายการสรุปผล</button>
+                            <!-- <button class="btn btn-sm btn-primary" id="create-summary-btn">เพิ่มรายการสรุปผล</button> -->
                             <button class="btn btn-sm btn-light" onclick="return window.history.back();">ย้อนกลับ</button>
                         </div>
                         <div id="loading-table">Loading data...</div>
@@ -159,7 +159,7 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">เพิ่มรายการสรุปผล</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">แก้ไขรายการสรุปผล</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>

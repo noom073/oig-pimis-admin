@@ -24,16 +24,16 @@ class Summary_model extends CI_Model
 
     public function get_summaries($planID)
     {
-        $sql = "SELECT a.ROW_ID, a.COMMENTION, TO_CHAR(a.TIME_UPDATE, 'YYYY/MM/DD HH24:MI:SS') AS TIME_UPDATE, b.INSPE_NAME, sum(c.SCORE) as SCORE
-            FROM PIMIS_INSPECTION_SUMMARY a
-            LEFT JOIN PIMIS_INSPECTIONS b
-                ON a.INSPECTION_ID = b.INSPE_ID 
-            LEFT JOIN PIMIS_INSPECTION_SCORE_AUDITOR c
-                ON a.INSPECTION_ID = c.INSPECTION_ID 
-                AND c.PLAN_ID = ?
-            WHERE a.PLAN_ID = ?
-            GROUP BY a.ROW_ID, a.COMMENTION, a.TIME_UPDATE, b.INSPE_NAME
-            ORDER BY a.ROW_ID";
+        $sql = "SELECT a.INSPE_ID,a.INSPE_NAME, SUM(b.SCORE) AS SCORE, c.ROW_ID, c.COMMENTION, TO_CHAR(c.TIME_UPDATE, 'YYYY/MM/DD HH24:MI:SS') AS TIME_UPDATE
+        FROM PIMIS_INSPECTIONS a
+        LEFT JOIN PIMIS_INSPECTION_SCORE_AUDITOR b 
+            ON a.INSPE_ID = b.INSPECTION_ID 
+            AND b.PLAN_ID = ?
+        LEFT JOIN PIMIS_INSPECTION_SUMMARY c
+            ON a.INSPE_ID = c.INSPECTION_ID 
+            AND c.PLAN_ID = ?
+        GROUP BY a.INSPE_ID, a.INSPE_NAME, c.ROW_ID, c.COMMENTION, c.TIME_UPDATE
+        ORDER BY a.INSPE_ID ";
         $query = $this->oracle->query($sql, array($planID, $planID));
         return $query;
     }
@@ -54,6 +54,13 @@ class Summary_model extends CI_Model
         $this->oracle->set('USER_UPDATE', $this->session->email);
         $this->oracle->where('ROW_ID', $array['summaryID']);
         $query = $this->oracle->update('PIMIS_INSPECTION_SUMMARY');
+        return $query;
+    }
+
+    public function delete_summary($summaryID)
+    {
+        $this->oracle->where('ROW_ID', $summaryID);
+        $query = $this->oracle->delete('PIMIS_INSPECTION_SUMMARY');
         return $query;
     }
 }

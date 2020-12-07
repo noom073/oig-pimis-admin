@@ -37,7 +37,14 @@
                     data: 'ROW_ID',
                     className: 'text-center',
                     render: (data, type, row, meta) => {
-                        let btn = `<button class="btn btn-sm btn-primary edit-btn" data-summary-id="${data}">แก้ไข</button>`;
+                        let btn = '';
+                        if (data === null) {
+                            btn = `<button class="btn btn-sm btn-primary create-summary-btn" data-summary-id="${data}" data-inspection-id="${row.INSPE_ID}">เพิ่ม</button>`;
+                        } else {
+                            let editBtn = `<button class="btn btn-sm btn-primary edit-btn" data-summary-id="${data}">แก้ไข</button>`;
+                            let deleteBtn = `<button class="btn btn-sm btn-danger delete-btn" data-summary-id="${data}">ลบ</button>`;
+                            btn = `${editBtn} ${deleteBtn}`;
+                        }
                         return btn;
                     }
                 }
@@ -59,10 +66,14 @@
         };
 
 
-        $("#create-summary-btn").click(async function() {
+        $(document).on('click', ".create-summary-btn", async function() {
+            let inspectionID = $(this).data('inspection-id');
             let inspections = await getInspections();
+            console.log(inspectionID);
             let option = '';
-            inspections.forEach(r => {
+            inspections.filter(r => {
+                return r.INSPE_ID == inspectionID
+            }).forEach(r => {
                 option += `<option value="${r.INSPE_ID}">${r.INSPE_NAME}</option>`;
             });
             $("#create-summary-inspections").html(option);
@@ -199,6 +210,27 @@
                     $("#update-summary-result").text('');
                 }, 3000);
             }).fail((jhr, status, error) => console.error(jhr, status, error));
+        });
+
+
+        $(document).on('click', '.delete-btn', function() {
+            $("#loading-table").removeClass('invisible');
+            let summaryID = $(this).data('summary-id');            
+            if (confirm('ยืนยันการลบข้อนี้')) {
+                $.post({
+                    url: '<?= site_url('auditor/ajax_delete_summary')?>',
+                    data: {summaryID:summaryID},
+                    dataType: 'json'
+                }).done(res=> {
+                    alert(res.text);
+                    summaryTable.ajax.reload(() => {
+                        $("#loading-table").addClass('invisible');
+                    });
+                }).fail((jhr, status, error) => console.error(jhr, status, error));
+                return true;
+            } else {
+                return false;
+            }
         });
 
     });

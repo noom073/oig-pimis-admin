@@ -236,13 +236,12 @@ class Auditor extends CI_Controller
 			$dataForScript['planID'] = $planID;
 			$dataForScript['inspection'] = $inspection;
 			$script['custom'] = $this->load->view('auditor/inspection_summary/script', $dataForScript, true);
-			$header['custom'] = $this->load->view('auditor/inspection_summary/custom_header', '', true);
 
 			$data['inspection'] = $inspection;
 			$data['plan'] = $planData->row_array();
 			$data['sumScore'] = $sumScore;
 
-			$component['header'] 			= $this->load->view('auditor/component/header', $header, true);
+			$component['header'] 			= $this->load->view('auditor/component/header', '', true);
 			$component['navbar'] 			= $this->load->view('auditor/component/navbar', '', true);
 			$component['mainSideBar'] 		= $this->load->view('auditor/component/sidebar', $sideBar, true);
 			$component['mainFooter'] 		= $this->load->view('auditor/component/footer_text', '', true);
@@ -325,6 +324,22 @@ class Auditor extends CI_Controller
 			$result['status'] = false;
 			$result['text'] = 'บันทึกไม่สำเร็จ';
 		}	
+		$this->output
+			->set_content_type('application/json')
+			->set_output(json_encode($result));
+	}
+
+	public function ajax_delete_summary()
+	{
+		$summaryID = $this->input->post('summaryID');
+		$delete = $this->summary_model->delete_summary($summaryID);
+		if ($delete) {
+			$result['status'] = true;
+			$result['text'] = 'ลบข้อมูลสำเร็จ';
+		} else {
+			$result['status'] = false;
+			$result['text'] = 'ลบข้อมูลไม่สำเร็จ';
+		}
 		$this->output
 			->set_content_type('application/json')
 			->set_output(json_encode($result));
