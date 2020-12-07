@@ -37,7 +37,7 @@
                     data: 'ROW_ID',
                     className: 'text-center',
                     render: (data, type, row, meta) => {
-                        let btn = `<button class="btn btn-sm btn-primary" data-summary-id="${data}">แก้ไข</button>`;
+                        let btn = `<button class="btn btn-sm btn-primary edit-btn" data-summary-id="${data}">แก้ไข</button>`;
                         return btn;
                     }
                 }
@@ -91,7 +91,6 @@
                 data: formData,
                 dataType: 'json'
             }).done(res => {
-                console.log(res);
                 if (res.status) {
                     $("#create-summary-result").prop('class', 'alert alert-success');
                     $("#create-summary-result").text(res.text);
@@ -117,7 +116,6 @@
             let thisForm = $(this);
             let planID = thisForm.data('plan-id');
             let formData = thisForm.serialize() + `&plan=${planID}`;
-            console.log(formData);
             $.post({
                 url: '<?= site_url('auditor/ajax_update_plan_score') ?>',
                 data: formData,
@@ -139,6 +137,66 @@
                 setTimeout(() => {
                     $("#set-plan-score-result").prop('class', '');
                     $("#set-plan-score-result").text('');
+                }, 3000);
+            }).fail((jhr, status, error) => console.error(jhr, status, error));
+        });
+
+
+        const getsummaryDetail = summaryID => {
+            console.log('Loading summary detail...');
+            return $.post({
+                url: '<?= site_url('auditor/ajax_get_summary_detail') ?>',
+                data: {
+                    summaryID: summaryID
+                },
+                dataType: 'json'
+            }).done(res => {
+                console.log('Loading summary detail complete');
+            }).fail((jhr, status, error) => console.error(jhr, status, error));
+        };
+
+
+        $(document).on('click', ".edit-btn", async function() {
+            let summaryID = $(this).data('summary-id');
+            let summaryData = await getsummaryDetail(summaryID);
+            let inspections = await getInspections();
+            let option = '';
+            inspections.forEach(r => {
+                option += `<option value="${r.INSPE_ID}">${r.INSPE_NAME}</option>`;
+            });
+            $("#update-summary-form").data('summary-id', summaryID);
+            $("#update-summary-inspections").html(option);
+            $("#update-summary-inspections").val(summaryData.INSPECTION_ID);
+            $("#update-summary-comment").val(summaryData.COMMENTION);
+            $("#update-summary-modal").modal();
+        });
+
+
+        $("#update-summary-form").submit(function(event) {
+            event.preventDefault();
+            $("#loading-table").removeClass('invisible');
+            let thisForm = $(this);
+            let summaryID = thisForm.data('summary-id');
+            let formData = thisForm.serialize() + `&summaryID=${summaryID}`;
+            $.post({
+                url: '<?= site_url('auditor/ajax_update_summary') ?>',
+                data: formData,
+                dataType: 'json'
+            }).done(res => {
+                if (res.status) {
+                    $("#update-summary-result").prop('class', 'alert alert-success');
+                    $("#update-summary-result").text(res.text);
+                    summaryTable.ajax.reload(() => {
+                        $("#loading-table").addClass('invisible');
+                    });
+                } else {
+                    $("#update-summary-result").prop('class', 'alert alert-danger');
+                    $("#update-summary-result").text(res.text);
+                }
+
+                setTimeout(() => {
+                    $("#update-summary-result").prop('class', '');
+                    $("#update-summary-result").text('');
                 }, 3000);
             }).fail((jhr, status, error) => console.error(jhr, status, error));
         });

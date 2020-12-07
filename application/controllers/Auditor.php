@@ -302,4 +302,31 @@ class Auditor extends CI_Controller
 			->set_content_type('application/json')
 			->set_output(json_encode($result));		
 	}
+
+	public function ajax_get_summary_detail()
+	{
+		$summaryID = $this->input->post('summaryID');
+		$detail = $this->summary_model->get_summary_detail($summaryID)->row_array();
+		$this->output
+			->set_content_type('application/json')
+			->set_output(json_encode($detail));
+	}
+
+	public function ajax_update_summary()
+	{		
+		$data['summaryID'] = $this->input->post('summaryID');
+		$data['inspectionID'] = $this->input->post('inspectionID');
+		$data['comment'] = $this->input->post('comment');
+		$insert = $this->summary_model->update_summary($data);
+		if ($insert) {
+			$result['status'] = true;
+			$result['text'] = 'บันทึกสำเร็จ';
+		} else {
+			$result['status'] = false;
+			$result['text'] = 'บันทึกไม่สำเร็จ';
+		}	
+		$this->output
+			->set_content_type('application/json')
+			->set_output(json_encode($result));
+	}
 }

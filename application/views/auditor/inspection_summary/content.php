@@ -123,7 +123,7 @@
     </section>
 
     <div>
-        <!-- Modal -->
+        <!-- ADD SUMMARY Modal -->
         <div class="modal fade" id="create-summary-modal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -152,5 +152,37 @@
                 </div>
             </div>
         </div>
+        <!-- END ADD SUMMARY Modal -->
+
+        <!-- UPDATE SUMMARY Modal -->
+        <div class="modal fade" id="update-summary-modal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">เพิ่มรายการสรุปผล</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="update-summary-form">
+                            <div class="form-group">
+                                <label>สายการตรวจ</label>
+                                <select class="form-control" name="inspectionID" id="update-summary-inspections"></select>
+                            </div>
+                            <div class="form-group">
+                                <label>รายละเอียด</label>
+                                <textarea class="form-control" name="comment" id="update-summary-comment"></textarea>
+                            </div>
+                            <div id="update-summary-result"></div>
+                            <button type="submit" class="btn btn-primary">บันทึก</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                        </form>
+                    </div>
+                    <div class="modal-footer"></div>
+                </div>
+            </div>
+        </div>
+        <!-- UPDATE ADD SUMMARY Modal -->
     </div>
 </div>

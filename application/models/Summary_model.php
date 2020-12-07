@@ -37,4 +37,23 @@ class Summary_model extends CI_Model
         $query = $this->oracle->query($sql, array($planID, $planID));
         return $query;
     }
+
+    public function get_summary_detail($summaryID)
+    {
+        $this->oracle->where('ROW_ID', $summaryID);
+        $query = $this->oracle->get('PIMIS_INSPECTION_SUMMARY');
+        return $query;
+    }
+
+    public function update_summary($array)
+    {
+        $date = date("Y-m-d H:i:s");
+        $this->oracle->set('INSPECTION_ID', $array['inspectionID']);
+        $this->oracle->set('COMMENTION', $array['comment']);
+        $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
+        $this->oracle->set('USER_UPDATE', $this->session->email);
+        $this->oracle->where('ROW_ID', $array['summaryID']);
+        $query = $this->oracle->update('PIMIS_INSPECTION_SUMMARY');
+        return $query;
+    }
 }
