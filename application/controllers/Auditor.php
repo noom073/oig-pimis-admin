@@ -13,6 +13,7 @@ class Auditor extends CI_Controller
 		$this->load->library('session_services');
 
 		$this->load->model('questionaire_model');
+		$this->load->model('summary_model');
 	}
 
 	public function index()
@@ -216,5 +217,89 @@ class Auditor extends CI_Controller
 			// ไม่พบ planID ให้กลับไปหน้า calendar
 			redirect('auditor/calendar');
 		}
+	}
+
+	public function inspection_summary()
+	{
+		$planID = $this->input->get('plan');
+		$inspectionID = $this->input->get('inspectionID');
+		$planData = $this->questionaire_model->get_plan($planID);
+		if ($planData->num_rows() == 1) {
+			//พบ planID 
+			$username = $this->session->nameth;
+			$userType = $this->session_services->get_user_type_name($this->session->usertype);
+			$inspection = $this->questionaire_model->get_a_inspection($inspectionID)->row_array();
+			$sumScore = $this->questionaire_model->get_sum_form_score_by_planid($planID)->row_array();
+
+			$sideBar['name'] = $username;
+			$sideBar['userType'] = $userType;
+			$dataForScript['planID'] = $planID;
+			$dataForScript['inspection'] = $inspection;
+			$script['custom'] = $this->load->view('auditor/inspection_summary/script', $dataForScript, true);
+			$header['custom'] = $this->load->view('auditor/inspection_summary/custom_header', '', true);
+
+			$data['inspection'] = $inspection;
+			$data['plan'] = $planData->row_array();
+			$data['sumScore'] = $sumScore;
+
+			$component['header'] 			= $this->load->view('auditor/component/header', $header, true);
+			$component['navbar'] 			= $this->load->view('auditor/component/navbar', '', true);
+			$component['mainSideBar'] 		= $this->load->view('auditor/component/sidebar', $sideBar, true);
+			$component['mainFooter'] 		= $this->load->view('auditor/component/footer_text', '', true);
+			$component['controllerSidebar'] = $this->load->view('auditor/component/controller_sidebar', '', true);
+			$component['contentWrapper'] 	= $this->load->view('auditor/inspection_summary/content', $data, true);
+			$component['jsScript'] 			= $this->load->view('auditor/component/main_script', $script, true);
+
+			$this->load->view('auditor/template', $component);
+		} else {
+			// ไม่พบ planID ให้กลับไปหน้า calendar
+			redirect('auditor/calendar');
+		}
+	}
+
+	public function ajax_add_summary()
+	{		
+		$data['planID'] = $this->input->post('planID');
+		$data['inspectionID'] = $this->input->post('inspectionID');
+		$data['comment'] = $this->input->post('comment');
+		$insert = $this->summary_model->add_summary($data);
+		if ($insert) {
+			$result['status'] = true;
+			$result['text'] = 'บันทึกสำเร็จ';
+		} else {
+			$result['status'] = false;
+			$result['text'] = 'บันทึกไม่สำเร็จ';
+		}	
+		$this->output
+			->set_content_type('application/json')
+			->set_output(json_encode($result));
+	}
+
+	public function ajax_get_summary()
+	{
+		$planID = $this->input->post('planID');
+		$summaries = $this->summary_model->get_summaries($planID)->result_array();
+		$this->output
+			->set_content_type('application/json')
+			->set_output(json_encode($summaries));
+	}
+
+	public function ajax_update_plan_score()
+	{
+		$data['planID'] = $this->input->post('plan');
+		$data['policyScore'] = $this->input->post('policyScore');
+		$data['prepareScore'] = $this->input->post('prepareScore');
+		$update = $this->questionaire_model->update_plan_score($data);
+		if ($update) {
+			$result['status'] = true;
+			$result['text'] = 'บันทึกสำเร็จ';
+			$result['data'] = $data;
+		} else {
+			$result['status'] = false;
+			$result['text'] = 'บันทึกไม่สำเร็จ';
+		}
+		$this->output
+			->set_content_type('application/json')
+			->set_output(json_encode($result));		
 	}
 }

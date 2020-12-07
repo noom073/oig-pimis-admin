@@ -46,7 +46,7 @@ class Questionaire_model extends CI_Model
 
     public function get_plan($planID)
     {
-        $sql = 'SELECT a.ID, a."SET", a.INS_UNIT, a.INS_DATE, a.FINISH_DATE,
+        $sql = 'SELECT a.ID, a."SET", a.INS_UNIT, a.INS_DATE, a.FINISH_DATE, a.POLICY_SCORE, a.PREPARE_SCORE,
         b.DEPARTMENT_NAME, b.STANDFOR 
         FROM PITS_PLAN a
         INNER JOIN PITS_UNIT b
@@ -107,6 +107,25 @@ class Questionaire_model extends CI_Model
             AND b.PLAN_ID = ?
         GROUP BY a.INSPE_ID, a.INSPE_NAME, b.INSPECTION_ID
         ORDER BY a.INSPE_ID";
+        $query = $this->oracle->query($sql, array($planID));
+        return $query;
+    }
+
+    public function update_plan_score($array)
+    {
+        $date = date("Y-m-d H:i:s");
+        $this->oracle->set('POLICY_SCORE', $array['policyScore']);
+        $this->oracle->set('PREPARE_SCORE', $array['prepareScore']);
+        $this->oracle->where('ID', $array['planID']);
+        $update = $this->oracle->update('PITS_PLAN');
+        return $update;
+    }
+
+    public function get_sum_form_score_by_planid($planID)
+    {
+        $sql = "SELECT SUM(SCORE) as SCORE
+            FROM PIMIS_INSPECTION_SCORE_AUDITOR
+            WHERE PLAN_ID = ?";
         $query = $this->oracle->query($sql, array($planID));
         return $query;
     }

@@ -32,8 +32,11 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title">การรตรวจตามสายงาน</h5>
+                    <h5 class="card-title"></h5>
                     <div class="card-text">
+                        <div>
+                            <button class="btn btn-sm btn-light" onclick="return window.history.back();">ย้อนกลับ</button>
+                        </div>
                         <div class="row mb-2">
                             <div class="col-6">
                                 <div class="list-group">
@@ -41,7 +44,7 @@
                                         <?php if ($inspection['INSPECTION_ID'] == null) { ?>
                                             <button type="button" class="list-group-item list-group-item-action inspect-list" data-inspection-id="<?= $inspection['INSPE_ID'] ?>"><?= $inspection['INSPE_NAME'] ?></button>
                                         <?php } else { ?>
-                                            <a href="<?= site_url("auditor/inspected?plan={$plan['ID']}&inspectionID={$inspection['INSPE_ID']}")?>" class="list-group-item list-group-item-action" title="บันทึกข้อมูลแล้ว" data-inspection-id="<?= $inspection['INSPE_ID'] ?>">
+                                            <a href="<?= site_url("auditor/inspected?plan={$plan['ID']}&inspectionID={$inspection['INSPE_ID']}") ?>" class="list-group-item list-group-item-action" title="บันทึกข้อมูลแล้ว" data-inspection-id="<?= $inspection['INSPE_ID'] ?>">
                                                 <?= $inspection['INSPE_NAME'] ?>
                                                 <small class="d-block text-success">**บันทึกข้อมูลแล้ว</small>
                                             </a>
@@ -56,7 +59,7 @@
                                         <?php if ($inspection['INSPECTION_ID'] == null) { ?>
                                             <button type="button" class="list-group-item list-group-item-action inspect-list" data-inspection-id="<?= $inspection['INSPE_ID'] ?>"><?= $inspection['INSPE_NAME'] ?></button>
                                         <?php } else { ?>
-                                            <a href="<?= site_url("auditor/inspected?plan={$plan['ID']}&inspectionID={$inspection['INSPE_ID']}")?>" class="list-group-item list-group-item-action" title="บันทึกข้อมูลแล้ว" data-inspection-id="<?= $inspection['INSPE_ID'] ?>">
+                                            <a href="<?= site_url("auditor/inspected?plan={$plan['ID']}&inspectionID={$inspection['INSPE_ID']}") ?>" class="list-group-item list-group-item-action" title="บันทึกข้อมูลแล้ว" data-inspection-id="<?= $inspection['INSPE_ID'] ?>">
                                                 <?= $inspection['INSPE_NAME'] ?>
                                                 <small class="d-block text-success">**บันทึกข้อมูลแล้ว</small>
                                             </a>

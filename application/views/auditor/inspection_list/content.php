@@ -43,7 +43,7 @@
                                 <i class="far fa-file-alt"></i>
                                 บันทึกผลการตรวจ
                             </a>
-                            <a href="<?= site_url("auditor/inspect_summary?plan={$plan['ID']}") ?>" class="btn btn-info">
+                            <a href="<?= site_url("auditor/inspection_summary?plan={$plan['ID']}") ?>" class="btn btn-info">
                                 <i class="far fa-file-alt"></i>
                                 สรุปผลการตรวจ
                             </a>

@@ -32,8 +32,11 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title">การรตรวจตามสายงาน</h5>
+                    <h5 class="card-title"></h5>
                     <div class="card-text">
+                        <div>
+                            <button class="btn btn-sm btn-light" onclick="return window.history.back();">ย้อนกลับ</button>
+                        </div>
                         <div class="row mb-2">
                             <div class="col-6">
                                 <div class="list-group">
