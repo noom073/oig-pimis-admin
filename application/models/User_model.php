@@ -45,6 +45,7 @@ class User_model extends CI_Model
         $this->oracle->set('EMAIL', $array['email']);
         $this->oracle->set('USER_TYPE', $array['userType']);
         $this->oracle->set('USER_ACTIVE', $array['activation']);
+        $this->oracle->set('SYSTEM', 'pimis');
         $this->oracle->set('USER_UPDATE', $array['updater']);
         $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
         $insert = $this->oracle->insert('PIMIS_USER');

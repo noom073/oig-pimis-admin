@@ -39,7 +39,7 @@
                         dataType: 'json'
                     }).done(function(res) {
                         let events = res.map(r => {
-                            let bgColor = r.squad == 1 ? '#FA7A35' : '#00A170';
+                            let bgColor = r.squad == 1 ? '#007bff' : '#00A170';
                             return {
                                 title: r.unitAcm,
                                 start: r.dateStart,

@@ -20,6 +20,7 @@ class Subject_model extends CI_Model
         $this->oracle->set('USER_UPDATE', $this->session->email);
         $this->oracle->set('SUBJECT_ORDER', $array['subjectOrder']);
         $this->oracle->set('SUBJECT_LEVEL', '1');
+        $this->oracle->set('SUBJECT_STATUS', 'y');
         $query = $this->oracle->insert('PIMIS_SUBJECT');
         return $query;
     }
@@ -48,6 +49,7 @@ class Subject_model extends CI_Model
         $this->oracle->set('USER_UPDATE', $this->session->email);
         $this->oracle->set('SUBJECT_ORDER', $array['subjectOrder']);
         $this->oracle->set('SUBJECT_LEVEL', $array['subjectLevel']);
+        $this->oracle->set('SUBJECT_STATUS', 'y');
         $query = $this->oracle->insert('PIMIS_SUBJECT');
         return $query;
     }
