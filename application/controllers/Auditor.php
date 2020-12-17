@@ -21,14 +21,14 @@ class Auditor extends CI_Controller
 		$username = $this->session->nameth;
 		$userType = $this->session_services->get_user_type_name($this->session->usertype);
 
-		$sideBar['name'] = $username;
-		$sideBar['userType'] = $userType;
+		$sideBar['name'] 	= $this->session->nameth;
+		$sideBar['userType'] 	= array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
 		$script['custom'] = $this->load->view('auditor/index_content/script', '', true);
 		$header['custom'] = '';
 
 		$component['header'] 			= $this->load->view('auditor/component/header', $header, true);
 		$component['navbar'] 			= $this->load->view('auditor/component/navbar', '', true);
-		$component['mainSideBar'] 		= $this->load->view('auditor/component/sidebar', $sideBar, true);
+		$component['mainSideBar'] 		= $this->load->view('sidebar/main-sidebar', $sideBar, true);
 		$component['mainFooter'] 		= $this->load->view('auditor/component/footer_text', '', true);
 		$component['controllerSidebar'] = $this->load->view('auditor/component/controller_sidebar', '', true);
 		$component['contentWrapper'] 	= $this->load->view('auditor/index_content/content', '', true);
@@ -42,14 +42,14 @@ class Auditor extends CI_Controller
 		$username = $this->session->nameth;
 		$userType = $this->session_services->get_user_type_name($this->session->usertype);
 
-		$sideBar['name'] = $username;
-		$sideBar['userType'] = $userType;
+		$sideBar['name'] 	= $this->session->nameth;
+		$sideBar['userType'] 	= array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
 		$script['custom'] = $this->load->view('auditor/calendar/script', '', true);
 		$header['custom'] = $this->load->view('auditor/calendar/custom_header', '', true);
 
 		$component['header'] 			= $this->load->view('auditor/component/header', $header, true);
 		$component['navbar'] 			= $this->load->view('auditor/component/navbar', '', true);
-		$component['mainSideBar'] 		= $this->load->view('auditor/component/sidebar', $sideBar, true);
+		$component['mainSideBar'] 		= $this->load->view('sidebar/main-sidebar', $sideBar, true);
 		$component['mainFooter'] 		= $this->load->view('auditor/component/footer_text', '', true);
 		$component['controllerSidebar'] = $this->load->view('auditor/component/controller_sidebar', '', true);
 		$component['contentWrapper'] 	= $this->load->view('auditor/calendar/content', '', true);
@@ -67,8 +67,8 @@ class Auditor extends CI_Controller
 			$username = $this->session->nameth;
 			$userType = $this->session_services->get_user_type_name($this->session->usertype);
 
-			$sideBar['name'] = $username;
-			$sideBar['userType'] = $userType;
+			$sideBar['name'] 	= $this->session->nameth;
+			$sideBar['userType'] 	= array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
 			$dataForScript['planID'] = $planID;
 			$script['custom'] = $this->load->view('auditor/inspection_list/script', $dataForScript, true);
 
@@ -76,7 +76,7 @@ class Auditor extends CI_Controller
 
 			$component['header'] 			= $this->load->view('auditor/component/header', '', true);
 			$component['navbar'] 			= $this->load->view('auditor/component/navbar', '', true);
-			$component['mainSideBar'] 		= $this->load->view('auditor/component/sidebar', $sideBar, true);
+			$component['mainSideBar'] 		= $this->load->view('sidebar/main-sidebar', $sideBar, true);
 			$component['mainFooter'] 		= $this->load->view('auditor/component/footer_text', '', true);
 			$component['controllerSidebar'] = $this->load->view('auditor/component/controller_sidebar', '', true);
 			$component['contentWrapper'] 	= $this->load->view('auditor/inspection_list/content', $data, true);
@@ -98,8 +98,8 @@ class Auditor extends CI_Controller
 			$username = $this->session->nameth;
 			$userType = $this->session_services->get_user_type_name($this->session->usertype);
 
-			$sideBar['name'] = $username;
-			$sideBar['userType'] = $userType;
+			$sideBar['name'] 	= $this->session->nameth;
+			$sideBar['userType'] 	= array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
 			$dataForScript['planID'] = $planID;
 			$script['custom'] = $this->load->view('auditor/inspect/script', $dataForScript, true);
 			$header['custom'] = $this->load->view('auditor/inspect/custom_header', '', true);
@@ -120,7 +120,7 @@ class Auditor extends CI_Controller
 
 			$component['header'] 			= $this->load->view('auditor/component/header', $header, true);
 			$component['navbar'] 			= $this->load->view('auditor/component/navbar', '', true);
-			$component['mainSideBar'] 		= $this->load->view('auditor/component/sidebar', $sideBar, true);
+			$component['mainSideBar'] 		= $this->load->view('sidebar/main-sidebar', $sideBar, true);
 			$component['mainFooter'] 		= $this->load->view('auditor/component/footer_text', '', true);
 			$component['controllerSidebar'] = $this->load->view('auditor/component/controller_sidebar', '', true);
 			$component['contentWrapper'] 	= $this->load->view('auditor/inspect/content', $data, true);
@@ -159,8 +159,8 @@ class Auditor extends CI_Controller
 			$userType = $this->session_services->get_user_type_name($this->session->usertype);
 			$inspection = $this->questionaire_model->get_a_inspection($inspectionID)->row_array();
 
-			$sideBar['name'] = $username;
-			$sideBar['userType'] = $userType;
+			$sideBar['name'] 	= $this->session->nameth;
+			$sideBar['userType'] 	= array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
 			$dataForScript['planID'] = $planID;
 			$dataForScript['inspection'] = $inspection;
 			$script['custom'] = $this->load->view('auditor/inspected/script', $dataForScript, true);
@@ -171,7 +171,7 @@ class Auditor extends CI_Controller
 
 			$component['header'] 			= $this->load->view('auditor/component/header', $header, true);
 			$component['navbar'] 			= $this->load->view('auditor/component/navbar', '', true);
-			$component['mainSideBar'] 		= $this->load->view('auditor/component/sidebar', $sideBar, true);
+			$component['mainSideBar'] 		= $this->load->view('sidebar/main-sidebar', $sideBar, true);
 			$component['mainFooter'] 		= $this->load->view('auditor/component/footer_text', '', true);
 			$component['controllerSidebar'] = $this->load->view('auditor/component/controller_sidebar', '', true);
 			$component['contentWrapper'] 	= $this->load->view('auditor/inspected/content', $data, true);
@@ -195,8 +195,8 @@ class Auditor extends CI_Controller
 			$userType = $this->session_services->get_user_type_name($this->session->usertype);
 			$inspection = $this->questionaire_model->get_a_inspection($inspectionID)->row_array();
 
-			$sideBar['name'] = $username;
-			$sideBar['userType'] = $userType;
+			$sideBar['name'] 	= $this->session->nameth;
+			$sideBar['userType'] 	= array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
 			$dataForScript['planID'] = $planID;
 			$dataForScript['inspection'] = $inspection;
 			$script['custom'] = $this->load->view('auditor/inspection_result/script', $dataForScript, true);
@@ -206,7 +206,7 @@ class Auditor extends CI_Controller
 
 			$component['header'] 			= $this->load->view('auditor/component/header', '', true);
 			$component['navbar'] 			= $this->load->view('auditor/component/navbar', '', true);
-			$component['mainSideBar'] 		= $this->load->view('auditor/component/sidebar', $sideBar, true);
+			$component['mainSideBar'] 		= $this->load->view('sidebar/main-sidebar', $sideBar, true);
 			$component['mainFooter'] 		= $this->load->view('auditor/component/footer_text', '', true);
 			$component['controllerSidebar'] = $this->load->view('auditor/component/controller_sidebar', '', true);
 			$component['contentWrapper'] 	= $this->load->view('auditor/inspection_result/content', $data, true);
@@ -231,8 +231,8 @@ class Auditor extends CI_Controller
 			$inspection = $this->questionaire_model->get_a_inspection($inspectionID)->row_array();
 			$sumScore = $this->questionaire_model->get_sum_form_score_by_planid($planID)->row_array();
 
-			$sideBar['name'] = $username;
-			$sideBar['userType'] = $userType;
+			$sideBar['name'] 	= $this->session->nameth;
+			$sideBar['userType'] 	= array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
 			$dataForScript['planID'] = $planID;
 			$dataForScript['inspection'] = $inspection;
 			$script['custom'] = $this->load->view('auditor/inspection_summary/script', $dataForScript, true);
@@ -243,7 +243,7 @@ class Auditor extends CI_Controller
 
 			$component['header'] 			= $this->load->view('auditor/component/header', '', true);
 			$component['navbar'] 			= $this->load->view('auditor/component/navbar', '', true);
-			$component['mainSideBar'] 		= $this->load->view('auditor/component/sidebar', $sideBar, true);
+			$component['mainSideBar'] 		= $this->load->view('sidebar/main-sidebar', $sideBar, true);
 			$component['mainFooter'] 		= $this->load->view('auditor/component/footer_text', '', true);
 			$component['controllerSidebar'] = $this->load->view('auditor/component/controller_sidebar', '', true);
 			$component['contentWrapper'] 	= $this->load->view('auditor/inspection_summary/content', $data, true);
@@ -257,7 +257,7 @@ class Auditor extends CI_Controller
 	}
 
 	public function ajax_add_summary()
-	{		
+	{
 		$data['planID'] = $this->input->post('planID');
 		$data['inspectionID'] = $this->input->post('inspectionID');
 		$data['comment'] = $this->input->post('comment');
@@ -268,7 +268,7 @@ class Auditor extends CI_Controller
 		} else {
 			$result['status'] = false;
 			$result['text'] = 'บันทึกไม่สำเร็จ';
-		}	
+		}
 		$this->output
 			->set_content_type('application/json')
 			->set_output(json_encode($result));
@@ -299,7 +299,7 @@ class Auditor extends CI_Controller
 		}
 		$this->output
 			->set_content_type('application/json')
-			->set_output(json_encode($result));		
+			->set_output(json_encode($result));
 	}
 
 	public function ajax_get_summary_detail()
@@ -312,7 +312,7 @@ class Auditor extends CI_Controller
 	}
 
 	public function ajax_update_summary()
-	{		
+	{
 		$data['summaryID'] = $this->input->post('summaryID');
 		$data['inspectionID'] = $this->input->post('inspectionID');
 		$data['comment'] = $this->input->post('comment');
@@ -323,7 +323,7 @@ class Auditor extends CI_Controller
 		} else {
 			$result['status'] = false;
 			$result['text'] = 'บันทึกไม่สำเร็จ';
-		}	
+		}
 		$this->output
 			->set_content_type('application/json')
 			->set_output(json_encode($result));

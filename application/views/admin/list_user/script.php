@@ -1,7 +1,7 @@
 <script>
     $(document).ready(function() {
-        console.log('ok list_user');
-
+        $("li#admin-manage-user-section").addClass('menu-open');
+        $("a#admin-manage-user-subject").addClass('active');
         $("a#admin-list-user").addClass('active');
 
 

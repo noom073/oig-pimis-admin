@@ -1,6 +1,6 @@
 <script>
     $(document).ready(function() {
         console.log('ok index');
-        $("a#admin-index").addClass('active');
+        $("a#auditor-user-index").addClass('active');
     });
 </script>

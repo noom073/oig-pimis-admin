@@ -21,12 +21,14 @@ class Controller_user extends CI_Controller
     {
         $data['name']       = $this->session->nameth;
         $data['userType']   = $this->session_services->get_user_type_name($this->session->usertype);
+        $sideBar['name']     = $this->session->nameth;
+        $sideBar['userType']     = array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
 
         $script['customScript'] = $this->load->view('controller_user/index_content/script', '', true);
 
         $component['header']            = $this->load->view('controller_user/component/header', '', true);
         $component['navbar']            = $this->load->view('controller_user/component/navbar', '', true);
-        $component['mainSideBar']       = $this->load->view('controller_user/component/sidebar', $data, true);
+        $component['mainSideBar']         = $this->load->view('sidebar/main-sidebar', $sideBar, true);
         $component['mainFooter']        = $this->load->view('controller_user/component/footer_text', '', true);
         $component['controllerSidebar'] = $this->load->view('controller_user/component/controller_sidebar', '', true);
         $component['contentWrapper']    = $this->load->view('controller_user/index_content/content', $data, true);
@@ -39,12 +41,13 @@ class Controller_user extends CI_Controller
     {
         $data['name']       = $this->session->nameth;
         $data['userType']   = $this->session_services->get_user_type_name($this->session->usertype);
-
+        $sideBar['name']     = $this->session->nameth;
+        $sideBar['userType']     = array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
         $script['customScript'] = $this->load->view('controller_user/subject/script', '', true);
 
         $component['header']            = $this->load->view('controller_user/component/header', '', true);
         $component['navbar']            = $this->load->view('controller_user/component/navbar', '', true);
-        $component['mainSideBar']       = $this->load->view('controller_user/component/sidebar', $data, true);
+        $component['mainSideBar']         = $this->load->view('sidebar/main-sidebar', $sideBar, true);
         $component['mainFooter']        = $this->load->view('controller_user/component/footer_text', '', true);
         $component['controllerSidebar'] = $this->load->view('controller_user/component/controller_sidebar', '', true);
         $component['contentWrapper']    = $this->load->view('controller_user/subject/content', $data, true);
@@ -149,11 +152,13 @@ class Controller_user extends CI_Controller
             $data['userType']   = $this->session_services->get_user_type_name($this->session->usertype);
             $data['subject']    = $this->subject_model->get_a_subject($subjectID)->row_array();
             // $data['questions']  = $this->question_model->get_all_question($subjectID)->result_array();
+            $sideBar['name']     = $this->session->nameth;
+            $sideBar['userType']     = array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
             $script['customScript'] = $this->load->view('controller_user/questions/script', $data, true);
 
             $component['header']            = $this->load->view('controller_user/component/header', '', true);
             $component['navbar']            = $this->load->view('controller_user/component/navbar', '', true);
-            $component['mainSideBar']       = $this->load->view('controller_user/component/sidebar', $data, true);
+            $component['mainSideBar']       = $this->load->view('sidebar/main-sidebar', $sideBar, true);
             $component['mainFooter']        = $this->load->view('controller_user/component/footer_text', '', true);
             $component['controllerSidebar'] = $this->load->view('controller_user/component/controller_sidebar', '', true);
             $component['contentWrapper']    = $this->load->view('controller_user/questions/content', $data, true);
@@ -217,12 +222,13 @@ class Controller_user extends CI_Controller
     {
         $data['name']       = $this->session->nameth;
         $data['userType']   = $this->session_services->get_user_type_name($this->session->usertype);
-
+        $sideBar['name'] 	= $this->session->nameth;
+		$sideBar['userType'] 	= array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
         $script['customScript'] = $this->load->view('controller_user/index_content/script', '', true);
 
         $component['header']            = $this->load->view('controller_user/component/header', '', true);
         $component['navbar']            = $this->load->view('controller_user/component/navbar', '', true);
-        $component['mainSideBar']       = $this->load->view('controller_user/component/sidebar', $data, true);
+        $component['mainSideBar']         = $this->load->view('sidebar/main-sidebar', $sideBar, true);
         $component['mainFooter']        = $this->load->view('controller_user/component/footer_text', '', true);
         $component['controllerSidebar'] = $this->load->view('controller_user/component/controller_sidebar', '', true);
         $component['contentWrapper']    = $this->load->view('controller_user/index_content/content', $data, true);

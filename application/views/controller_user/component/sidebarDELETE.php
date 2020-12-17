@@ -26,13 +26,13 @@
         <!-- Sidebar Menu -->
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <li class="nav-header">ส่วนผู้จัดการข้อมูล</li>
                 <li class="nav-item">
                     <a href="<?= site_url('controller_user/index') ?>" id="controller-user-index" class="nav-link">
                         <i class="nav-icon fas fa-home"></i>
                         <p>หน้าหลัก</p>
                     </a>
                 </li>
-                <li class="nav-header">ส่วนจัดการข้อมูล</li>
                 <li class="nav-item has-treeview" id="controller-user-headnav-manage-data">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-database"></i>
@@ -50,7 +50,6 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-header">ส่วนสรุปผล</li>
                 <li class="nav-item has-treeview" id="controller-user-headnav-summarize">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-chart-line"></i>

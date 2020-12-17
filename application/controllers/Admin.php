@@ -18,12 +18,14 @@ class Admin extends CI_Controller
 	{
 		$data['name'] 		= $this->session->nameth;
 		$data['userType'] 	= $this->session_services->get_user_type_name($this->session->usertype);
-
+		// $sideBar['userType'] 	= $this->session_services->get_user_type_name($this->session->usertype);
+		$sideBar['name'] 	= $this->session->nameth;
+		$sideBar['userType'] 	= array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
 		$script['customScript'] = $this->load->view('admin/index_content/script', '', true);
 
 		$component['header'] 			= $this->load->view('admin/component/header', '', true);
 		$component['navbar'] 			= $this->load->view('admin/component/navbar', '', true);
-		$component['mainSideBar'] 		= $this->load->view('admin/component/sidebar', $data, true);
+		$component['mainSideBar'] 		= $this->load->view('sidebar/main-sidebar', $sideBar, true);
 		$component['mainFooter'] 		= $this->load->view('admin/component/footer_text', '', true);
 		$component['controllerSidebar'] = $this->load->view('admin/component/controller_sidebar', '', true);
 		$component['contentWrapper'] 	= $this->load->view('admin/index_content/content', $data, true);
@@ -36,12 +38,14 @@ class Admin extends CI_Controller
 	{
 		$data['name'] 		= $this->session->nameth;
 		$data['userType'] 	= $this->session_services->get_user_type_name($this->session->usertype);
-
+		// $sideBar['userType'] 	= $this->session_services->get_user_type_name($this->session->usertype);
+		$sideBar['name'] 	= $this->session->nameth;
+		$sideBar['userType'] 	= array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
 		$script['customScript'] 		= $this->load->view('admin/list_user/script', '', true);
 
 		$component['header'] 			= $this->load->view('admin/component/header', '', true);
 		$component['navbar'] 			= $this->load->view('admin/component/navbar', '', true);
-		$component['mainSideBar'] 		= $this->load->view('admin/component/sidebar', $data, true);
+		$component['mainSideBar'] 		= $this->load->view('sidebar/main-sidebar', $sideBar, true);
 		$component['mainFooter'] 		= $this->load->view('admin/component/footer_text', '', true);
 		$component['controllerSidebar'] = $this->load->view('admin/component/controller_sidebar', '', true);
 		$component['contentWrapper'] 	= $this->load->view('admin/list_user/content', '', true);

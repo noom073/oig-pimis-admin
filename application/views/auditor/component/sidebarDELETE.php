@@ -28,13 +28,13 @@
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-                <li class="nav-item">
-                    <a href="<?= site_url('auditor/index') ?>" id="controller-user-index" class="nav-link">
-                        <i class="nav-icon fas fa-home"></i>
-                        <p>หน้าหลัก</p>
-                    </a>
-                </li>
-                <li class="nav-header">ส่วนรายละเอียดการตรวจ</li>
+               <li class="nav-header">ส่วนผู้ตรวจ</li>
+               <li class="nav-item">
+                   <a href="<?= site_url('auditor/index') ?>" id="controller-user-index" class="nav-link">
+                       <i class="nav-icon fas fa-home"></i>
+                       <p>หน้าหลัก</p>
+                   </a>
+               </li>
                 <li class="nav-item has-treeview" id="auditor-inspection-section">
                     <a href="#" class="nav-link" id="auditor-inspection-subject">
                         <i class="nav-icon fas fa-file-signature"></i>
@@ -52,7 +52,6 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-header">ส่วนรายงาน</li>
                 <li class="nav-item has-treeview" id="auditor-report-section">
                     <a href="#" class="nav-link" id="auditor-report-subject">
                         <i class="nav-icon fas fa-users"></i>
