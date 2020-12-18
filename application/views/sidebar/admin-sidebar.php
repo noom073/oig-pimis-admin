@@ -20,5 +20,11 @@
                 <p>รายชื่อผู้ใช้</p>
             </a>
         </li>
+        <li class="nav-item">
+            <a href="<?= site_url('admin/list_authorize') ?>" id="admin-list-authorize" class="nav-link">
+                <i class="nav-icon fas fa-user-friends"></i>
+                <p>สิทธิผู้ใช้</p>
+            </a>
+        </li>
     </ul>
 </li>

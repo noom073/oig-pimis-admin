@@ -12,10 +12,9 @@ class User_model extends CI_Model
 
     public function get_all_user()
     {
-        $sql = "SELECT a.USER_ID, a.TITLE, a.FIRSTNAME, a.LASTNAME, b.TYPE_NAME, a.EMAIL, a.USER_ACTIVE, TO_CHAR(a.TIME_UPDATE, 'YYYY/MM/DD HH:MI:SS') as TIME_UPDATE
+        $sql = "SELECT a.USER_ID, a.TITLE, a.FIRSTNAME, a.LASTNAME, a.EMAIL, a.USER_ACTIVE,
+            TO_CHAR(a.TIME_UPDATE, 'YYYY/MM/DD HH:MI:SS') as TIME_UPDATE
             FROM PIMIS_USER a 
-            JOIN PIMIS_USER_TYPE b 
-                ON a.USER_TYPE = b.TYPE_ID
             WHERE a.SYSTEM LIKE 'pimis'
             ORDER BY a.TIME_UPDATE DESC";
         $result = $this->oracle->query($sql);
@@ -32,6 +31,7 @@ class User_model extends CI_Model
     public function chk_user_duplicate($email)
     {
         $this->oracle->where('EMAIL', $email);
+        $this->oracle->where('SYSTEM', 'pimis');
         $query = $this->oracle->get('PIMIS_USER');
         return $query;
     }
@@ -43,19 +43,53 @@ class User_model extends CI_Model
         $this->oracle->set('FIRSTNAME', $array['firstname']);
         $this->oracle->set('LASTNAME', $array['lastname']);
         $this->oracle->set('EMAIL', $array['email']);
-        $this->oracle->set('USER_TYPE', $array['userType']);
         $this->oracle->set('USER_ACTIVE', $array['activation']);
         $this->oracle->set('SYSTEM', 'pimis');
         $this->oracle->set('USER_UPDATE', $array['updater']);
         $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
         $insert = $this->oracle->insert('PIMIS_USER');
-        return $insert;
+        if ($insert) {
+            $this->oracle->select('USER_ID');
+            $this->oracle->where('EMAIL', $array['email']);
+            $this->oracle->where('SYSTEM', 'pimis');
+            $getUserID = $this->oracle->get('PIMIS_USER')->row_array();
+            $result['status']   = $insert;
+            $result['insertID'] = $getUserID['USER_ID'];
+        } else {
+            $result['status']   = false;
+            $result['insertID'] = '';
+        }
+        return $result;
+    }
+
+    public function insert_privileges($arrayUserPrivileges, $userID, $updater)
+    {
+        foreach ($arrayUserPrivileges as $r) {
+            $date = date("Y-m-d H:i:s");
+            $this->oracle->set('USER_ID', $userID);
+            $this->oracle->set('TYPE_ID', $r);
+            $this->oracle->set('USER_UPDATE', $updater);
+            $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
+            $insert = $this->oracle->insert('PIMIS_USER_PRIVILEGES');
+            $data['typeID'] = $r;
+            $data['userID'] = $userID;
+            $data['status'] = $insert;
+            $result[] = $data;
+        }
+        return $result;
     }
 
     public function delete_user($array)
     {
         $this->oracle->where('USER_ID', $array['userID']);
         $query = $this->oracle->delete('PIMIS_USER');
+        return $query;
+    }
+
+    public function delete_privileges($array)
+    {
+        $this->oracle->where('USER_ID', $array['userID']);
+        $query = $this->oracle->delete('PIMIS_USER_PRIVILEGES');
         return $query;
     }
 
@@ -73,7 +107,6 @@ class User_model extends CI_Model
         $this->oracle->set('FIRSTNAME', $array['firstname']);
         $this->oracle->set('LASTNAME', $array['lastname']);
         $this->oracle->set('EMAIL', $array['email']);
-        $this->oracle->set('USER_TYPE', $array['userType']);
         $this->oracle->set('USER_ACTIVE', $array['activation']);
         $this->oracle->set('USER_UPDATE', $array['updater']);
         $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
@@ -89,4 +122,14 @@ class User_model extends CI_Model
         $query = $this->oracle->get('PIMIS_USER');
         return $query;
     }
+
+    public function get_privileges_per_user($userID)
+    {
+        $this->oracle->select('a.USER_ID, b.TYPE_NAME');
+        $this->oracle->join('PIMIS_USER_TYPE b', 'a.TYPE_ID = b.TYPE_ID ');
+        $this->oracle->where('a.USER_ID', $userID);    
+        $query = $this->oracle->get('PIMIS_USER_PRIVILEGES a');
+        return $query;
+    }
+
 }

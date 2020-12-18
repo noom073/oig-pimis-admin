@@ -29,10 +29,6 @@
                     data: 'EMAIL',
                 },
                 {
-                    data: 'TYPE_NAME',
-                    className: 'text-center'
-                },
-                {
                     data: 'USER_ACTIVE',
                     className: 'text-center',
                     render: (data, type, row, meta) => {
@@ -137,8 +133,9 @@
                     },
                     dataType: 'json'
                 }).done(res => {
-                    alert(res.text);
-                    if (res.status) {
+                    alert(res.user.text);
+                    alert(res.privilege.text);
+                    if (res.user.status) {
                         reloadUserTable();
                     }
                 }).fail((jhr, status, error) => console.error(jhr, status, error));

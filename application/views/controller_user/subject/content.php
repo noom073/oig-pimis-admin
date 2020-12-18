@@ -22,7 +22,9 @@
                     <div class="h3">การจัดการคำถามประเมิน</div>
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title">Controller User</h5>
+                    <div class="mb-3">
+                        <button class="btn btn-sm btn-light" onclick="return window.history.back();">ย้อนกลับ</button>
+                    </div>
                     <div class="card-text">
                         <div class="form-inline">
                             <label class="my-1 mr-2">ประเภทการตรวจ</label>

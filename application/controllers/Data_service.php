@@ -85,7 +85,7 @@ class Data_service extends CI_Controller
     public function ajax_inspection_data_calendar()
     {
         $data = $this->questionaire_model->get_inspections_date_data()->result_array();
-        $result = array_map(function($r) {
+        $result = array_map(function ($r) {
             $array['planID']    = $r['ID'];
             $array['depName']   = $r['DEPARTMENT_NAME'];
             $array['unitAcm']   = $r['STANDFOR'];
@@ -94,7 +94,6 @@ class Data_service extends CI_Controller
             $array['squad']     = $r['SET'];
             return $array;
         }, $data);
-
         $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode($result));
@@ -109,5 +108,17 @@ class Data_service extends CI_Controller
         $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode($array));
+    }
+
+    public function ajax_get_all_user_types()
+    {
+        $allUserTypes = $this->user_model->list_user_type()->result_array();
+        $data = array_map(function ($r) {
+            $r['TYPE_NAME_FULL'] = $this->session_services->get_user_type_name($r['TYPE_NAME']);
+            return $r;
+        }, $allUserTypes);
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($data));
     }
 }

@@ -32,12 +32,7 @@
         <!-- Sidebar Menu -->
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                <li class="nav-item">
-                    <a href="<?= site_url('welcome/index') ?>" class="nav-link">
-                        <i class="nav-icon fas fa-house-user"></i>
-                        <p>หน้าหลัก</p>
-                    </a>
-                </li>
+                <li class="nav-item"></li>
                 <?php
                 if (in_array('Administrator', $userType)) $this->load->view('sidebar/admin-sidebar');
                 if (in_array('Controller', $userType)) $this->load->view('sidebar/controller-user-sidebar');

@@ -36,8 +36,8 @@
                     <h5 class="card-title"></h5>
                     <div class="card-text">
                         <div>
-                            <button class="btn btn-sm btn-primary disabled" id="add-note-btn" disabled>เพิ่มบันทึก</button>
                             <button class="btn btn-sm btn-light" onclick="return window.history.back();">ย้อนกลับ</button>
+                            <button class="btn btn-sm btn-primary disabled" id="add-note-btn" disabled>เพิ่มบันทึก</button>
                         </div>
                         <div>
                             <table class="table">

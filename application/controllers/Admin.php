@@ -38,17 +38,42 @@ class Admin extends CI_Controller
 	{
 		$data['name'] 		= $this->session->nameth;
 		$data['userType'] 	= $this->session_services->get_user_type_name($this->session->usertype);
-		// $sideBar['userType'] 	= $this->session_services->get_user_type_name($this->session->usertype);
-		$sideBar['name'] 	= $this->session->nameth;
+
+		$sideBar['name'] 		= $this->session->nameth;
 		$sideBar['userType'] 	= array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
-		$script['customScript'] 		= $this->load->view('admin/list_user/script', '', true);
+		$script['customScript'] = $this->load->view('admin/list_user/script', '', true);
 
 		$component['header'] 			= $this->load->view('admin/component/header', '', true);
 		$component['navbar'] 			= $this->load->view('admin/component/navbar', '', true);
 		$component['mainSideBar'] 		= $this->load->view('sidebar/main-sidebar', $sideBar, true);
 		$component['mainFooter'] 		= $this->load->view('admin/component/footer_text', '', true);
 		$component['controllerSidebar'] = $this->load->view('admin/component/controller_sidebar', '', true);
-		$component['contentWrapper'] 	= $this->load->view('admin/list_user/content', '', true);
+		$component['contentWrapper'] 	= $this->load->view('admin/list_user/content', $data, true);
+		$component['jsScript'] 			= $this->load->view('admin/component/main_script', $script, true);
+
+		$this->load->view('admin/template', $component);
+	}
+
+	public function list_authorize()
+	{
+		$allUserTypes 		= $this->user_model->list_user_type()->result_array();
+		$data['name'] 		= $this->session->nameth;
+		$data['userType'] 	= $this->session_services->get_user_type_name($this->session->usertype);
+		$data['allUserTypes'] = array_map(function ($r) {
+			$r['TYPE_NAME'] = $this->session_services->get_user_type_name($r['TYPE_NAME']);
+			return $r;
+		}, $allUserTypes);
+		$sideBar['name'] 		= $this->session->nameth;
+		$sideBar['userType'] 	= array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
+		$script['customScript'] = $this->load->view('admin/list_authorize/script', '', true);
+		$header['custom'] 		= $this->load->view('admin/list_authorize/header', '', true);
+
+		$component['header'] 			= $this->load->view('admin/component/header', $header, true);
+		$component['navbar'] 			= $this->load->view('admin/component/navbar', '', true);
+		$component['mainSideBar'] 		= $this->load->view('sidebar/main-sidebar', $sideBar, true);
+		$component['mainFooter'] 		= $this->load->view('admin/component/footer_text', '', true);
+		$component['controllerSidebar'] = $this->load->view('admin/component/controller_sidebar', '', true);
+		$component['contentWrapper'] 	= $this->load->view('admin/list_authorize/content', $data, true);
 		$component['jsScript'] 			= $this->load->view('admin/component/main_script', $script, true);
 
 		$this->load->view('admin/template', $component);
@@ -57,10 +82,18 @@ class Admin extends CI_Controller
 	public function ajax_get_user_all()
 	{
 		$users = $this->user_model->get_all_user()->result_array();
+		$this->output
+			->set_content_type('application/json')
+			->set_output(json_encode($users));
+	}
+
+	public function ajax_list_user_and_privileges()
+	{
+		$users = $this->user_model->get_all_user()->result_array();
 		$result = array_map(function ($r) {
-			$data = $r;
-			$data['TYPE_NAME'] = $this->session_services->get_user_type_name($r['TYPE_NAME']);
-			return $data;
+			$privileges = $this->user_model->get_privileges_per_user($r['USER_ID'])->result_array();
+			$r['PRIVILEGES'] = $privileges;
+			return $r;
 		}, $users);
 		$this->output
 			->set_content_type('application/json')
@@ -74,16 +107,18 @@ class Admin extends CI_Controller
 		$data['lastname'] 	= $this->input->post('lname');
 		$email 				= explode('@', $this->input->post('email'));
 		$data['email'] 		= $email[0] . '@rtarf.mi.th';
-		$data['userType'] 	= $this->input->post('userType');
+		$data['userType']	= array('4');
 		$data['activation'] = $this->input->post('activation');
 		$data['updater'] 	= $this->session->email;
 
 		$userDuplicate = $this->user_model->chk_user_duplicate($data['email'])->num_rows();
 		if ($userDuplicate == 0) {
 			$insert = $this->user_model->insert_user($data);
-			if ($insert) {
+			if ($insert['status']) {
+				$insertPrivilege = $this->user_model->insert_privileges($data['userType'], $insert['insertID'], $data['updater']);
 				$result['status'] = true;
 				$result['text'] = 'บันทึกสำเร็จ';
+				$result['insertPrivileges'] = $insertPrivilege;
 			} else {
 				$result['status'] = false;
 				$result['text'] = 'บันทึกไม่สำเร็จ';
@@ -100,13 +135,22 @@ class Admin extends CI_Controller
 	public function ajax_delete_user()
 	{
 		$data['userID'] = $this->input->post('userID');
-		$delete = $this->user_model->delete_user($data);
-		if ($delete) {
-			$result['status'] = true;
-			$result['text'] = 'ลบสำเร็จ';
+		$deletePrivileges = $this->user_model->delete_privileges($data);
+		$deleteUser = $this->user_model->delete_user($data);
+
+		if ($deleteUser) { // CHECK DELETE USER STATUS
+			$result['user']['status'] = true;
+			$result['user']['text'] = 'ลบผู้ใช้งานสำเร็จ';
 		} else {
-			$result['status'] = false;
-			$result['text'] = 'ลบไม่สำเร็จ';
+			$result['user']['status'] = false;
+			$result['user']['text'] = 'ลบผู้ใช้งานไม่สำเร็จ';
+		}
+		if ($deletePrivileges) { // CHECK DELETE PRIVILEGES USER STATUS
+			$result['privilege']['status'] = true;
+			$result['privilege']['text'] = 'ลบสิทธิผู้ใช้งานสำเร็จ';
+		} else {
+			$result['privilege']['status'] = false;
+			$result['privilege']['text'] = 'ลบสิทธิผู้ใช้งานไม่สำเร็จ';
 		}
 		$this->output
 			->set_content_type('application/json')
@@ -129,7 +173,6 @@ class Admin extends CI_Controller
 		$data['lastname'] 	= $this->input->post('lname');
 		$email 				= explode('@', $this->input->post('email'));
 		$data['email'] 		= $email[0] . '@rtarf.mi.th';
-		$data['userType'] 	= $this->input->post('userType');
 		$data['activation'] = $this->input->post('activation');
 		$data['userID'] 	= $this->input->post('userID');
 		$data['updater'] 	= $this->session->email;
