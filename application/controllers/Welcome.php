@@ -54,8 +54,7 @@ class Welcome extends CI_Controller
 		$rtarfMail = $this->input->post('email');
 		$password = $this->input->post('password');
 
-		$checkADReturn = $this->authentication->check_ad($rtarfMail, $password);
-		$loginProcess = $this->authentication->process_login($checkADReturn);	
+		$loginProcess = $this->authentication->process_login($rtarfMail, $password);	
 
 		echo json_encode($loginProcess);
 	}

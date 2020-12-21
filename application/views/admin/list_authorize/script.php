@@ -1,13 +1,8 @@
-<!-- Select2 -->
-<script src="<?= base_url('assets/admin_lte/plugins/select2/js/select2.full.min.js') ?>"></script>
 <script>
     $(document).ready(function() {
         $("li#admin-manage-user-section").addClass('menu-open');
         $("a#admin-manage-user-subject").addClass('active');
         $("a#admin-list-authorize").addClass('active');
-
-
-        $("select").select2();
 
 
         let userTable = $("#table-user").DataTable({
@@ -36,7 +31,6 @@
                 {
                     data: 'PRIVILEGES',
                     render: (data, type, row, meta) => {
-                        console.log(data);
                         let text = '';
                         data.forEach(r => {
                             text += `${r.TYPE_NAME} `;
@@ -48,7 +42,7 @@
                     data: null,
                     className: 'text-center',
                     render: (data, type, row, meta) => {
-                        let editBtn = `<button class="btn btn-sm btn-primary update-user" data-user-id="${row.USER_ID}">แก้ไข</button>`;
+                        let editBtn = `<a href="<?= site_url('admin/user_authorize')?>?userID=${row.USER_ID}" class="btn btn-sm btn-primary update-user">แก้ไข</a>`;
                         return `${editBtn}`;
                     }
                 },

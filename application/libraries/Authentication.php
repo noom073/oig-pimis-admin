@@ -10,9 +10,10 @@ class Authentication
     {
         $this->CI = &get_instance();
         $this->CI->load->library('session');
+        $this->CI->load->model('auth_model');
     }
 
-    public function check_ad($rtarfMail, $password)
+    private function check_ad($rtarfMail, $password)
     {
         $url = "https://itdev.rtarf.mi.th/welfare/index.php/authentication_2";
         $curlAD = curl_init();
@@ -39,7 +40,7 @@ class Authentication
         return $data;
     }
 
-    public function check_token($token)
+    private function check_token($token)
     {
         $url = "https://itdev.rtarf.mi.th/welfare/index.php/profile?token={$token}";
         $curlAD = curl_init();
@@ -62,7 +63,7 @@ class Authentication
         return $data;
     }
 
-    protected function check_login()
+    public function check_login()
     {
         $isLogged = $this->CI->session->isLogged;
 
@@ -99,9 +100,10 @@ class Authentication
         return;
     }
 
-    public function process_login($checkADReturn)
+    public function process_login($rtarfMail, $password)
     {
         // check user password SD
+        $checkADReturn = $this->check_ad($rtarfMail, $password);
         if ($checkADReturn['status'] === true && $checkADReturn['http_code'] == 200) {
             $ADToken = json_decode($checkADReturn['response']);
             $checkTokenReturn = $this->check_token($ADToken->TOKEN);
@@ -109,12 +111,12 @@ class Authentication
             // check token
             if ($checkTokenReturn['status'] === true && $checkTokenReturn['http_code'] == 200) {
                 $ADData = json_decode($checkTokenReturn['response']);
-                $userType = $this->CI->auth_model->get_user_type($ADData->EMAIL);
+                $userID = $this->CI->auth_model->get_user($ADData->EMAIL)->row_array()['USER_ID'];
+                $userType = $this->CI->auth_model->get_user_type($userID);
 
                 // check privilege existence 
                 if ($userType->num_rows() > 0) {
-                    $userData = $userType->row(); // return first row
-                    $sesData['usertype']    = $userData->TYPE_NAME;
+                    $sesData['usertype']    = $userType->result_array();
                     $sesData['nameth']      = $ADData->BIOG_NAME;
                     $sesData['nameen']      = $ADData->BIOG_NAME_ENG;
                     $sesData['email']       = $ADData->EMAIL;

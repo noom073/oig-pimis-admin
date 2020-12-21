@@ -10,14 +10,24 @@ class Auth_model extends CI_Model
         $this->oracle = $this->load->database('oracle', true);
     }
 
-    public function get_user_type($email)
+    public function get_user_type($userID)
     {
-        $this->oracle->select('a.USER_TYPE, b.TYPE_NAME');
-        $this->oracle->join('PIMIS_USER_TYPE b', 'a.USER_TYPE = b.TYPE_ID');
-        $this->oracle->where('a.EMAIL', $email);
-        $this->oracle->where('a.SYSTEM', 'pimis');
-        $result = $this->oracle->get('PIMIS_USER a');
+        $sql = "SELECT B.TYPE_ID, B.TYPE_NAME 
+            FROM PIMIS_USER_PRIVILEGES A
+            INNER JOIN PIMIS_USER_TYPE B 
+                ON A.TYPE_ID = B.TYPE_ID 
+            WHERE A.USER_ID = ?";
+        $query = $this->oracle->query($sql, array($userID));
+        return $query;
+    }
 
-        return $result;
+    public function get_user($rtarfMail)
+    {
+        $sql = "SELECT *
+            FROM PIMIS_USER
+            WHERE EMAIL = ?
+            AND SYSTEM = 'pimis'";
+        $query = $this->oracle->query($sql, array($rtarfMail));
+        return $query;
     }
 }

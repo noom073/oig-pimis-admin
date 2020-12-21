@@ -24,6 +24,7 @@ class User_model extends CI_Model
     public function list_user_type()
     {
         $this->oracle->select('TYPE_ID, TYPE_NAME');
+        $this->oracle->order_by('ORDER_NUMBER');   
         $query = $this->oracle->get('PIMIS_USER_TYPE');
         return $query;
     }
@@ -93,9 +94,9 @@ class User_model extends CI_Model
         return $query;
     }
 
-    public function get_user_detail($array)
+    public function get_user_detail($userID)
     {
-        $this->oracle->where('USER_ID', $array['userID']);
+        $this->oracle->where('USER_ID', $userID);
         $query = $this->oracle->get('PIMIS_USER');
         return $query;
     }

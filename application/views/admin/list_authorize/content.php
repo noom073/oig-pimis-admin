@@ -22,31 +22,25 @@
                     <div class="h3">สิทธิผู้ใช้</div>
                 </div>
                 <div class="card-body">
-                    <div class="mb-3">
-                        <button class="btn btn-sm btn-light" onclick="return window.history.back();">ย้อนกลับ</button>
-                        <button class="btn btn-sm btn-primary" id="add-user-btn">เพิ่มผู้ใช้</button>
-                    </div>
-                    <div>
-                        <table id="table-user" class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th class="text-center">ลำดับ</th>
-                                    <th>ชื่อผู้ใช้</th>
-                                    <th>RTARF-MAIL</th>
-                                    <th>สิทธิ</th>
-                                    <th class="text-center">การดำเนินการ</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div>
-                        <select class="form-control" name="" id="" multiple="multiple">
-                            <option value="a">aa</option>
-                            <option value="b">bb</option>
-                        </select>
+                    <div class="card-text">
+                        <div class="mb-3">
+                            <button class="btn btn-sm btn-light" onclick="return window.history.back();">ย้อนกลับ</button>
+                        </div>
+                        <div>
+                            <table id="table-user" class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">ลำดับ</th>
+                                        <th>ชื่อผู้ใช้</th>
+                                        <th>RTARF-MAIL</th>
+                                        <th>สิทธิ</th>
+                                        <th class="text-center">การดำเนินการ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

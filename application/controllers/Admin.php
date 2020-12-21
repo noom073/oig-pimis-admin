@@ -79,6 +79,35 @@ class Admin extends CI_Controller
 		$this->load->view('admin/template', $component);
 	}
 
+	public function user_authorize()
+	{
+
+		// $allUserTypes 		= $this->user_model->list_user_type()->result_array();
+		// $data['name'] 		= $this->session->nameth;
+		// $data['userType'] 	= $this->session_services->get_user_type_name($this->session->usertype);
+		// $data['allUserTypes'] = array_map(function ($r) {
+		// 	$r['TYPE_NAME'] = $this->session_services->get_user_type_name($r['TYPE_NAME']);
+		// 	return $r;
+		// }, $allUserTypes);
+		$userID = $this->input->get('userID', true);
+		$data['userDetail'] 	= $this->user_model->get_user_detail($userID)->row_array();
+		$sideBar['name'] 		= $this->session->nameth;
+		$sideBar['userType'] 	= array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
+		$scriptData['userPrivileges'] = $this->user_model->get_privileges_per_user($userID)->result_array();
+		$script['customScript'] = $this->load->view('admin/user_authorize/script', $scriptData, true);
+		$header['custom'] 		= $this->load->view('admin/user_authorize/header', '', true);
+
+		$component['header'] 			= $this->load->view('admin/component/header', $header, true);
+		$component['navbar'] 			= $this->load->view('admin/component/navbar', '', true);
+		$component['mainSideBar'] 		= $this->load->view('sidebar/main-sidebar', $sideBar, true);
+		$component['mainFooter'] 		= $this->load->view('admin/component/footer_text', '', true);
+		$component['controllerSidebar'] = $this->load->view('admin/component/controller_sidebar', '', true);
+		$component['contentWrapper'] 	= $this->load->view('admin/user_authorize/content', $data, true);
+		$component['jsScript'] 			= $this->load->view('admin/component/main_script', $script, true);
+
+		$this->load->view('admin/template', $component);
+	}
+
 	public function ajax_get_user_all()
 	{
 		$users = $this->user_model->get_all_user()->result_array();
@@ -159,8 +188,8 @@ class Admin extends CI_Controller
 
 	public function ajax_get_user_detail()
 	{
-		$data['userID'] = $this->input->post('userID');
-		$userDetail = $this->user_model->get_user_detail($data)->row_array();
+		$userID = $this->input->post('userID');
+		$userDetail = $this->user_model->get_user_detail($userID)->row_array();
 		$this->output
 			->set_content_type('application/json')
 			->set_output(json_encode($userDetail));
@@ -194,5 +223,13 @@ class Admin extends CI_Controller
 		$this->output
 			->set_content_type('application/json')
 			->set_output(json_encode($result));
+	}
+
+	public function ajax_edit_privilage()
+	{
+		$data['privileges'] = $this->input->post('privileges', true);
+		$data['userID'] = $this->input->post('userID', true);
+
+		echo json_encode($data);
 	}
 }
