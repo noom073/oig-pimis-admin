@@ -39,9 +39,9 @@
                                 </div>
                                 <div class="form-group">
                                     <label>สิทธิ</label>
-                                    <select name="privileges[]" id="user-privileges" class="form-control select2" multiple="multiple"></select>
+                                    <select name="privileges[]" id="user-privileges" class="form-control select2" multiple="multiple" required></select>
                                 </div>
-                                <div class="form-group" id="privileg-form-loading"></div>
+                                <div class="form-group" id="privilege-form-result"></div>
                                 <div class="form-group">
                                     <button type="submit" class="btn btn-primary">บันทึก</button>
                                     <button type="reset" class="btn btn-light">Reset</button>

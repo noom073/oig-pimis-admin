@@ -12,15 +12,14 @@ class Admin extends CI_Controller
 		$this->load->library('session_services');
 
 		$this->load->model('user_model');
+		$this->load->model('privilege_model');
 	}
 
 	public function index()
 	{
 		$data['name'] 		= $this->session->nameth;
 		$data['userType'] 	= $this->session_services->get_user_type_name($this->session->usertype);
-		// $sideBar['userType'] 	= $this->session_services->get_user_type_name($this->session->usertype);
 		$sideBar['name'] 	= $this->session->nameth;
-		$sideBar['userType'] 	= array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
 		$script['customScript'] = $this->load->view('admin/index_content/script', '', true);
 
 		$component['header'] 			= $this->load->view('admin/component/header', '', true);
@@ -38,9 +37,7 @@ class Admin extends CI_Controller
 	{
 		$data['name'] 		= $this->session->nameth;
 		$data['userType'] 	= $this->session_services->get_user_type_name($this->session->usertype);
-
 		$sideBar['name'] 		= $this->session->nameth;
-		$sideBar['userType'] 	= array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
 		$script['customScript'] = $this->load->view('admin/list_user/script', '', true);
 
 		$component['header'] 			= $this->load->view('admin/component/header', '', true);
@@ -64,7 +61,6 @@ class Admin extends CI_Controller
 			return $r;
 		}, $allUserTypes);
 		$sideBar['name'] 		= $this->session->nameth;
-		$sideBar['userType'] 	= array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
 		$script['customScript'] = $this->load->view('admin/list_authorize/script', '', true);
 		$header['custom'] 		= $this->load->view('admin/list_authorize/header', '', true);
 
@@ -81,18 +77,9 @@ class Admin extends CI_Controller
 
 	public function user_authorize()
 	{
-
-		// $allUserTypes 		= $this->user_model->list_user_type()->result_array();
-		// $data['name'] 		= $this->session->nameth;
-		// $data['userType'] 	= $this->session_services->get_user_type_name($this->session->usertype);
-		// $data['allUserTypes'] = array_map(function ($r) {
-		// 	$r['TYPE_NAME'] = $this->session_services->get_user_type_name($r['TYPE_NAME']);
-		// 	return $r;
-		// }, $allUserTypes);
 		$userID = $this->input->get('userID', true);
 		$data['userDetail'] 	= $this->user_model->get_user_detail($userID)->row_array();
 		$sideBar['name'] 		= $this->session->nameth;
-		$sideBar['userType'] 	= array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
 		$scriptData['userPrivileges'] = $this->user_model->get_privileges_per_user($userID)->result_array();
 		$script['customScript'] = $this->load->view('admin/user_authorize/script', $scriptData, true);
 		$header['custom'] 		= $this->load->view('admin/user_authorize/header', '', true);
@@ -120,7 +107,12 @@ class Admin extends CI_Controller
 	{
 		$users = $this->user_model->get_all_user()->result_array();
 		$result = array_map(function ($r) {
-			$privileges = $this->user_model->get_privileges_per_user($r['USER_ID'])->result_array();
+			$privilegesData = $this->user_model->get_privileges_per_user($r['USER_ID'])->result_array();
+			$privileges = array();
+			foreach ($privilegesData as $data) {
+				$data['TYPE_NAME_FULL'] = $this->session_services->get_user_type_name($data['TYPE_NAME']);
+				$privileges[] = $data;
+			}
 			$r['PRIVILEGES'] = $privileges;
 			return $r;
 		}, $users);
@@ -227,9 +219,30 @@ class Admin extends CI_Controller
 
 	public function ajax_edit_privilage()
 	{
-		$data['privileges'] = $this->input->post('privileges', true);
-		$data['userID'] = $this->input->post('userID', true);
-
-		echo json_encode($data);
+		$userID 	= $this->input->post('userID', true);
+		$updater	= $this->session->email;
+		$newPrivileges 	= $this->input->post('privileges', true);
+		$privileges 	= $this->user_model->get_privileges_per_user($userID)->result_array();
+		$oldPrivileges 	= array_map(function ($r) {
+			return $r['TYPE_ID'];
+		}, $privileges);
+		$toClearPrivileges 	= array_merge(array_diff($oldPrivileges, $newPrivileges), array());
+		$toAddPrivileges 	= array_merge(array_diff($newPrivileges, $oldPrivileges), array());
+		$result = array();
+		foreach ($toClearPrivileges as $r) { // REMOVE OLD PRIVRILEGE
+			$data['privilege'] = $r;
+			$data['userID'] = $userID;
+			$data['result'] = $this->privilege_model->remove_privilege($userID, $r);
+			$result['remove'][] = $data;
+		}
+		foreach ($toAddPrivileges as $r) { // ADD NEW PRIVRILEGE
+			$data['privilege'] = $r;
+			$data['userID'] = $userID;
+			$data['result'] = $this->privilege_model->add_privilege($userID, $r, $updater);
+			$result['add'][] = $data;
+		}
+		$this->output
+			->set_content_type('application/json')
+			->set_output(json_encode($result));
 	}
 }

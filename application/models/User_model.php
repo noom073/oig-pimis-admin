@@ -24,7 +24,7 @@ class User_model extends CI_Model
     public function list_user_type()
     {
         $this->oracle->select('TYPE_ID, TYPE_NAME');
-        $this->oracle->order_by('ORDER_NUMBER');   
+        $this->oracle->order_by('ORDER_NUMBER');
         $query = $this->oracle->get('PIMIS_USER_TYPE');
         return $query;
     }
@@ -126,11 +126,10 @@ class User_model extends CI_Model
 
     public function get_privileges_per_user($userID)
     {
-        $this->oracle->select('a.USER_ID, b.TYPE_NAME');
-        $this->oracle->join('PIMIS_USER_TYPE b', 'a.TYPE_ID = b.TYPE_ID ');
-        $this->oracle->where('a.USER_ID', $userID);    
+        $this->oracle->select('a.USER_ID, b.TYPE_ID, b.TYPE_NAME');
+        $this->oracle->join('PIMIS_USER_TYPE b', 'a.TYPE_ID = b.TYPE_ID');
+        $this->oracle->where('a.USER_ID', $userID);
         $query = $this->oracle->get('PIMIS_USER_PRIVILEGES a');
         return $query;
     }
-
 }

@@ -18,8 +18,8 @@
                     <div><?= $name ?></div>
                     <div class="text-sm">
                         <?php
-                        foreach ($userType as $r) {
-                            echo "<div>{$r}</div>";
+                        foreach ($this->session->usertype as $r) {
+                            echo "<div>{$r['TYPE_NAME_FULL']}</div>";
                         }
                         ?>
                     </div>
@@ -34,11 +34,13 @@
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <li class="nav-item"></li>
                 <?php
-                if (in_array('Administrator', $userType)) $this->load->view('sidebar/admin-sidebar');
-                if (in_array('Controller', $userType)) $this->load->view('sidebar/controller-user-sidebar');
-                if (in_array('Auditor', $userType)) $this->load->view('sidebar/auditor-sidebar');
-                if (in_array('Viewer', $userType)) $this->load->view('sidebar/viewer-sidebar');
-                if (in_array('User', $userType)) $this->load->view('sidebar/user-sidebar');
+                foreach ($this->session->usertype as $r) {
+                    if ($r['TYPE_NAME'] == 'admin') $this->load->view('sidebar/admin-sidebar');
+                    if ($r['TYPE_NAME'] == 'control') $this->load->view('sidebar/controller-user-sidebar');
+                    if ($r['TYPE_NAME'] == 'auditor') $this->load->view('sidebar/auditor-sidebar');
+                    if ($r['TYPE_NAME'] == 'viewer') $this->load->view('sidebar/viewer-sidebar');
+                    if ($r['TYPE_NAME'] == 'user') $this->load->view('sidebar/user-sidebar');
+                }
                 ?>
             </ul>
         </nav>

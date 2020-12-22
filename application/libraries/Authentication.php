@@ -10,6 +10,7 @@ class Authentication
     {
         $this->CI = &get_instance();
         $this->CI->load->library('session');
+        $this->CI->load->library('session_services');
         $this->CI->load->model('auth_model');
     }
 
@@ -24,7 +25,6 @@ class Authentication
         curl_setopt($curlAD, CURLOPT_CAINFO, FCPATH . "assets/ca/cacert.pem");
         $output     = curl_exec($curlAD);
         $curlErr    = curl_error($curlAD);
-
         if ($curlErr) {
             $data['status']  = false;
             $data['errno']   = curl_errno($curlAD);
@@ -34,9 +34,7 @@ class Authentication
             $data['http_code']  = curl_getinfo($curlAD, CURLINFO_HTTP_CODE);
             $data['response']   = $output;
         }
-
         curl_close($curlAD);
-
         return $data;
     }
 
@@ -49,7 +47,6 @@ class Authentication
         curl_setopt($curlAD, CURLOPT_CAINFO, FCPATH . "assets/ca/cacert.pem");
         $output = curl_exec($curlAD);
         $curlErr = curl_error($curlAD);
-
         if ($curlErr) {
             $data['status']  = false;
             $data['errno']   = curl_errno($curlAD);
@@ -66,7 +63,6 @@ class Authentication
     public function check_login()
     {
         $isLogged = $this->CI->session->isLogged;
-
         return $isLogged;
     }
 
@@ -78,7 +74,6 @@ class Authentication
         } else {
             $result = false;
         }
-
         return $result;
     }
 
@@ -102,21 +97,21 @@ class Authentication
 
     public function process_login($rtarfMail, $password)
     {
-        // check user password SD
-        $checkADReturn = $this->check_ad($rtarfMail, $password);
+        $checkADReturn = $this->check_ad($rtarfMail, $password); // CHECK USER PASSWORD AD
         if ($checkADReturn['status'] === true && $checkADReturn['http_code'] == 200) {
             $ADToken = json_decode($checkADReturn['response']);
             $checkTokenReturn = $this->check_token($ADToken->TOKEN);
 
-            // check token
-            if ($checkTokenReturn['status'] === true && $checkTokenReturn['http_code'] == 200) {
+            if ($checkTokenReturn['status'] === true && $checkTokenReturn['http_code'] == 200) { // CHECK TOKEN
                 $ADData = json_decode($checkTokenReturn['response']);
                 $userID = $this->CI->auth_model->get_user($ADData->EMAIL)->row_array()['USER_ID'];
                 $userType = $this->CI->auth_model->get_user_type($userID);
-
-                // check privilege existence 
-                if ($userType->num_rows() > 0) {
-                    $sesData['usertype']    = $userType->result_array();
+                if ($userType->num_rows() > 0) { // CHECK PRIVILEGES
+                    $sesData['usertype']    = array_map(function ($r) {
+                        $data['TYPE_NAME'] = $r['TYPE_NAME'];
+                        $data['TYPE_NAME_FULL'] = $this->CI->session_services->get_user_type_name($r['TYPE_NAME']);
+                        return $data;
+                    }, $userType->result_array());
                     $sesData['nameth']      = $ADData->BIOG_NAME;
                     $sesData['nameen']      = $ADData->BIOG_NAME_ENG;
                     $sesData['email']       = $ADData->EMAIL;
@@ -124,7 +119,6 @@ class Authentication
                     $sesData['cid']         = $ADData->REG_CID;
                     $sesData['isLogged']    = true;
                     $this->CI->session->set_userdata($sesData);
-
                     $result['status']   = true;
                     $result['data']     = $sesData;
                 } else {
@@ -142,7 +136,6 @@ class Authentication
             $result['text']     = 'Email หรือ Password ไม่ถูกต้อง';
             $result['curldata'] = $checkADReturn; // return http code and curl data
         }
-
         return $result;
     }
 }

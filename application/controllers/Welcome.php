@@ -49,13 +49,9 @@ class Welcome extends CI_Controller
 	public function ajax_adlogin_process()
 	{
 		$this->load->model('auth_model');
-
-		// echo json_encode($this->input->post());
-		$rtarfMail = $this->input->post('email');
-		$password = $this->input->post('password');
-
+		$rtarfMail 	= $this->input->post('email');
+		$password 	= $this->input->post('password');
 		$loginProcess = $this->authentication->process_login($rtarfMail, $password);	
-
 		echo json_encode($loginProcess);
 	}
 

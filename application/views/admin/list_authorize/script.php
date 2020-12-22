@@ -32,8 +32,12 @@
                     data: 'PRIVILEGES',
                     render: (data, type, row, meta) => {
                         let text = '';
-                        data.forEach(r => {
-                            text += `${r.TYPE_NAME} `;
+                        data.forEach((r, index, arr) => {
+                            if (index == arr.length - 1) {
+                                text += `${r.TYPE_NAME_FULL}`;
+                            } else {
+                                text += `${r.TYPE_NAME_FULL}, `;
+                            }
                         });
                         return text;
                     }
@@ -42,7 +46,7 @@
                     data: null,
                     className: 'text-center',
                     render: (data, type, row, meta) => {
-                        let editBtn = `<a href="<?= site_url('admin/user_authorize')?>?userID=${row.USER_ID}" class="btn btn-sm btn-primary update-user">แก้ไข</a>`;
+                        let editBtn = `<a href="<?= site_url('admin/user_authorize') ?>?userID=${row.USER_ID}" class="btn btn-sm btn-primary update-user">แก้ไข</a>`;
                         return `${editBtn}`;
                     }
                 },

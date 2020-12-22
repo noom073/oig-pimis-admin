@@ -39,7 +39,7 @@
 					<div class="input-group mb-3">
 						<input type="text" class="form-control" name="email" placeholder="RTARF Mail">
 						<div class="input-group-append">
-							<span class="input-group-text" style="background-color:#f1f1f1;">@rtarf.mi.th</span >
+							<span class="input-group-text" style="background-color:#f1f1f1;">@rtarf.mi.th</span>
 						</div>
 					</div>
 					<div class="input-group mb-3">
@@ -54,7 +54,7 @@
 						<div class="col-4">
 							<button type="submit" id="submit-login-form" class="btn btn-primary btn-block">Sign In</button>
 						</div>
-						
+
 					</div>
 					<div class="form-group">
 						Result: <span id="result-login-form"></span>
@@ -92,12 +92,31 @@
 					if (res.status) {
 						$("#result-login-form").text(res.data.nameth);
 						$("#result-login-form").prop('class', 'text-success');
-
 						setTimeout(() => {
-							if (res.data.usertype == 'admin') {
-								window.location.replace('<?= site_url('admin/index') ?>');
-							} else {
-								window.location.replace('<?= site_url('main/index') ?>');
+							let userTypes = res.data.usertype;
+							let index = 0
+							while (index < userTypes.length) {
+								console.log(userTypes[index]);
+								if (userTypes[index].TYPE_NAME == 'admin') {
+									window.location.replace('<?= site_url('admin/index') ?>');
+									break;
+								} else if (userTypes[index].TYPE_NAME == 'control') {
+									window.location.replace('<?= site_url('controller_user/index') ?>');
+									break;
+								} else if (userTypes[index].TYPE_NAME == 'auditor') {
+									window.location.replace('<?= site_url('auditor/index') ?>');
+									break;
+								} else if (userTypes[index].TYPE_NAME == 'user') {
+									window.location.replace('<?= site_url('user/index') ?>');
+									break;
+								} else if (userTypes[index].TYPE_NAME == 'viewer') {
+									window.location.replace('<?= site_url('viewer/index') ?>');
+									break;
+								} else {
+									window.location.replace('<?= site_url('welcome/login') ?>');
+									break;
+								}
+								index++;
 							}
 						}, 1500);
 					} else {

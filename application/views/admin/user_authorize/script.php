@@ -5,7 +5,7 @@
         $("li#admin-manage-user-section").addClass('menu-open');
         $("a#admin-manage-user-subject").addClass('active');
         $("a#admin-list-authorize").addClass('active');
-        $("#privileg-form-loading").text('Loading...');
+        $("#privilege-form-result").text('Loading...');
 
 
         $(".select2").select2();
@@ -32,7 +32,7 @@
                 option += `<option value="${r.TYPE_ID}" ${selected}>${r.TYPE_NAME_FULL}</option>`;
             });
             $("#user-privileges").html(option);
-            $("#privileg-form-loading").text('');
+            $("#privilege-form-result").text('');
         };
 
 
@@ -46,11 +46,17 @@
             let formData = thisForm.serialize() + `&userID=${userID}`;
             console.log(formData);
             $.post({
-                url: '<?= site_url('admin/ajax_edit_privilage')?>',
+                url: '<?= site_url('admin/ajax_edit_privilage') ?>',
                 data: formData,
                 dataType: 'json'
             }).done(res => {
                 console.log(res);
+                $("#privilege-form-result").prop('class', 'alert alert-success');
+                $("#privilege-form-result").text('บันทึกสำเร็จ');
+                setTimeout(() => {
+                    $("#privilege-form-result").prop('class', '');
+                    $("#privilege-form-result").text('');
+                }, 3000);
             }).fail((jhr, status, error) => console.error(jhr, status, error));
         });
     });
