@@ -6,8 +6,6 @@
         $("a#admin-manage-user-subject").addClass('active');
         $("a#admin-list-authorize").addClass('active');
         $("#privilege-form-result").text('Loading...');
-
-
         $(".select2").select2();
 
 
@@ -34,8 +32,6 @@
             $("#user-privileges").html(option);
             $("#privilege-form-result").text('');
         };
-
-
         drawUserTypeSelect();
 
 
@@ -44,7 +40,6 @@
             let thisForm = $(this);
             let userID = thisForm.data('user-id');
             let formData = thisForm.serialize() + `&userID=${userID}`;
-            console.log(formData);
             $.post({
                 url: '<?= site_url('admin/ajax_edit_privilage') ?>',
                 data: formData,
@@ -55,7 +50,7 @@
                 $("#privilege-form-result").text('บันทึกสำเร็จ');
                 setTimeout(() => {
                     $("#privilege-form-result").prop('class', '');
-                    $("#privilege-form-result").text('');
+                    $("#privilege-form-result").text(res.text);
                 }, 3000);
             }).fail((jhr, status, error) => console.error(jhr, status, error));
         });

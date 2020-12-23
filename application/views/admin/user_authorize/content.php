@@ -39,7 +39,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label>สิทธิ</label>
-                                    <select name="privileges[]" id="user-privileges" class="form-control select2" multiple="multiple" required></select>
+                                    <select name="privileges[]" id="user-privileges" class="form-control select2" multiple="multiple"></select>
                                 </div>
                                 <div class="form-group" id="privilege-form-result"></div>
                                 <div class="form-group">

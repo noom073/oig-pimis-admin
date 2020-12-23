@@ -128,7 +128,7 @@ class Admin extends CI_Controller
 		$data['lastname'] 	= $this->input->post('lname');
 		$email 				= explode('@', $this->input->post('email'));
 		$data['email'] 		= $email[0] . '@rtarf.mi.th';
-		$data['userType']	= array('4');
+		$data['userType']	= array('2');
 		$data['activation'] = $this->input->post('activation');
 		$data['updater'] 	= $this->session->email;
 
@@ -221,7 +221,7 @@ class Admin extends CI_Controller
 	{
 		$userID 	= $this->input->post('userID', true);
 		$updater	= $this->session->email;
-		$newPrivileges 	= $this->input->post('privileges', true);
+		$newPrivileges 	= is_array($this->input->post('privileges', true)) ? $this->input->post('privileges', true) : array();
 		$privileges 	= $this->user_model->get_privileges_per_user($userID)->result_array();
 		$oldPrivileges 	= array_map(function ($r) {
 			return $r['TYPE_ID'];
@@ -241,6 +241,7 @@ class Admin extends CI_Controller
 			$data['result'] = $this->privilege_model->add_privilege($userID, $r, $updater);
 			$result['add'][] = $data;
 		}
+
 		$this->output
 			->set_content_type('application/json')
 			->set_output(json_encode($result));
