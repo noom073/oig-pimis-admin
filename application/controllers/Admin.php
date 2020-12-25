@@ -229,7 +229,7 @@ class Admin extends CI_Controller
 		$toClearPrivileges 	= array_merge(array_diff($oldPrivileges, $newPrivileges), array());
 		$toAddPrivileges 	= array_merge(array_diff($newPrivileges, $oldPrivileges), array());
 		$result = array();
-		foreach ($toClearPrivileges as $r) { // REMOVE OLD PRIVRILEGE
+		foreach ($toClearPrivileges as $r) { // REMOVE OTHER PRIVRILEGE
 			$data['privilege'] = $r;
 			$data['userID'] = $userID;
 			$data['result'] = $this->privilege_model->remove_privilege($userID, $r);
@@ -241,7 +241,6 @@ class Admin extends CI_Controller
 			$data['result'] = $this->privilege_model->add_privilege($userID, $r, $updater);
 			$result['add'][] = $data;
 		}
-
 		$this->output
 			->set_content_type('application/json')
 			->set_output(json_encode($result));

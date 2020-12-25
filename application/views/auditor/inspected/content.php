@@ -49,6 +49,7 @@
                             <div>
                                 <form id="auditor-inspect-form">
                                     <h5>ฟอร์ม</h5>
+                                    <div id="form-loading">Loading data...</div>
                                     <div id="form-questionaire"></div>
                                     <div>
                                         <button class="btn btn-sm btn-primary">บันทึก</button>

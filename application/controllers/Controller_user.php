@@ -15,6 +15,7 @@ class Controller_user extends CI_Controller
         $this->load->model('subject_model');
         $this->load->model('question_model');
         $this->load->model('questionaire_model');
+        $this->load->model('inspection_model');
     }
 
     public function index()
@@ -222,18 +223,36 @@ class Controller_user extends CI_Controller
     {
         $data['name']       = $this->session->nameth;
         $data['userType']   = $this->session_services->get_user_type_name($this->session->usertype);
-        $sideBar['name'] 	= $this->session->nameth;
-		$sideBar['userType'] 	= array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
+        $sideBar['name']     = $this->session->nameth;
+        $sideBar['userType']     = array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
         $script['customScript'] = $this->load->view('controller_user/index_content/script', '', true);
 
         $component['header']            = $this->load->view('controller_user/component/header', '', true);
         $component['navbar']            = $this->load->view('controller_user/component/navbar', '', true);
-        $component['mainSideBar']         = $this->load->view('sidebar/main-sidebar', $sideBar, true);
+        $component['mainSideBar']       = $this->load->view('sidebar/main-sidebar', $sideBar, true);
         $component['mainFooter']        = $this->load->view('controller_user/component/footer_text', '', true);
         $component['controllerSidebar'] = $this->load->view('controller_user/component/controller_sidebar', '', true);
         $component['contentWrapper']    = $this->load->view('controller_user/index_content/content', $data, true);
         $component['jsScript']          = $this->load->view('controller_user/component/main_script', $script, true);
 
         $this->load->view('controller_user/template', $component);
+    }
+
+    public function add_inspection()
+    {
+        $data['inspectionName'] = $this->input->post('inspectionName', true);
+        $data['inspectionOrder'] = $this->input->post('inspectionOrder', true);
+        $data['updater']        = $this->session->email;
+        $insert = $this->inspection_model->add_inspection($data);
+        if ($insert) {
+            $result['status']   = true;
+            $result['text']     = 'บันทึกข้อมูลสำเร็จ';
+        } else {
+            $result['status']   = false;
+            $result['text']     = 'บันทึกข้อมูลไม่สำเร็จ';
+        }
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($result));
     }
 }

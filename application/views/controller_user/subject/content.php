@@ -24,6 +24,7 @@
                 <div class="card-body">
                     <div class="mb-3">
                         <button class="btn btn-sm btn-light" onclick="return window.history.back();">ย้อนกลับ</button>
+                        <button class="btn btn-sm btn-primary" id="create-inspection">เพิ่มประเภทการตรวจ</button>
                     </div>
                     <div class="card-text">
                         <div class="form-inline">
@@ -156,6 +157,39 @@
                             </div>
 
                             <div id="result-create-sub-subject-form"></div>
+                            <button type="submit" class="btn btn-primary">บันทึก</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                        </form>
+                    </div>
+                    <div class="modal-footer"></div>
+                </div>
+            </div>
+        </div>
+        <!-- END ADD SUB-SUBJECT Modal -->
+
+        <!-- ADD SUB-SUBJECT Modal -->
+        <div class="modal fade" id="create-inspection-modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">แก้ไขหัวข้อการตรวจ</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="create-inspection-form">
+                            <div class="form-group">
+                                <label>ประเภทการตรวจ</label>
+                                <input type="text" class="form-control" name="inspectionName" id="inspection-name-create-inspection-form" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>ลำดับ</label>
+                                <input type="number" min="1" class="form-control" name="inspectionOrder" id="inspection-order-create-inspection-form" required>
+                            </div>
+
+                            <div id="result-create-inspection-form"></div>
                             <button type="submit" class="btn btn-primary">บันทึก</button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
                         </form>

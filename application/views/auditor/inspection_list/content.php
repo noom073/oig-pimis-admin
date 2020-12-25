@@ -32,8 +32,11 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title">รายการตรวจราชการ</h5>
+                    <h5 class="card-title"></h5>
                     <div class="card-text">
+                        <div>
+                            <button class="btn btn-sm btn-light" onclick="return window.history.back();">ย้อนกลับ</button>
+                        </div>
                         <div class="pt-3">
                             <a href="<?= site_url("auditor/inspect?plan={$plan['ID']}") ?>" class="btn btn-info">
                                 <i class="far fa-file-alt"></i>

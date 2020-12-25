@@ -309,5 +309,38 @@
                 return false;
             }
         });
+
+
+        $("#create-inspection").click(function(){
+            $("#create-inspection-modal").modal();
+        });
+
+
+        $("#create-inspection-form").submit(function(event){
+            event.preventDefault();
+            let thisForm = $(this);
+            let formData = thisForm.serialize();
+
+            $.post({
+                url: '<?= site_url('controller_user/add_inspection')?>',
+                data: formData,
+                dataType: 'json'
+            }).done(res=>{
+                console.log(res);
+                if (res.status) {
+                    $("#result-create-inspection-form").prop('class', 'alert alert-success');
+                    $("#result-create-inspection-form").text(res.text);
+                    putInspectionToSelect();
+                } else {
+                    $("#result-create-inspection-form").prop('class', 'alert alert-danger');
+                    $("#result-create-inspection-form").text(res.text);
+                }
+                setTimeout(() => {
+                    $("#result-create-inspection-form").prop('class', '');
+                    $("#result-create-inspection-form").text('');
+                    thisForm.trigger('reset');
+                }, 5000);
+            }).fail((jhr, status, error) => console.error(jhr, status, error));
+        })
     });
 </script>

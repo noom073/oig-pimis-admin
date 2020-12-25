@@ -91,6 +91,7 @@
             questionsAmount = 0; // reset ค่าจำนวนคำถาม
             let questions = await getQuestionsAndSubject(inspectionID);
             let html = generateTreeView(questions);
+            $("#form-loading").addClass('d-none');
             $("#form-questionaire").html(html);
             showScore();
         };
