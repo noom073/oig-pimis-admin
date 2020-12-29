@@ -24,7 +24,7 @@
                         ?>
                     </div>
                 </a>
-                <div class="text-sm text-light"><a href="#">Logout</a></div>
+                <div class="text-sm text-light"><a href="<?=site_url('welcome/logout')?>">Logout</a></div>
 
             </div>
         </div>

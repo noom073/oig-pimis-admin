@@ -89,6 +89,7 @@
 					data: formData,
 					dataType: 'json'
 				}).done(res => {
+					console.log(res);
 					if (res.status) {
 						$("#result-login-form").text(res.data.nameth);
 						$("#result-login-form").prop('class', 'text-success');
