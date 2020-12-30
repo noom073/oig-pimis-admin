@@ -110,5 +110,27 @@
 
         let inspectionID = '<?= $inspection['INSPE_ID'] ?>';
         drawQuestionForm(inspectionID);
+
+
+        $("#auditor-inspect-form").submit(function(event) {
+            event.preventDefault();
+            let thisForm = $(this);
+            let planID = <?= $planID ?>;
+            let formData = thisForm.serialize() + `&planID=${planID}`;
+            $.post({
+                url: '<?= site_url('auditor/ajax_update_inspect_score') ?>',
+                data: formData,
+                dataType: 'json'
+            }).done(res => {
+                console.log(res);
+                $("#form-questionaire-result").prop('class', 'alert alert-success');
+                $("#form-questionaire-result").text('บันทึกสำเร็จ');
+
+                setTimeout(() => {
+                    $("#form-questionaire-result").prop('class', '');
+                    $("#form-questionaire-result").text('');
+                }, 3000);
+            }).fail((jhr, status, error) => console.error(jhr, status, error));
+        });
     });
 </script>

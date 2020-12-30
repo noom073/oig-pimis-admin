@@ -344,4 +344,31 @@ class Auditor extends CI_Controller
 			->set_content_type('application/json')
 			->set_output(json_encode($result));
 	}
+
+	public function ajax_update_inspect_score()
+	{
+		$planID = $this->input->post('planID', true);
+		$scores = $this->input->post();
+		unset($scores['planID']);
+		$result = array();
+		foreach ($scores as $key => $val) {
+			$questionID = explode('score-', $key)[1];
+			$update = $this->questionaire_model->update_inspection_score($val, $planID, $questionID);
+			if ($update) {
+				$data['questionID'] = $questionID;
+				$data['planID'] = $planID;
+				$data['score'] = $val;
+				$data['status'] = true;
+			} else {
+				$data['questionID'] = $questionID;
+				$data['planID'] = $planID;
+				$data['score'] = $val;
+				$data['status'] = false;
+			}
+			$result[] = $data;
+		}
+		$this->output
+			->set_content_type('application/json')
+			->set_output(json_encode($result));
+	}
 }

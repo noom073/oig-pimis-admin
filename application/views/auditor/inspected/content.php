@@ -52,6 +52,7 @@
                                     <div id="form-loading">Loading data...</div>
                                     <div id="form-questionaire"></div>
                                     <div>
+                                        <div id="form-questionaire-result"></div>
                                         <button class="btn btn-sm btn-primary">บันทึก</button>
                                         <button class="btn btn-sm btn-light" type="button">ปิด</button>
                                     </div>

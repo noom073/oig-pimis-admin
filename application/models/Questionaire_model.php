@@ -129,4 +129,16 @@ class Questionaire_model extends CI_Model
         $query = $this->oracle->query($sql, array($planID));
         return $query;
     }
+
+    public function update_inspection_score($score, $planID, $questionID)
+    {
+        $date = date("Y-m-d H:i:s");
+        $this->oracle->set('SCORE', $score);
+        $this->oracle->set("TIME_UPDATE", "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
+        $this->oracle->set("USER_UPDATE", $this->session->email);
+        $this->oracle->where('PLAN_ID', $planID);
+        $this->oracle->where('QUESTION_ID', $questionID);
+        $query = $this->oracle->update('PIMIS_INSPECTION_SCORE_AUDITOR');
+        return $query;
+    }
 }
