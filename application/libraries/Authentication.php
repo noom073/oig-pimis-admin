@@ -9,6 +9,8 @@ class Authentication
     public function __construct()
     {
         $this->CI = &get_instance();
+        $this->CI->load->helper('string');
+        $this->CI->load->helper('cookie');
         $this->CI->load->library('session');
         $this->CI->load->library('session_services');
         $this->CI->load->model('auth_model');
@@ -107,20 +109,36 @@ class Authentication
                 $userID = $this->CI->auth_model->get_user($ADData->EMAIL)->row_array()['USER_ID'];
                 $userType = $this->CI->auth_model->get_user_type($userID);
                 if ($userType->num_rows() > 0) { // CHECK PRIVILEGES
-                    $sesData['usertype']    = array_map(function ($r) {
-                        $data['TYPE_NAME'] = $r['TYPE_NAME'];
-                        $data['TYPE_NAME_FULL'] = $this->CI->session_services->get_user_type_name($r['TYPE_NAME']);
-                        return $data;
-                    }, $userType->result_array());
-                    $sesData['nameth']      = $ADData->BIOG_NAME;
-                    $sesData['nameen']      = $ADData->BIOG_NAME_ENG;
-                    $sesData['email']       = $ADData->EMAIL;
-                    $sesData['mid']         = $ADData->BIOG_ID;
-                    $sesData['cid']         = $ADData->REG_CID;
-                    $sesData['isLogged']    = true;
-                    $this->CI->session->set_userdata($sesData);
-                    $result['status']   = true;
-                    $result['data']     = $sesData;
+                    $token = random_string('alnum', 32);
+                    $checkToken = $this->CI->auth_model->check_token($token);
+                    if ($checkToken->num_rows() == 0) { // CHECK TOKEN DUPLICATE
+                        $insertToken = $this->CI->auth_model->insert_token($token, $userID);
+                        if ($insertToken) { // CHECK INSERT TOKEN
+                            set_cookie('pimis-token', $token, 0);
+                            $sesData['usertype']    = array_map(function ($r) {
+                                $data['TYPE_NAME'] = $r['TYPE_NAME'];
+                                $data['TYPE_NAME_FULL'] = $this->CI->session_services->get_user_type_name($r['TYPE_NAME']);
+                                return $data;
+                            }, $userType->result_array());
+                            $sesData['nameth']      = $ADData->BIOG_NAME;
+                            $sesData['nameen']      = $ADData->BIOG_NAME_ENG;
+                            $sesData['email']       = $ADData->EMAIL;
+                            $sesData['mid']         = $ADData->BIOG_ID;
+                            $sesData['cid']         = $ADData->REG_CID;
+                            $sesData['isLogged']    = true;
+                            $this->CI->session->set_userdata($sesData);
+                            $result['status']   = true;
+                            $result['data']     = $sesData;
+                        } else {
+                            $result['status']   = false;
+                            $result['text']     = 'เพิ่ม TOKEN ไม่สำเร็จ';
+                            $result['http_code'] = 403;
+                        }
+                    } else {
+                        $result['status']   = false;
+                        $result['text']     = 'สร้าง TOKEN ไม่สำเร็จ';
+                        $result['http_code'] = 403;
+                    }
                 } else {
                     $result['status']   = false;
                     $result['text']     = 'ไม่พบสิทธิผู้ใช้นี้';

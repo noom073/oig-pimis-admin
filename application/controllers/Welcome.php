@@ -24,9 +24,10 @@ class Welcome extends CI_Controller
 	{
 		parent::__construct();
 		$this->load->helper('url');
-
+		$this->load->helper('cookie');		
 		$this->load->library('session');
 		$this->load->library('authentication');
+		$this->load->model('auth_model');
 	}
 	public function index()
 	{
@@ -42,13 +43,12 @@ class Welcome extends CI_Controller
 	}
 
 	public function login()
-	{
+	{	
 		$this->load->view('welcome/login_content/content');
 	}
 
 	public function ajax_adlogin_process()
 	{
-		$this->load->model('auth_model');
 		$rtarfMail 	= $this->input->post('email');
 		$password 	= $this->input->post('password');
 		$loginProcess = $this->authentication->process_login($rtarfMail, $password);	
@@ -57,7 +57,10 @@ class Welcome extends CI_Controller
 
 	public function logout()
 	{
+		$token = get_cookie('pimis-token');
 		$this->session->sess_destroy();
+		$this->auth_model->update_token($token, 'n');
+		delete_cookie('pimis-token');
 		redirect('welcome/index');
 	}
 }

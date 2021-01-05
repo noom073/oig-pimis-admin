@@ -31,4 +31,41 @@ class Auth_model extends CI_Model
         $query = $this->oracle->query($sql, array($rtarfMail));
         return $query;
     }
+
+    public function check_token($token)
+    {
+        $this->oracle->where('TOKEN', $token);
+        $query = $this->oracle->get('PIMIS_TOKEN_DATA');
+        return $query;
+    }
+
+    public function insert_token($token, $userID)
+    {
+        $date = date("Y-m-d H:i:s");
+        $this->oracle->set('TOKEN', $token);
+        $this->oracle->set('ACTIVE', 'y');
+        $this->oracle->set('USER_ID', $userID);
+        $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
+        $query = $this->oracle->insert('PIMIS_TOKEN_DATA');
+        return $query;
+    }
+
+    public function update_token($token)
+    {
+        $date = date("Y-m-d H:i:s");
+        $this->oracle->set('ACTIVE', 'n');
+        $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
+        $this->oracle->where('TOKEN', $token);
+        $query = $this->oracle->update('PIMIS_TOKEN_DATA');
+        return $query;
+    }
+
+    public function get_user_id($token)
+    {
+        $this->oracle->select('USER_ID');
+        $this->oracle->where('TOKEN', $token);
+        $this->oracle->where('ACTIVE', 'y');
+        $query = $this->oracle->get('PIMIS_TOKEN_DATA');
+        return $query;
+    }
 }

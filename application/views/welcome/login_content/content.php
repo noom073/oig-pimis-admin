@@ -125,7 +125,6 @@
 						$("#result-login-form").prop('class', 'text-danger');
 						$("#submit-login-form").prop('disabled', false);
 					}
-
 				}).fail((jhr, status, error) => console.error(jhr, status, error));
 			});
 		});

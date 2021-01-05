@@ -8,20 +8,24 @@ class Admin extends CI_Controller
 	{
 		parent::__construct();
 		$this->load->helper('url');
+		$this->load->helper('cookie');
 		$this->load->library('session');
 		$this->load->library('session_services');
-
 		$this->load->model('user_model');
 		$this->load->model('privilege_model');
+
+		$data['token'] = get_cookie('pimis-token');
+		$this->load->library('user_data', $data);
 	}
 
 	public function index()
 	{
+		$token = $this->user_data->get_user_id();
 		$data['name'] 		= $this->session->nameth;
 		$data['userType'] 	= $this->session_services->get_user_type_name($this->session->usertype);
 		$sideBar['name'] 	= $this->session->nameth;
 		$script['customScript'] = $this->load->view('admin/index_content/script', '', true);
-
+		
 		$component['header'] 			= $this->load->view('admin/component/header', '', true);
 		$component['navbar'] 			= $this->load->view('admin/component/navbar', '', true);
 		$component['mainSideBar'] 		= $this->load->view('sidebar/main-sidebar', $sideBar, true);
@@ -29,7 +33,7 @@ class Admin extends CI_Controller
 		$component['controllerSidebar'] = $this->load->view('admin/component/controller_sidebar', '', true);
 		$component['contentWrapper'] 	= $this->load->view('admin/index_content/content', $data, true);
 		$component['jsScript'] 			= $this->load->view('admin/component/main_script', $script, true);
-
+		
 		$this->load->view('admin/template', $component);
 	}
 
