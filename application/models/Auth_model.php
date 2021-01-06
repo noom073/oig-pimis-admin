@@ -68,4 +68,13 @@ class Auth_model extends CI_Model
         $query = $this->oracle->get('PIMIS_TOKEN_DATA');
         return $query;
     }
+
+    public function get_email($userID)
+    {
+        $this->oracle->select('EMAIL');
+        $this->oracle->where('USER_ID', $userID);
+        $this->oracle->where('ACTIVE', 'y');
+        $query = $this->oracle->get('PIMIS_USER');
+        return $query;
+    }
 }
