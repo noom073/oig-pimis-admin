@@ -38,6 +38,25 @@ class Controller_user extends CI_Controller
         $this->load->view('controller_user/template', $component);
     }
 
+    public function inspection_list()
+    {
+        $data['name']       = $this->session->nameth;
+        $data['userType']   = $this->session_services->get_user_type_name($this->session->usertype);
+        $sideBar['name']     = $this->session->nameth;
+        $sideBar['userType']     = array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
+        $script['customScript'] = $this->load->view('controller_user/inspection_list/script', '', true);
+
+        $component['header']            = $this->load->view('controller_user/component/header', '', true);
+        $component['navbar']            = $this->load->view('controller_user/component/navbar', '', true);
+        $component['mainSideBar']         = $this->load->view('sidebar/main-sidebar', $sideBar, true);
+        $component['mainFooter']        = $this->load->view('controller_user/component/footer_text', '', true);
+        $component['controllerSidebar'] = $this->load->view('controller_user/component/controller_sidebar', '', true);
+        $component['contentWrapper']    = $this->load->view('controller_user/inspection_list/content', $data, true);
+        $component['jsScript']          = $this->load->view('controller_user/component/main_script', $script, true);
+
+        $this->load->view('controller_user/template', $component);
+    }
+
     public function subject()
     {
         $data['name']       = $this->session->nameth;
@@ -245,6 +264,25 @@ class Controller_user extends CI_Controller
         $data['updater']        = $this->session->email;
         $insert = $this->inspection_model->add_inspection($data);
         if ($insert) {
+            $result['status']   = true;
+            $result['text']     = 'บันทึกข้อมูลสำเร็จ';
+        } else {
+            $result['status']   = false;
+            $result['text']     = 'บันทึกข้อมูลไม่สำเร็จ';
+        }
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($result));
+    }
+
+    public function ajax_update_inspection()
+    {
+        $input['inspectionName']    = $this->input->post('inspectionName', true);
+        $input['inspectionOrder']   = $this->input->post('inspectionOrder', true);
+        $input['inspectionID']      = $this->input->post('inspectionID', true);
+        $input['updater']           = $this->session->email;
+        $update = $this->inspection_model->update_inspection($input);
+        if ($update) {
             $result['status']   = true;
             $result['text']     = 'บันทึกข้อมูลสำเร็จ';
         } else {

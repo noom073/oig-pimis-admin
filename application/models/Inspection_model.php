@@ -143,4 +143,23 @@ class Inspection_model extends CI_Model
         $query = $this->oracle->insert('PIMIS_INSPECTIONS');
         return $query;
     }
+
+    public function get_a_inspection($inspectionID)
+    {
+        $this->oracle->where('INSPE_ID', $inspectionID);
+        $query = $this->oracle->get('PIMIS_INSPECTIONS');
+        return $query;
+    }
+
+    public function update_inspection($array)
+    {
+        $date = date("Y-m-d H:i:s");
+        $this->oracle->set('INSPE_NAME', $array['inspectionName']);
+        $this->oracle->set('ORDER_NUM', $array['inspectionOrder']);
+        $this->oracle->set('USER_UPDATE', $array['updater']);
+        $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
+        $this->oracle->where('INSPE_ID', $array['inspectionID']);
+        $query = $this->oracle->update('PIMIS_INSPECTIONS');
+        return $query;
+    }
 }

@@ -12,6 +12,7 @@ class Data_service extends CI_Controller
         $this->load->model('questionaire_model');
         $this->load->model('subject_model');
         $this->load->model('question_model');
+        $this->load->model('inspection_model');
         $this->load->model('data_model');
     }
 
@@ -117,6 +118,15 @@ class Data_service extends CI_Controller
             $r['TYPE_NAME_FULL'] = $this->session_services->get_user_type_name($r['TYPE_NAME']);
             return $r;
         }, $allUserTypes);
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($data));
+    }
+
+    public function ajax_get_a_inspection()
+    {
+        $inspectionID = $this->input->post('inspectionID', true);
+        $data = $this->inspection_model->get_a_inspection($inspectionID)->row_array();
         $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode($data));

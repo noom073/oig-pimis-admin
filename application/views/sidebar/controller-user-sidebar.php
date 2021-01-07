@@ -15,9 +15,15 @@
     </a>
     <ul class="nav nav-treeview">
         <li class="nav-item">
-            <a href="<?= site_url('controller_user/subject') ?>" id="controller-user-inspection" class="nav-link">
+            <a href="<?= site_url('controller_user/inspection_list') ?>" id="controller-user-inspection" class="nav-link">
                 <i class="nav-icon far fa-question-circle"></i>
-                <p>การจัดการคำถามประเมิน</p>
+                <p>การจัดการสายการตรวจ</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="<?= site_url('controller_user/subject') ?>" id="controller-user-inspection-option" class="nav-link">
+                <i class="nav-icon far fa-question-circle"></i>
+                <p title="การจัดการประเภทสายการตรวจ">การจัดการประเภทฯ</p>
             </a>
         </li>
     </ul>
