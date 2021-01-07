@@ -162,4 +162,18 @@ class Inspection_model extends CI_Model
         $query = $this->oracle->update('PIMIS_INSPECTIONS');
         return $query;
     }
+
+    public function check_inspection_in_subject($inspectionID)
+    {
+        $this->oracle->where('INSPECTION_ID', $inspectionID);
+        $query = $this->oracle->get('PIMIS_SUBJECT');
+        return $query;
+    }
+
+    public function delete_inspection($inspectionID)
+    {
+        $this->oracle->where('INSPE_ID', $inspectionID);
+        $query = $this->oracle->delete('PIMIS_INSPECTIONS');
+        return $query;
+    }
 }

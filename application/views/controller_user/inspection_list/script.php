@@ -126,5 +126,25 @@
                 }
             }).fail((jhr, status, error) => console.error(jhr, status, error));
         });
+
+        $(document).on('click', ".delete-inspection", function() {
+            if (confirm('ยืนยันการลบสายการตรวจ')) {
+                let inspectionID = $(this).data('inspection-id');
+                $.post({
+                    url: '<?= site_url('controller_user/ajax_delete_inspection') ?>',
+                    data: {
+                        inspectionID: inspectionID
+                    },
+                    dataType: 'json'
+                }).done(res => {
+                    console.log(res);
+                    alert(res.text);
+                    inspectionTable.ajax.reload();
+                }).fail((jhr, status, error) => console.error(jhr, status, error));
+                return true;
+            } else {
+                return false;
+            }
+        });
     });
 </script>

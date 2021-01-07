@@ -293,4 +293,27 @@ class Controller_user extends CI_Controller
             ->set_content_type('application/json')
             ->set_output(json_encode($result));
     }
+
+    public function ajax_delete_inspection()
+    {
+        $inspectionID = $this->input->post('inspectionID', true);
+        $checkInpspection = $this->inspection_model->check_inspection_in_subject($inspectionID);
+        if ($checkInpspection->num_rows() == 0) {
+            $delete = $this->inspection_model->delete_inspection($inspectionID);
+            if ($delete) {
+                $result['status']   = true;
+                $result['text']     = 'ลบข้อมูลสำเร็จ';
+            } else {
+                $result['status']   = false;
+                $result['text']     = 'ลบไม่ข้อมูลสำเร็จ';
+            }
+            
+        } else {
+            $result['status']   = false;
+            $result['text']     = 'ลบไม่สำเร็จ สายการตรวจนี้มีการใช้งานอยู่';
+        }
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($result));
+    }
 }
