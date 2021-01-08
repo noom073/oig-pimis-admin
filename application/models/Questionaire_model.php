@@ -16,7 +16,7 @@ class Questionaire_model extends CI_Model
             $this->oracle->where('INSPE_ID', $inspectionID);
         }
         $this->oracle->select('INSPE_ID, INSPE_NAME');
-        $this->oracle->order_by('INSPE_ID');
+        $this->oracle->order_by('ORDER_NUM');
         $result = $this->oracle->get('PIMIS_INSPECTIONS');
         return $result;
     }

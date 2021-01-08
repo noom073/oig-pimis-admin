@@ -26,6 +26,12 @@
                 <p title="การจัดการประเภทสายการตรวจ">การจัดการประเภทฯ</p>
             </a>
         </li>
+        <li class="nav-item">
+            <a href="<?= site_url('controller_user/question_manage') ?>" id="controller-user-question-manage" class="nav-link">
+                <i class="nav-icon far fa-question-circle"></i>
+                <p title="การจัดการประเภทสายการตรวจ">การจัดการชุดคำถาม</p>
+            </a>
+        </li>
     </ul>
 </li>
 <li class="nav-item has-treeview" id="controller-user-headnav-summarize">

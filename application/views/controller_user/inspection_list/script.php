@@ -78,7 +78,7 @@
                     $("#result-create-inspection-form").prop('class', '');
                     $("#result-create-inspection-form").text('');
                     thisForm.trigger('reset');
-                }, 5000);
+                }, 3000);
             }).fail((jhr, status, error) => console.error(jhr, status, error));
         });
 
@@ -124,8 +124,13 @@
                     $("#result-edit-inspection-form").prop('class', 'alert alert-danger');
                     $("#result-edit-inspection-form").text(res.text);
                 }
+                setTimeout(() => {
+                    $("#result-edit-inspection-form").prop('class', '');
+                    $("#result-edit-inspection-form").text('');
+                }, 2500);
             }).fail((jhr, status, error) => console.error(jhr, status, error));
         });
+
 
         $(document).on('click', ".delete-inspection", function() {
             if (confirm('ยืนยันการลบสายการตรวจ')) {

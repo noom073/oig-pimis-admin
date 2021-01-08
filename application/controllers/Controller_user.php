@@ -307,10 +307,47 @@ class Controller_user extends CI_Controller
                 $result['status']   = false;
                 $result['text']     = 'ลบไม่ข้อมูลสำเร็จ';
             }
-            
         } else {
             $result['status']   = false;
             $result['text']     = 'ลบไม่สำเร็จ สายการตรวจนี้มีการใช้งานอยู่';
+        }
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($result));
+    }
+
+    public function question_manage()
+    {
+        $data['name']       = $this->session->nameth;
+        $data['userType']   = $this->session_services->get_user_type_name($this->session->usertype);
+        $sideBar['name']     = $this->session->nameth;
+        $sideBar['userType']     = array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
+        $script['customScript'] = $this->load->view('controller_user/question_manage/script', '', true);
+
+        $component['header']            = $this->load->view('controller_user/component/header', '', true);
+        $component['navbar']            = $this->load->view('controller_user/component/navbar', '', true);
+        $component['mainSideBar']         = $this->load->view('sidebar/main-sidebar', $sideBar, true);
+        $component['mainFooter']        = $this->load->view('controller_user/component/footer_text', '', true);
+        $component['controllerSidebar'] = $this->load->view('controller_user/component/controller_sidebar', '', true);
+        $component['contentWrapper']    = $this->load->view('controller_user/question_manage/content', $data, true);
+        $component['jsScript']          = $this->load->view('controller_user/component/main_script', $script, true);
+
+        $this->load->view('controller_user/template', $component);
+    }
+
+    public function ajax_add_inspection_option()
+    {
+        $input['name']          = $this->input->post('inspectionOptionName', true);
+        $input['year']          = $this->input->post('optionYear', true);
+        $input['inspectionID']  = $this->input->post('inspectionID', true);
+        $input['updater']       = $this->session->email;
+        $insert = $this->inspection_model->add_inspection_option($input);
+        if ($insert) {
+            $result['status'] = true;
+            $result['text'] = 'บันทึกสำเร็จ';
+        } else {
+            $result['status'] = false;
+            $result['text'] = 'บันทึกไม่สำเร็จ';
         }
         $this->output
             ->set_content_type('application/json')
