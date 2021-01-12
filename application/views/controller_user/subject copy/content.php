@@ -19,23 +19,30 @@
         <div class="container-fluid">
             <div class="card">
                 <div class="card-header">
-                    <div class="h3">การจัดการชุดคำถามประเมิน <?= "{$insOpt['INSPECTION_NAME']} ({$insOpt['OPTION_YEAR']})" ?></div>
+                    <div class="h3">การจัดการคำถามประเมิน</div>
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
                         <button class="btn btn-sm btn-light" onclick="return window.history.back();">ย้อนกลับ</button>
+                        <button class="btn btn-sm btn-primary" id="create-inspection">เพิ่มสายการตรวจ</button>
                     </div>
                     <div class="card-text">
+                        <div class="form-inline">
+                            <label class="my-1 mr-2">ประเภทการตรวจ</label>
+                            <select class="custom-select my-1 mr-2" id="inspection-list"></select>
+                        </div>
                         <div class="my-2">
-                            <button class="btn btn-sm btn-primary subject-activity-btn" id="add-subject">เพิ่มหัวข้อการตรวจ</button>
-                            <button class="btn btn-sm btn-primary subject-activity-btn" id="collapse-subject-ul">แสดงทั้งหมด</button>
-                            <button class="btn btn-sm btn-primary subject-activity-btn" id="show-subject-ul">ปิดทั้งหมด</button>
+                            <button class="btn btn-sm btn-primary subject-activity-btn invisible" id="add-subject">เพิ่มหัวข้อการตรวจ</button>
+                            <button class="btn btn-sm btn-primary subject-activity-btn invisible" id="collapse-subject-ul">แสดงทั้งหมด</button>
+                            <button class="btn btn-sm btn-primary subject-activity-btn invisible" id="show-subject-ul">ปิดทั้งหมด</button>
                         </div>
                         <div>
                             <div>
                                 <b>หัวข้อการตรวจ</b>
                             </div>
-                            <div id="tree"></div>
+                            <div id="tree">
+                                <label for="inspection-list"> - โปรดเลือก ประเภทการตรวจ - </label>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -97,10 +104,8 @@
                             </div>
 
                             <div class="form-group">
-                                <label>ชุดคำถามประเมิน</label>
-                                <select class="custom-select" name="inspectionID" id="inspection-id-edit-subject-form">
-                                    <option value="<?= $insOpt['ROW_ID'] ?>"><?= $insOpt['INSPECTION_NAME'] ?></option>
-                                </select>
+                                <label>ประเภทการตรวจ</label>
+                                <select class="custom-select" name="inspectionID" id="inspection-id-edit-subject-form"></select>
                             </div>
 
                             <div class="form-group">
@@ -124,7 +129,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">เพิ่มหัวข้อการตรวจ</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">แก้ไขหัวข้อการตรวจ</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -142,10 +147,8 @@
                             </div>
 
                             <div class="form-group">
-                                <label>ชุดคำถามประเมิน</label>
-                                <select class="custom-select" name="inspectionID" id="inspection-create-sub-subject-form">
-                                    <option value="<?= $insOpt['ROW_ID'] ?>"><?= $insOpt['INSPECTION_NAME'] ?></option>
-                                </select>
+                                <label>ประเภทการตรวจ</label>
+                                <select class="custom-select" name="inspectionID" id="inspection-create-sub-subject-form"></select>
                             </div>
 
                             <div class="form-group">

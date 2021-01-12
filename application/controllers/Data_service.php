@@ -39,8 +39,8 @@ class Data_service extends CI_Controller
 
     public function ajax_get_subjects()
     {
-        $inspectionID = $this->input->post('inspectionID');
-        $subjects = $this->subject_model->get_subject_by_inspection($inspectionID)->result_array();
+        $inspectionOptionID = $this->input->post('inspectionOptionID');
+        $subjects = $this->subject_model->get_subject_by_inspection($inspectionOptionID)->result_array();
         $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode($subjects));
@@ -135,7 +135,6 @@ class Data_service extends CI_Controller
     public function ajax_get_inspection_options()
     {
         $input['inspectionID'] = $this->input->post('inspectionID', true);
-        $input['optionYear'] = $this->input->post('optionYear', true);
         $data = $this->inspection_model->get_inspection_options($input)->result_array();
         $this->output
             ->set_content_type('application/json')

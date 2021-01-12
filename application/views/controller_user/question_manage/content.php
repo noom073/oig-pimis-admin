@@ -19,40 +19,30 @@
         <div class="container-fluid">
             <div class="card">
                 <div class="card-header">
-                    <div class="h3">การจัดการคำถามประเมิน</div>
+                    <div class="h3">การจัดการชุดคำถามประเมิน</div>
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
                         <button class="btn btn-sm btn-light" onclick="return window.history.back();">ย้อนกลับ</button>
+                        <div>
+                            <button class="btn btn-sm btn-success invisible" id="add-inspection-option">
+                                + เพิ่มสายการตรวจ
+                                <span></span>
+                            </button>
+                        </div>
                     </div>
                     <div class="card-text">
                         <div>
                             <form id="get-inspections-option-form">
                                 <div class="form-row">
                                     <div class="form-group col-md-4">
-                                        <label class="my-1 mr-2">สายการตรวจ</label>
-                                        <select class="custom-select my-1 mr-2" id="inspection-list" name="inspectionID"></select>
+                                        <label>ประเภทสายการตรวจ</label>
+                                        <select class="custom-select" id="inspection-list" name="inspectionID"></select>
                                     </div>
-                                    <div class="form-group col-md-4">
-                                        <label>ประจำปี</label>
-                                        <select class="custom-select" name="optionYear">
-                                        
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <button class="btn btn-primary">ค้นหา</button>
-                                    <button class="btn btn-light" type="reset">Reset</button>
                                 </div>
                             </form>
 
                             <div id="fetch-inspection-option-loading" class="invisible">Loading...</div>
-                            <div>
-                                <button class="btn btn-sm btn-primary" id="add-inspection-option" disabled>
-                                    เพิ่มสายการตรวจ
-                                    <span></span>
-                                </button>
-                            </div>
                         </div>
                         <div class="mt-3">
                             <div class="h5">ชุดคำถาม</div>
@@ -92,7 +82,11 @@
                             </div>
                             <div class="form-group">
                                 <label>ประจำปี</label>
-                                <input type="number" class="form-control" name="optionYear" required>
+                                <select class="custom-select" name="optionYear" required>
+                                    <?php for ($i = 0; $i < 5; $i++) { ?>
+                                        <option value="<?= date("Y") + 543 + $i ?>"><?= date("Y") + 543 + $i ?></option>
+                                    <?php } ?>
+                                </select>
                             </div>
                             <div id="result-create-inspection-option-form"></div>
                             <button type="submit" class="btn btn-primary">บันทึก</button>

@@ -57,23 +57,49 @@ class Controller_user extends CI_Controller
         $this->load->view('controller_user/template', $component);
     }
 
+    // public function subject()
+    // {
+    //     $data['name']       = $this->session->nameth;
+    //     $data['userType']   = $this->session_services->get_user_type_name($this->session->usertype);
+    //     $sideBar['name']     = $this->session->nameth;
+    //     $sideBar['userType']     = array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
+    //     $script['customScript'] = $this->load->view('controller_user/subject/script', '', true);
+
+    //     $component['header']            = $this->load->view('controller_user/component/header', '', true);
+    //     $component['navbar']            = $this->load->view('controller_user/component/navbar', '', true);
+    //     $component['mainSideBar']         = $this->load->view('sidebar/main-sidebar', $sideBar, true);
+    //     $component['mainFooter']        = $this->load->view('controller_user/component/footer_text', '', true);
+    //     $component['controllerSidebar'] = $this->load->view('controller_user/component/controller_sidebar', '', true);
+    //     $component['contentWrapper']    = $this->load->view('controller_user/subject/content', $data, true);
+    //     $component['jsScript']          = $this->load->view('controller_user/component/main_script', $script, true);
+
+    //     $this->load->view('controller_user/template', $component);
+    // }
+
     public function subject()
     {
-        $data['name']       = $this->session->nameth;
-        $data['userType']   = $this->session_services->get_user_type_name($this->session->usertype);
-        $sideBar['name']     = $this->session->nameth;
-        $sideBar['userType']     = array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
-        $script['customScript'] = $this->load->view('controller_user/subject/script', '', true);
+        $inspectionoption = $this->input->get('inspectionoption', true);
+        $insOpt = $this->inspection_model->get_inspection_option($inspectionoption);
+        if ($insOpt->num_rows()) {
+            
+            $data['insOpt']         = $insOpt->row_array();
+            $sideBar['name']        = $this->session->nameth;
+            $sideBar['userType']    = array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
+            $scriptData['insOpt']   = $insOpt->row_array();
+            $script['customScript'] = $this->load->view('controller_user/subject/script', $scriptData, true);
 
-        $component['header']            = $this->load->view('controller_user/component/header', '', true);
-        $component['navbar']            = $this->load->view('controller_user/component/navbar', '', true);
-        $component['mainSideBar']         = $this->load->view('sidebar/main-sidebar', $sideBar, true);
-        $component['mainFooter']        = $this->load->view('controller_user/component/footer_text', '', true);
-        $component['controllerSidebar'] = $this->load->view('controller_user/component/controller_sidebar', '', true);
-        $component['contentWrapper']    = $this->load->view('controller_user/subject/content', $data, true);
-        $component['jsScript']          = $this->load->view('controller_user/component/main_script', $script, true);
+            $component['header']            = $this->load->view('controller_user/component/header', '', true);
+            $component['navbar']            = $this->load->view('controller_user/component/navbar', '', true);
+            $component['mainSideBar']       = $this->load->view('sidebar/main-sidebar', $sideBar, true);
+            $component['mainFooter']        = $this->load->view('controller_user/component/footer_text', '', true);
+            $component['controllerSidebar'] = $this->load->view('controller_user/component/controller_sidebar', '', true);
+            $component['contentWrapper']    = $this->load->view('controller_user/subject/content', $data, true);
+            $component['jsScript']          = $this->load->view('controller_user/component/main_script', $script, true);
 
-        $this->load->view('controller_user/template', $component);
+            $this->load->view('controller_user/template', $component);
+        } else {
+            redirect('controller_user/question_manage');
+        }
     }
 
     public function ajax_add_subject()

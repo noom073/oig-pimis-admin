@@ -182,9 +182,6 @@ class Inspection_model extends CI_Model
         if($array['inspectionID'] != null && $array['inspectionID'] != ''){
             $this->oracle->where('INSPECTION_ID', $array['inspectionID']);
         }
-        if($array['optionYear'] != null && $array['optionYear'] != ''){
-            $this->oracle->where('OPTION_YEAR', $array['optionYear']);
-        }
         $query = $this->oracle->get('PIMIS_INSPECTION_OPTION');
         return $query;
     }
@@ -198,6 +195,13 @@ class Inspection_model extends CI_Model
         $this->oracle->set('USER_UPDATE', $array['updater']);
         $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
         $query = $this->oracle->insert('PIMIS_INSPECTION_OPTION');
+        return $query;
+    }
+
+    public function get_inspection_option($id)
+    {
+        $this->oracle->where('ROW_ID', $id);
+        $query = $this->oracle->get('PIMIS_INSPECTION_OPTION');
         return $query;
     }
 }

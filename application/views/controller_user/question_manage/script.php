@@ -5,7 +5,7 @@
         $("a#controller-user-question-manage").addClass('active');
 
 
-        const inspectionOPtionsTable = $("#inspection-option-table").DataTable({
+        const inspectionOptionsTable = $("#inspection-option-table").DataTable({
             data: [],
             columns: [{
                     data: null,
@@ -13,7 +13,8 @@
                     className: 'text-center'
                 },
                 {
-                    data: 'INSPECTION_NAME'
+                    data: 'INSPECTION_NAME',
+                    render: (data, type, row, meta) => `ชุดคำถาม ${data}`
                 },
                 {
                     data: 'OPTION_YEAR',
@@ -21,7 +22,12 @@
                 },
                 {
                     data: 'ROW_ID',
-                    className: 'text-center'
+                    className: 'text-center',
+                    render: (data, type, row, meta) => {
+                        let detailBtn = `<a href="<?= site_url('controller_user/subject') ?>?inspectionoption=${data}" class="btn btn-sm btn-primary">รายละเอียด</a>`;
+                        let deleteBtn = `<button class="btn btn-sm btn-danger">ลบ</button>`;
+                        return `${detailBtn} ${deleteBtn}`;
+                    }
                 }
             ]
         });
@@ -46,37 +52,34 @@
         putInspectionToSelect();
 
 
-        const getInspectionOptions = formData => {
+        const getInspectionOptions = inspectionID => {
             return $.post({
                 url: '<?= site_url('data_service/ajax_get_inspection_options') ?>',
-                data: formData,
+                data: {
+                    inspectionID: inspectionID
+                },
                 dataType: 'json'
             }).done().fail((jhr, status, error) => console.error(jhr, status, error));
         };
 
 
-        $("#get-inspections-option-form").submit(async function(event) {
-            event.preventDefault();
-            let thisForm = $(this);
-            let formData = thisForm.serialize();
+        $("#inspection-list").change(async function(event) {
             $("#fetch-inspection-option-loading").removeClass('invisible');
-            let inspectionOptions = await getInspectionOptions(formData);
-            inspectionOPtionsTable.clear()
-                .rows.add(inspectionOptions)
-                .draw();
-            $("#fetch-inspection-option-loading").addClass('invisible');
-        });
-
-
-        $("#inspection-list").change(function() {
             let inspectionID = $(this).val();
             if (inspectionID !== '') {
                 let inspection = inspections.filter(r => r.INSPE_ID == inspectionID);
-                console.log(inspection);
+                let inspectionOptions = await getInspectionOptions(inspectionID);
+                inspectionOptionsTable.clear()
+                    .rows.add(inspectionOptions)
+                    .draw();
+                $("#fetch-inspection-option-loading").addClass('invisible');
                 $("#add-inspection-option").children('span').text(inspection[0].INSPE_NAME);
-                $("#add-inspection-option").removeAttr('disabled');
+                $("#add-inspection-option").removeClass('invisible');
+                $("#add-inspection-option").attr('disabled', false);
             } else {
+                $("#add-inspection-option").addClass('invisible');
                 $("#add-inspection-option").attr('disabled', true);
+                $("#add-inspection-option").children('span').text('');
             }
         });
 
@@ -93,10 +96,15 @@
                 url: '<?= site_url('controller_user/ajax_add_inspection_option') ?>',
                 data: formData,
                 dataType: 'json'
-            }).done(res => {
+            }).done(async res => {
                 if (res.status) {
                     $("#result-create-inspection-option-form").prop('class', 'alert alert-success');
                     $("#result-create-inspection-option-form").text(res.text);
+                    let data = $("#inspection-list").serialize();
+                    let inspectionOptions = await getInspectionOptions(data);
+                    inspectionOptionsTable.clear()
+                        .rows.add(inspectionOptions)
+                        .draw();
                 } else {
                     $("#result-create-inspection-option-form").prop('class', 'alert alert-danger');
                     $("#result-create-inspection-option-form").text(res.text);

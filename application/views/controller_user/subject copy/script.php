@@ -5,10 +5,26 @@
         $("a#controller-user-inspection-option").addClass('active');
 
 
-        let inspectionOption = <?= json_encode($insOpt) ?>;
-        let inspectionOptionID = inspectionOption.ROW_ID;
+        let inspections = new Array();
+        const putInspectionToSelect = () => { // PUT INSPECTIONS TO #inspection-list
+            console.log('Loading inspections');
+            $.get({
+                url: '<?= site_url('data_service/ajax_get_inspection') ?>',
+                dataType: 'json'
+            }).done(res => {
+                inspections = res;
+                let option = '<option value="">โปรดระบุ</option>';
+                res.forEach(r => {
+                    option += `<option value="${r.INSPE_ID}">${r.INSPE_NAME}</option>`;
+                });
+                $('#inspection-list').html(option);
+                console.log('Loading inspections complete');
 
-        
+            }).fail((jhr, status, error) => console.error(jhr, status, error));
+        };
+        putInspectionToSelect();
+
+
         const convertSubjectToTree = (subjects, parentID = '0') => {
             let items = subjects.filter(r => r.SUBJECT_PARENT_ID === parentID)
                 .sort((a, b) => a.SUBJECT_ORDER - b.SUBJECT_ORDER)
@@ -40,7 +56,7 @@
                                 <div class="d-flex">
                                     <span class="has-child">
                                         <i class="caret fas fa-angle-right text-primary"></i>
-                                        ${num}. ${r.SUBJECT_NAME} (Ref: ${r.SUBJECT_ID})
+                                        ${num}. ${r.SUBJECT_NAME}
                                     </span>                             
                                     <div class="ml-auto">${createBtn} ${listQuestionBtn} ${editBtn} ${deleteBtn}</div>
                                 </div>
@@ -49,7 +65,7 @@
                 } else {
                     html += `<li class="list-subject d-block my-1 mx-0 px-0 py-1">
                                 <div class="d-flex">
-                                    <span>${num}. ${r.SUBJECT_NAME} (Ref: ${r.SUBJECT_ID})</span>  
+                                    <span>${num}. ${r.SUBJECT_NAME}</span>  
                                     <div class="ml-auto">${createBtn} ${listQuestionBtn} ${editBtn} ${deleteBtn}</div>
                                 </div>
                             </li>`;
@@ -60,12 +76,12 @@
         };
 
 
-        const getSubjects = inspectionOptionID => {
+        const getSubjects = inspectionID => {
             console.log('Loading Subjects');
             return $.post({
                 url: '<?= site_url('data_service/ajax_get_subjects') ?>',
                 data: {
-                    inspectionOptionID: inspectionOptionID
+                    inspectionID: inspectionID
                 },
                 dataType: 'json'
             }).done(res => console.log('Loading Subjects complete')).fail((jhr, status, error) => console.error(jhr, status, error));
@@ -73,13 +89,23 @@
 
 
         let subjects = new Array();
-        const drawSubjectList = async inspectionOptionID => {
-            subjects = await getSubjects(inspectionOptionID);
+        const drawSubjectList = async inspectionID => {
+            subjects = await getSubjects(inspectionID);
             let treeArray = convertSubjectToTree(subjects);
             let html = treeView(treeArray);
             $("#tree").html(html);
         };
-        drawSubjectList(inspectionOptionID);
+
+
+        $("#inspection-list").change(function() {
+            let inspectionValue = $(this).val();
+            drawSubjectList(inspectionValue);
+            if (inspectionValue != '') {
+                $(".subject-activity-btn").removeClass('invisible');
+            } else {
+                $(".subject-activity-btn").addClass('invisible');
+            }
+        });
 
 
         $(document).on('click', ".has-child", function() {
@@ -102,7 +128,8 @@
         $("#create-subject-form").submit(function(event) {
             event.preventDefault();
             let thisForm = $(this);
-            let formData = thisForm.serialize() + `&inspectionID=${inspectionOptionID}`;
+            let inspectionID = $("#inspection-list").val();
+            let formData = thisForm.serialize() + `&inspectionID=${inspectionID}`;
             console.log(formData);
             $.post({
                 url: '<?= site_url('controller_user/ajax_add_subject') ?>',
@@ -116,7 +143,8 @@
                     $("#result-create-subject-form").prop('class', 'alert alert-danger');
                     $("#result-create-subject-form").text(res.text);
                 }
-                drawSubjectList(inspectionOptionID);
+                let inspectionID = $("#inspection-list").val();
+                drawSubjectList(inspectionID);
                 setTimeout(() => {
                     $("#result-create-subject-form").prop('class', '');
                     $("#result-create-subject-form").text('');
@@ -140,16 +168,26 @@
 
         $(document).on('click', ".edit-btn", async function() {
             let subjectID = $(this).data('subject-id');
+            let inspectionID = $("#inspection-list").val();
             let subjectDetail = await getSubjectOne(subjectID);
+
             let subjectParentOption = '<option value="0">ไม่ระบุ</option>';
             subjects.filter(r => r.SUBJECT_ID != subjectID)
                 .sort((a, b) => a.SUBJECT_ORDER - b.SUBJECT_ORDER)
                 .forEach(r => {
-                    subjectParentOption += `<option value="${r.SUBJECT_ID}" ${subjectDetail.SUBJECT_PARENT_ID == r.SUBJECT_ID ? 'selected':''}>${r.SUBJECT_NAME} (Ref: ${r.SUBJECT_ID})</option>`;
+                    subjectParentOption += `<option value="${r.SUBJECT_ID}" ${subjectDetail.SUBJECT_PARENT_ID == r.SUBJECT_ID ? 'selected':''}>${r.SUBJECT_NAME}</option>`;
                 });
+
+            let inspection = inspections.filter(r => r.INSPE_ID == inspectionID);
+
+            let inspectionParentOption = '';
+            inspection.forEach(r => {
+                inspectionParentOption = `<option value="${r.INSPE_ID}" selected>${r.INSPE_NAME}</option>`;
+            });
             $("#edit-subject-form").data('subject-id', subjectID);
             $("#subject-name-edit-subject-form").val(subjectDetail.SUBJECT_NAME);
             $("#subject-parent-edit-subject-form").html(subjectParentOption);
+            $("#inspection-id-edit-subject-form").html(inspectionParentOption);
             $("#subject-order-edit-subject-form").val(subjectDetail.SUBJECT_ORDER);
             $("#edit-subject-modal").modal();
         });
@@ -173,7 +211,8 @@
                     $("#result-edit-subject-form").prop('class', 'alert alert-danger');
                     $("#result-edit-subject-form").text(res.text);
                 }
-                drawSubjectList(inspectionOptionID);
+                let inspectionID = $("#inspection-list").val();
+                drawSubjectList(inspectionID);
                 setTimeout(() => {
                     $("#result-edit-subject-form").prop('class', '');
                     $("#result-edit-subject-form").text('');
@@ -202,11 +241,18 @@
             let parentID = $(this).data('subject-id');
             let parentLevelID = $(this).data('subject-level');
             $("#create-sub-subject-form").data('parent-level-id', parentLevelID);
+
             let parentSubject = subjects.filter(r => r.SUBJECT_ID == parentID);
+            let inspection = inspections.filter(r => r.INSPE_ID == $("#inspection-list").val());
+
             let parentSubjectOption = '';
-            parentSubject.forEach(r => parentSubjectOption = `<option value="${r.SUBJECT_ID}">${r.SUBJECT_NAME} (Ref: ${r.SUBJECT_ID})</option>`);
+            parentSubject.forEach(r => parentSubjectOption = `<option value="${r.SUBJECT_ID}">${r.SUBJECT_NAME}</option>`);
             $("#subject-parent-create-sub-subject-form").html(parentSubjectOption);
+
             let inspectionOption = '';
+            inspection.forEach(r => inspectionOption = `<option value="${r.INSPE_ID}">${r.INSPE_NAME}</option>`);
+            $("#inspection-create-sub-subject-form").html(inspectionOption);
+
             $("#add-sub-subject-modal").modal();
         });
 
@@ -230,7 +276,8 @@
                     $("#result-create-sub-subject-form").prop('class', 'alert alert-danger');
                     $("#result-create-sub-subject-form").text(res.text);
                 }
-                drawSubjectList(inspectionOptionID);
+                let inspectionID = $("#inspection-list").val();
+                drawSubjectList(inspectionID);
                 setTimeout(() => {
                     $("#result-create-sub-subject-form").prop('class', '');
                     $("#result-create-sub-subject-form").text('');
@@ -254,12 +301,46 @@
                 }).done(res => {
                     console.log(res);
                     alert(res.text);
-                    drawSubjectList(inspectionOptionID);
+                    let inspectionID = $("#inspection-list").val();
+                    drawSubjectList(inspectionID);
                 }).fail((jhr, status, error) => console.error(jhr, status, error));
                 return true;
             } else {
                 return false;
             }
         });
+
+
+        $("#create-inspection").click(function(){
+            $("#create-inspection-modal").modal();
+        });
+
+
+        $("#create-inspection-form").submit(function(event){
+            event.preventDefault();
+            let thisForm = $(this);
+            let formData = thisForm.serialize();
+
+            $.post({
+                url: '<?= site_url('controller_user/add_inspection')?>',
+                data: formData,
+                dataType: 'json'
+            }).done(res=>{
+                console.log(res);
+                if (res.status) {
+                    $("#result-create-inspection-form").prop('class', 'alert alert-success');
+                    $("#result-create-inspection-form").text(res.text);
+                    putInspectionToSelect();
+                } else {
+                    $("#result-create-inspection-form").prop('class', 'alert alert-danger');
+                    $("#result-create-inspection-form").text(res.text);
+                }
+                setTimeout(() => {
+                    $("#result-create-inspection-form").prop('class', '');
+                    $("#result-create-inspection-form").text('');
+                    thisForm.trigger('reset');
+                }, 5000);
+            }).fail((jhr, status, error) => console.error(jhr, status, error));
+        })
     });
 </script>
