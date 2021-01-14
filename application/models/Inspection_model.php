@@ -204,4 +204,19 @@ class Inspection_model extends CI_Model
         $query = $this->oracle->get('PIMIS_INSPECTION_OPTION');
         return $query;
     }
+
+    public function check_inspection_option_in_subject($inspectionOptionID)
+    {
+        $this->oracle->where('INSPECTION_ID', $inspectionOptionID);
+        $this->oracle->where('SUBJECT_STATUS', 'y');
+        $query = $this->oracle->get('PIMIS_SUBJECT');
+        return $query;
+    }
+
+    public function check_inspection_option_in_auditor_score($inspectionOptionID)
+    {
+        $this->oracle->where('INSPECTION_ID', $inspectionOptionID);
+        $query = $this->oracle->get('PIMIS_INSPECTION_SCORE_AUDITOR');
+        return $query;
+    }
 }

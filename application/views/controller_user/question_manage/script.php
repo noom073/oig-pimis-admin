@@ -25,7 +25,7 @@
                     className: 'text-center',
                     render: (data, type, row, meta) => {
                         let detailBtn = `<a href="<?= site_url('controller_user/subject') ?>?inspectionoption=${data}" class="btn btn-sm btn-primary">รายละเอียด</a>`;
-                        let deleteBtn = `<button class="btn btn-sm btn-danger">ลบ</button>`;
+                        let deleteBtn = `<button class="btn btn-sm btn-danger delete-inspection-option" data-inspection-option-id="${data}">ลบ</button>`;
                         return `${detailBtn} ${deleteBtn}`;
                     }
                 }
@@ -114,6 +114,35 @@
                     $("#result-create-inspection-option-form").text('');
                 }, 2500);
             }).fail((jhr, status, error) => console.error(jhr, status, error));
+        });
+
+
+        $(document).on('click', ".delete-inspection-option", function() {
+            let inspectionOptionID = $(this).data('inspection-option-id');
+            console.log(inspectionOptionID);
+            if (confirm('ยืนยันการลบ ชุดคำถาม')) {
+                $.post({
+                    url: '<?= site_url('controller_user/ajax_delete_inspection_option') ?>',
+                    data: {
+                        inspectionOptionID: inspectionOptionID
+                    },
+                    dataType: 'json'
+                }).done(res => {
+                    console.log(res);
+                    let text = res.checkInSubject.status ? '' : res.checkInSubject.text;
+                    text += res.checkInAuditorScore.status ? '' : res.checkInAuditorScore.text;
+                    $("#inspection-option-result").prop('class', 'alert alert-info');
+                    $("#inspection-option-result").text(text);
+                    
+                    setTimeout(()=>{
+                        $("#inspection-option-result").prop('class', 'invisible');
+                        $("#inspection-option-result").text('');
+                    }, 3000);
+                }).fail((jhr, status, error) => console.error(jhr, status, error));
+                return true;
+            } else {
+                return false;
+            }
         });
 
     });

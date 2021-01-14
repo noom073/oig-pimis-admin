@@ -26,7 +26,7 @@
                         <button class="btn btn-sm btn-light" onclick="return window.history.back();">ย้อนกลับ</button>
                         <div>
                             <button class="btn btn-sm btn-success invisible" id="add-inspection-option">
-                                + เพิ่มสายการตรวจ
+                                + เพิ่มชุดคำถามสายการตรวจ
                                 <span></span>
                             </button>
                         </div>
@@ -43,6 +43,7 @@
                             </form>
 
                             <div id="fetch-inspection-option-loading" class="invisible">Loading...</div>
+                            <div id="inspection-option-result" class="invisible"></div>
                         </div>
                         <div class="mt-3">
                             <div class="h5">ชุดคำถาม</div>

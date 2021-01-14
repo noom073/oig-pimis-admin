@@ -16,6 +16,7 @@ class Controller_user extends CI_Controller
         $this->load->model('question_model');
         $this->load->model('questionaire_model');
         $this->load->model('inspection_model');
+        $this->load->model('inspection_option_model');
     }
 
     public function index()
@@ -79,9 +80,9 @@ class Controller_user extends CI_Controller
     public function subject()
     {
         $inspectionoption = $this->input->get('inspectionoption', true);
-        $insOpt = $this->inspection_model->get_inspection_option($inspectionoption);
+        $insOpt = $this->inspection_option_model->get_inspection_option($inspectionoption);
         if ($insOpt->num_rows()) {
-            
+
             $data['insOpt']         = $insOpt->row_array();
             $sideBar['name']        = $this->session->nameth;
             $sideBar['userType']    = array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
@@ -367,13 +368,47 @@ class Controller_user extends CI_Controller
         $input['year']          = $this->input->post('optionYear', true);
         $input['inspectionID']  = $this->input->post('inspectionID', true);
         $input['updater']       = $this->session->email;
-        $insert = $this->inspection_model->add_inspection_option($input);
+        $insert = $this->inspection_option_model->add_inspection_option($input);
         if ($insert) {
             $result['status'] = true;
             $result['text'] = 'บันทึกสำเร็จ';
         } else {
             $result['status'] = false;
             $result['text'] = 'บันทึกไม่สำเร็จ';
+        }
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($result));
+    }
+
+    public function ajax_delete_inspection_option()
+    {
+        $inspectionOptionID = $this->input->post('inspectionOptionID', true);
+        $checkInspOptInSubj = $this->inspection_option_model->check_inspection_option_in_subject($inspectionOptionID)->num_rows();
+        $checkInspOptInAudScore = $this->inspection_option_model->check_inspection_option_in_auditor_score($inspectionOptionID)->num_rows();
+        if ($checkInspOptInSubj) { // CHECK INSPECTION OPTION USED IN SUBJECT TABLE
+            $inSubject['status'] = true;
+            $inSubject['text'] = 'ไม่พบการใช้ชุดคำถามใน ชุดคำถามประเมิน';
+        } else {
+            $inSubject['status'] = false;
+            $inSubject['text'] = 'พบการใช้ชุดคำถามใน ชุดคำถามประเมิน';
+        }
+        if ($checkInspOptInAudScore) { // CHECK INSPECTION OPTION USED IN AUDITOR SCORE TABLE
+            $inAudScore['status'] = true;
+            $inAudScore['text'] = 'ไม่พบการใช้ชุดคำถามใน คะแนนฟอร์มการตรวจราชการ';
+        } else {
+            $inAudScore['status'] = false;
+            $inAudScore['text'] = 'พบการใช้ชุดคำถามใน คะแนนฟอร์มการตรวจราชการ';
+        }
+
+        if ($inSubject['status'] && $inAudScore['status']) { // CHECK TRUE IN BOTH
+            $result['status'] = true;
+            $result['checkInSubject'] = $inSubject;
+            $result['checkInAuditorScore'] = $inAudScore;
+        } else {
+            $result['status'] = false;
+            $result['checkInSubject'] = $inSubject;
+            $result['checkInAuditorScore'] = $inAudScore;
         }
         $this->output
             ->set_content_type('application/json')
