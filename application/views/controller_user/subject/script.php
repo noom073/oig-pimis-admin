@@ -8,7 +8,7 @@
         let inspectionOption = <?= json_encode($insOpt) ?>;
         let inspectionOptionID = inspectionOption.ROW_ID;
 
-        
+
         const convertSubjectToTree = (subjects, parentID = '0') => {
             let items = subjects.filter(r => r.SUBJECT_PARENT_ID === parentID)
                 .sort((a, b) => a.SUBJECT_ORDER - b.SUBJECT_ORDER)
@@ -40,7 +40,7 @@
                                 <div class="d-flex">
                                     <span class="has-child">
                                         <i class="caret fas fa-angle-right text-primary"></i>
-                                        ${num}. ${r.SUBJECT_NAME} (Ref: ${r.SUBJECT_ID})
+                                        ${num}&nbsp;&nbsp; ${r.SUBJECT_NAME} (Ref: ${r.SUBJECT_ID})
                                     </span>                             
                                     <div class="ml-auto">${createBtn} ${listQuestionBtn} ${editBtn} ${deleteBtn}</div>
                                 </div>
@@ -49,7 +49,7 @@
                 } else {
                     html += `<li class="list-subject d-block my-1 mx-0 px-0 py-1">
                                 <div class="d-flex">
-                                    <span>${num}. ${r.SUBJECT_NAME} (Ref: ${r.SUBJECT_ID})</span>  
+                                    <span>${num}&nbsp;&nbsp; ${r.SUBJECT_NAME} (Ref: ${r.SUBJECT_ID})</span>  
                                     <div class="ml-auto">${createBtn} ${listQuestionBtn} ${editBtn} ${deleteBtn}</div>
                                 </div>
                             </li>`;
@@ -253,8 +253,14 @@
                     dataType: 'json'
                 }).done(res => {
                     console.log(res);
-                    alert(res.text);
-                    drawSubjectList(inspectionOptionID);
+                    if (res.status) {
+                        alert(res.text);
+                        drawSubjectList(inspectionOptionID);
+                    } else {
+                        let text = res.inSubjectTable.status == true ? '' : res.inSubjectTable.text + '\n';
+                        text += res.InQuestiontTable.status == true ? '' : res.InQuestiontTable.text;
+                        alert(`!Error: ${text}`);
+                    }
                 }).fail((jhr, status, error) => console.error(jhr, status, error));
                 return true;
             } else {

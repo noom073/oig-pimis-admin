@@ -30,10 +30,16 @@
                     <h5 class="card-title">Controller User</h5>
                     <div class="card-text">
                         <div class="mt-3">
-                            <label>รายการคำถาม ของ <i>หัวข้อ<?= $subject['SUBJECT_NAME'] ?></i></label>
+                            <label>รายการคำถาม ของ <i>หัวข้อ <?= $subject['SUBJECT_NAME'] ?></i></label>
                         </div>
                         <div>
                             <button class="btn btn-sm btn-primary add-question">เพิ่มคำถาม</button>
+                            <div>
+                                <small class="text-danger">
+                                    <b>* ข้อควรระวัง :</b>
+                                    <u>กรณีที่มีการกรอกคำตอบแล้ว การเปลี่ยนปลงคำถาม อาจทำให้ผลสรุปคลาดเคลื่อนได้</u>
+                                </small>
+                            </div>
                         </div>
                         <div class="mt-2" id="question-list"></div>
                     </div>

@@ -21,15 +21,15 @@
             </a>
         </li>
         <li class="nav-item">
-            <a href="<?= site_url('controller_user/subject') ?>" id="controller-user-inspection-option" class="nav-link">
-                <i class="nav-icon far fa-question-circle"></i>
-                <p title="การจัดการประเภทสายการตรวจ">การจัดการประเภทฯ</p>
-            </a>
-        </li>
-        <li class="nav-item">
             <a href="<?= site_url('controller_user/question_manage') ?>" id="controller-user-question-manage" class="nav-link">
                 <i class="nav-icon far fa-question-circle"></i>
                 <p title="การจัดการประเภทสายการตรวจ">การจัดการชุดคำถาม</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="<?= site_url('controller_user/subject') ?>" id="controller-user-inspection-option" class="nav-link">
+                <i class="nav-icon far fa-question-circle"></i>
+                <p title="การจัดการประเภทสายการตรวจ">การจัดการประเภทฯ</p>
             </a>
         </li>
     </ul>

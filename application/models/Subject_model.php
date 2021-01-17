@@ -98,4 +98,18 @@ class Subject_model extends CI_Model
         $query = $this->oracle->update('PIMIS_SUBJECT');
         return $query;
     }
+
+    public function get_subject_in_question($subjectID)
+    {
+        $this->oracle->where('SUBJECT_ID', $subjectID);
+        $query = $this->oracle->get('PIMIS_QUESTION');
+        return $query;
+    }
+
+    public function check_parent_subject($subjectID)
+    {
+        $this->oracle->where('SUBJECT_PARENT_ID', $subjectID);
+        $query = $this->oracle->get('PIMIS_SUBJECT');
+        return $query;
+    }
 }

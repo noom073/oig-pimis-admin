@@ -127,17 +127,27 @@
                         inspectionOptionID: inspectionOptionID
                     },
                     dataType: 'json'
-                }).done(res => {
+                }).done(async res => {
                     console.log(res);
                     let text = res.checkInSubject.status ? '' : res.checkInSubject.text;
                     text += res.checkInAuditorScore.status ? '' : res.checkInAuditorScore.text;
-                    $("#inspection-option-result").prop('class', 'alert alert-info');
-                    $("#inspection-option-result").text(text);
-                    
-                    setTimeout(()=>{
+                    if (res.status) {
+                        $("#inspection-option-result").prop('class', 'alert alert-success');
+                        $("#inspection-option-result").text('ลบข้อมูล สำเร็จ');
+                        let inspectionID = $("#inspection-list").val();
+                        let inspectionOptions = await getInspectionOptions(inspectionID);
+                        inspectionOptionsTable.clear()
+                            .rows.add(inspectionOptions)
+                            .draw();
+                    } else {
+                        $("#inspection-option-result").prop('class', 'alert alert-danger');
+                        $("#inspection-option-result").text(text);
+                    }
+
+                    setTimeout(() => {
                         $("#inspection-option-result").prop('class', 'invisible');
                         $("#inspection-option-result").text('');
-                    }, 3000);
+                    }, 5000);
                 }).fail((jhr, status, error) => console.error(jhr, status, error));
                 return true;
             } else {

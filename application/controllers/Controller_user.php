@@ -236,13 +236,19 @@ class Controller_user extends CI_Controller
     public function ajax_delete_question()
     {
         $questionID = $this->input->post('questionID');
-        $delete = $this->question_model->delete_question($questionID);
-        if ($delete) {
-            $result['status']   = true;
-            $result['text']     = 'ลบข้อมูลสำเร็จ';
+        $checkInAuditorScore = $this->question_model->check_question_id_auditor_score($questionID);
+        if ($checkInAuditorScore->num_rows() == 0) {
+            $delete = $this->question_model->delete_question($questionID);
+            if ($delete) {
+                $result['status']   = true;
+                $result['text']     = 'ลบข้อมูลสำเร็จ';
+            } else {
+                $result['status']   = false;
+                $result['text']     = 'ลบข้อมูลไม่สำเร็จ';
+            }
         } else {
             $result['status']   = false;
-            $result['text']     = 'ลบข้อมูลไม่สำเร็จ';
+            $result['text']     = 'ลบข้อมูลไม่สำเร็จ มีการใช้ข้อคำถามนี้ ในตารางคะแนนการตรวจแล้ว';
         }
         $this->output
             ->set_content_type('application/json')
@@ -252,13 +258,38 @@ class Controller_user extends CI_Controller
     public function ajax_delete_subject()
     {
         $subjectID = $this->input->post('subjectID');
-        $delete = $this->subject_model->delete_subject($subjectID);
-        if ($delete) {
-            $result['status']   = true;
-            $result['text']     = 'ลบข้อมูลสำเร็จ';
+        $hasInSubjectTable = $this->subject_model->check_parent_subject($subjectID)->num_rows() > 0 ? true : false;
+        $hasInQuestiontTable = $this->subject_model->get_subject_in_question($subjectID)->num_rows() > 0 ? true : false;
+        if ($hasInSubjectTable) {
+            $inSubjectTable['status'] = false;
+            $inSubjectTable['text'] = 'มีการใช้ข้อมูลนี้ในตารางหัวข้อคำถาม';
+        } else {
+            $inSubjectTable['status'] = true;
+            $inSubjectTable['text'] = 'ไม่พบการใช้ข้อมูลนี้ในตารางหัวข้อคำถาม';
+        }
+
+        if ($hasInQuestiontTable) {
+            $InQuestiontTable['status'] = false;
+            $InQuestiontTable['text'] = 'มีการใช้ข้อมูลนี้ในตารางคำถาม';
+        } else {
+            $InQuestiontTable['status'] = true;
+            $InQuestiontTable['text'] = 'ไม่พบการใช้ข้อมูลนี้ในตารางคำถาม';
+        }
+
+        if ($inSubjectTable['status'] && $InQuestiontTable['status']) {
+            $delete = $this->subject_model->delete_subject($subjectID);
+            if ($delete) {
+                $result['status']   = true;
+                $result['text']     = 'ลบข้อมูลสำเร็จ';
+            } else {
+                $result['status']   = false;
+                $result['text']     = 'ลบข้อมูลไม่สำเร็จ';
+            }
         } else {
             $result['status']   = false;
             $result['text']     = 'ลบข้อมูลไม่สำเร็จ';
+            $result['inSubjectTable'] = $inSubjectTable;
+            $result['InQuestiontTable'] = $InQuestiontTable;
         }
         $this->output
             ->set_content_type('application/json')
@@ -388,17 +419,17 @@ class Controller_user extends CI_Controller
         $checkInspOptInAudScore = $this->inspection_option_model->check_inspection_option_in_auditor_score($inspectionOptionID)->num_rows();
         if ($checkInspOptInSubj) { // CHECK INSPECTION OPTION USED IN SUBJECT TABLE
             $inSubject['status'] = true;
-            $inSubject['text'] = 'ไม่พบการใช้ชุดคำถามใน ชุดคำถามประเมิน';
+            $inSubject['text'] = 'ไม่พบการใช้ชุดคำถามนี้ในตาราง ชุดคำถามประเมิน';
         } else {
             $inSubject['status'] = false;
-            $inSubject['text'] = 'พบการใช้ชุดคำถามใน ชุดคำถามประเมิน';
+            $inSubject['text'] = 'พบการใช้ชุดคำถามนี้ในตาราง ชุดคำถามประเมิน';
         }
         if ($checkInspOptInAudScore) { // CHECK INSPECTION OPTION USED IN AUDITOR SCORE TABLE
             $inAudScore['status'] = true;
-            $inAudScore['text'] = 'ไม่พบการใช้ชุดคำถามใน คะแนนฟอร์มการตรวจราชการ';
+            $inAudScore['text'] = 'ไม่พบการใช้ชุดคำถามนี้ในตาราง คะแนนฟอร์มการตรวจราชการ';
         } else {
             $inAudScore['status'] = false;
-            $inAudScore['text'] = 'พบการใช้ชุดคำถามใน คะแนนฟอร์มการตรวจราชการ';
+            $inAudScore['text'] = 'พบการใช้ชุดคำถามนี้ในตาราง คะแนนฟอร์มการตรวจราชการ';
         }
 
         if ($inSubject['status'] && $inAudScore['status']) { // CHECK TRUE IN BOTH

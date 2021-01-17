@@ -75,4 +75,11 @@ class Question_model extends CI_Model
         $query = $this->oracle->query($sql, array($planID, $subjectID));
         return $query;
     }
+
+    public function check_question_id_auditor_score($questionID)
+    {
+        $this->oracle->where('QUESTION_ID', $questionID);
+        $query = $this->oracle->get('PIMIS_INSPECTION_SCORE_AUDITOR');
+        return $query;
+    }
 }

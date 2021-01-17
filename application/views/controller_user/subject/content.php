@@ -19,7 +19,7 @@
         <div class="container-fluid">
             <div class="card">
                 <div class="card-header">
-                    <div class="h3">การจัดการชุดคำถามประเมิน <?= "{$insOpt['INSPECTION_NAME']} ({$insOpt['OPTION_YEAR']})" ?></div>
+                    <div class="h3">ชุดคำถามประเมิน <?= "{$insOpt['INSPECTION_NAME']} ({$insOpt['OPTION_YEAR']})" ?></div>
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
@@ -34,6 +34,12 @@
                         <div>
                             <div>
                                 <b>หัวข้อการตรวจ</b>
+                                <div>
+                                    <small class="text-danger">
+                                        <b>* ข้อควรระวัง :</b>
+                                        <u>กรณีที่มีการกรอกคำตอบแล้ว การเปลี่ยนปลงคำถาม อาจทำให้ผลสรุปคลาดเคลื่อนได้</u>
+                                    </small>
+                                </div>
                             </div>
                             <div id="tree"></div>
                         </div>
