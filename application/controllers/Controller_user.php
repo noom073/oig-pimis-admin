@@ -417,14 +417,14 @@ class Controller_user extends CI_Controller
         $inspectionOptionID = $this->input->post('inspectionOptionID', true);
         $checkInspOptInSubj = $this->inspection_option_model->check_inspection_option_in_subject($inspectionOptionID)->num_rows();
         $checkInspOptInAudScore = $this->inspection_option_model->check_inspection_option_in_auditor_score($inspectionOptionID)->num_rows();
-        if ($checkInspOptInSubj) { // CHECK INSPECTION OPTION USED IN SUBJECT TABLE
+        if ($checkInspOptInSubj == 0) { // CHECK INSPECTION OPTION USED IN SUBJECT TABLE
             $inSubject['status'] = true;
             $inSubject['text'] = 'ไม่พบการใช้ชุดคำถามนี้ในตาราง ชุดคำถามประเมิน';
         } else {
             $inSubject['status'] = false;
             $inSubject['text'] = 'พบการใช้ชุดคำถามนี้ในตาราง ชุดคำถามประเมิน';
         }
-        if ($checkInspOptInAudScore) { // CHECK INSPECTION OPTION USED IN AUDITOR SCORE TABLE
+        if ($checkInspOptInAudScore == 0) { // CHECK INSPECTION OPTION USED IN AUDITOR SCORE TABLE
             $inAudScore['status'] = true;
             $inAudScore['text'] = 'ไม่พบการใช้ชุดคำถามนี้ในตาราง คะแนนฟอร์มการตรวจราชการ';
         } else {
@@ -433,7 +433,7 @@ class Controller_user extends CI_Controller
         }
 
         if ($inSubject['status'] && $inAudScore['status']) { // CHECK TRUE IN BOTH
-            $result['status'] = true;
+            $result['status'] = $this->inspection_option_model->delete_inspection_option($inspectionOptionID);
             $result['checkInSubject'] = $inSubject;
             $result['checkInAuditorScore'] = $inAudScore;
         } else {

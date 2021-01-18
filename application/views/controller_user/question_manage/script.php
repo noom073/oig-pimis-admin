@@ -77,6 +77,9 @@
                 $("#add-inspection-option").removeClass('invisible');
                 $("#add-inspection-option").attr('disabled', false);
             } else {
+                inspectionOptionsTable.clear()
+                    .draw();
+                $("#fetch-inspection-option-loading").addClass('invisible');
                 $("#add-inspection-option").addClass('invisible');
                 $("#add-inspection-option").attr('disabled', true);
                 $("#add-inspection-option").children('span').text('');
@@ -92,6 +95,7 @@
             let thisForm = $(this);
             let id = $("#inspection-list").val();
             let formData = thisForm.serialize() + `&inspectionID=${id}`;
+            // console.log(formData);
             $.post({
                 url: '<?= site_url('controller_user/ajax_add_inspection_option') ?>',
                 data: formData,
@@ -100,7 +104,7 @@
                 if (res.status) {
                     $("#result-create-inspection-option-form").prop('class', 'alert alert-success');
                     $("#result-create-inspection-option-form").text(res.text);
-                    let data = $("#inspection-list").serialize();
+                    let data = $("#inspection-list").val();
                     let inspectionOptions = await getInspectionOptions(data);
                     inspectionOptionsTable.clear()
                         .rows.add(inspectionOptions)
@@ -119,7 +123,6 @@
 
         $(document).on('click', ".delete-inspection-option", function() {
             let inspectionOptionID = $(this).data('inspection-option-id');
-            console.log(inspectionOptionID);
             if (confirm('ยืนยันการลบ ชุดคำถาม')) {
                 $.post({
                     url: '<?= site_url('controller_user/ajax_delete_inspection_option') ?>',
@@ -129,7 +132,7 @@
                     dataType: 'json'
                 }).done(async res => {
                     console.log(res);
-                    let text = res.checkInSubject.status ? '' : res.checkInSubject.text;
+                    let text = res.checkInSubject.status ? '' : res.checkInSubject.text + ' ';
                     text += res.checkInAuditorScore.status ? '' : res.checkInAuditorScore.text;
                     if (res.status) {
                         $("#inspection-option-result").prop('class', 'alert alert-success');
