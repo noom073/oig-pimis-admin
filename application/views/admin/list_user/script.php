@@ -169,6 +169,7 @@
             $("#title-update-user-form").val(userDetail.TITLE);
             $("#fname-update-user-form").val(userDetail.FIRSTNAME);
             $("#lname-update-user-form").val(userDetail.LASTNAME);
+            $("#idp-update-user-form").val(userDetail.IDP);
             let email = userDetail.EMAIL.split('@'); //GET EMAIL WITHOUT DOMAIN
             $("#email-update-user-form").val(email[0]);
             $("#act-update-user-form").val(userDetail.USER_ACTIVE);

@@ -25,7 +25,7 @@ class Admin extends CI_Controller
 		$data['userType'] 	= $this->session_services->get_user_type_name($this->session->usertype);
 		$sideBar['name'] 	= $this->session->nameth;
 		$script['customScript'] = $this->load->view('admin/index_content/script', '', true);
-		
+
 		$component['header'] 			= $this->load->view('admin/component/header', '', true);
 		$component['navbar'] 			= $this->load->view('admin/component/navbar', '', true);
 		$component['mainSideBar'] 		= $this->load->view('sidebar/main-sidebar', $sideBar, true);
@@ -33,7 +33,7 @@ class Admin extends CI_Controller
 		$component['controllerSidebar'] = $this->load->view('admin/component/controller_sidebar', '', true);
 		$component['contentWrapper'] 	= $this->load->view('admin/index_content/content', $data, true);
 		$component['jsScript'] 			= $this->load->view('admin/component/main_script', $script, true);
-		
+
 		$this->load->view('admin/template', $component);
 	}
 
@@ -130,6 +130,7 @@ class Admin extends CI_Controller
 		$data['title'] 		= $this->input->post('title');
 		$data['firstname'] 	= $this->input->post('fname');
 		$data['lastname'] 	= $this->input->post('lname');
+		$data['idp'] 		= $this->input->post('idp');
 		$email 				= explode('@', $this->input->post('email'));
 		$data['email'] 		= $email[0] . '@rtarf.mi.th';
 		$data['userType']	= array('2');
@@ -196,6 +197,7 @@ class Admin extends CI_Controller
 		$data['title'] 		= $this->input->post('title');
 		$data['firstname'] 	= $this->input->post('fname');
 		$data['lastname'] 	= $this->input->post('lname');
+		$data['idp'] 	= $this->input->post('idp');
 		$email 				= explode('@', $this->input->post('email'));
 		$data['email'] 		= $email[0] . '@rtarf.mi.th';
 		$data['activation'] = $this->input->post('activation');

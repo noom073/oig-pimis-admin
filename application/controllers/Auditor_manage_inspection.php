@@ -14,6 +14,7 @@ class Auditor_manage_inspection extends CI_Controller
 
 		$this->load->model('questionaire_model');
 		$this->load->model('summary_model');
+		$this->load->model('auditor_team_model');
 	}
 
 	public function index()
@@ -54,5 +55,29 @@ class Auditor_manage_inspection extends CI_Controller
 		$component['jsScript'] 			= $this->load->view('auditor_manage_inspection/component/main_script', $script, true);
 
 		$this->load->view('auditor_manage_inspection/template', $component);
+	}
+
+	public function auditor_topic()
+	{
+		$sideBar['name'] 	= $this->session->nameth;
+		$script['custom'] = $this->load->view('auditor_manage_inspection/auditor_topic/script', '', true);
+
+		$component['header'] 			= $this->load->view('auditor_manage_inspection/component/header', '', true);
+		$component['navbar'] 			= $this->load->view('auditor_manage_inspection/component/navbar', '', true);
+		$component['mainSideBar'] 		= $this->load->view('sidebar/main-sidebar', $sideBar, true);
+		$component['mainFooter'] 		= $this->load->view('auditor_manage_inspection/component/footer_text', '', true);
+		$component['controllerSidebar'] = $this->load->view('auditor_manage_inspection/component/controller_sidebar', '', true);
+		$component['contentWrapper'] 	= $this->load->view('auditor_manage_inspection/auditor_topic/content', '', true);
+		$component['jsScript'] 			= $this->load->view('auditor_manage_inspection/component/main_script', $script, true);
+
+		$this->load->view('auditor_manage_inspection/template', $component);
+	}
+
+	public function ajax_get_auditor_team()
+	{
+		$data = $this->auditor_team_model->get_auditor_teams()->result_array();
+		$this->output
+			->set_content_type('application/json')
+			->set_output(json_encode($data));
 	}
 }

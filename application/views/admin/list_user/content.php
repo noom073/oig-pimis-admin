@@ -83,9 +83,13 @@
                                     </div>
                                     <small class="form-text text-danger">** ใส่ Email โดยไม่ต้องระบุ "@rtarf.mi.th"</small>
                                 </div>
+
+                                <div class="form-group col-md-6">
+                                    <input type="text" class="form-control" placeholder="เลขประชาชน" name="idp" maxlength="13">
+                                </div>
                             </div>
 
-                            <div class="form-row">                               
+                            <div class="form-row">
                                 <div class="form-group col-md-6">
                                     <label>เปิด/ปิด การใช้งาน</label>
                                     <select class="form-control" name="activation" id="act-create-user-form">
@@ -145,6 +149,10 @@
                                         </div>
                                     </div>
                                     <small class="form-text text-danger">** ใส่ Email โดยไม่ต้องระบุ "@rtarf.mi.th"</small>
+                                </div>
+
+                                <div class="form-group col-md-6">
+                                    <input type="text" class="form-control" id="idp-update-user-form" placeholder="เลขประชาชน" name="idp" maxlength="13">
                                 </div>
                             </div>
 

@@ -8,7 +8,7 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="<?= site_url('auditor/index') ?>">Auditor</a></li>
-                        <li class="breadcrumb-item active">กำหนดแผนการตรวจ</li>
+                        <li class="breadcrumb-item active">รายการชุดตรวจ</li>
                     </ol>
                 </div>
             </div>
@@ -19,16 +19,27 @@
         <div class="container-fluid">
             <div class="card">
                 <div class="card-header">
-                    <div class="h3">กำหนดแผนการตรวจ</div>
+                    <div class="h3">รายการชุดตรวจ</div>
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
                         <button class="btn btn-sm btn-light" onclick="return window.history.back();">ย้อนกลับ</button>
+                        <button class="btn btn-sm btn-success" >เพิ่มชุดตรวจ</button>
                     </div>
                     <h5 class="card-title"></h5>
                     <div class="card-text">
-                        <div id="load-calendar">Loading...</div>
-                        <div id="calendar"></div>
+                        <div>
+                            <table id="auditor-team-table" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">ลำดับ</th>
+                                        <th class="text-center">ชื่อสาย</th>
+                                        <th class="text-center">ปี</th>
+                                        <th class="text-center">รายละเอียด</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -43,6 +43,7 @@ class User_model extends CI_Model
         $this->oracle->set('TITLE', $array['title']);
         $this->oracle->set('FIRSTNAME', $array['firstname']);
         $this->oracle->set('LASTNAME', $array['lastname']);
+        $this->oracle->set('IDP', $array['idp']);
         $this->oracle->set('EMAIL', $array['email']);
         $this->oracle->set('USER_ACTIVE', $array['activation']);
         $this->oracle->set('SYSTEM', 'pimis');
@@ -107,6 +108,7 @@ class User_model extends CI_Model
         $this->oracle->set('TITLE', $array['title']);
         $this->oracle->set('FIRSTNAME', $array['firstname']);
         $this->oracle->set('LASTNAME', $array['lastname']);
+        $this->oracle->set('IDP', $array['idp']);
         $this->oracle->set('EMAIL', $array['email']);
         $this->oracle->set('USER_ACTIVE', $array['activation']);
         $this->oracle->set('USER_UPDATE', $array['updater']);

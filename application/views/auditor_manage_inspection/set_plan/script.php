@@ -23,12 +23,12 @@
         };
         getNprtUnit();
 
-        
+
         $("#search-units").blur(function() {
             let unit = units.filter(r => r.NPRT_ACM.includes($(this).val()))
-                .sort((a, b)=> a.NPRT_UNIT - b.NPRT_UNIT);
+                .sort((a, b) => a.NPRT_UNIT - b.NPRT_UNIT);
             let option = '';
-            unit.forEach(r=>{
+            unit.forEach(r => {
                 option += `<option value="${r.NPRT_UNIT}">${r.NPRT_ACM}</option>`;
             });
             $("#nprt-units").html(option);
@@ -36,7 +36,9 @@
 
 
         const createPlanModalCall = (info) => {
-            let dateEnd = info.endStr.substring(0,9)+(info.endStr.substring(8)-1);
+            let dayEnd = (info.endStr.substring(8) - 1).toString();
+            dayEnd = dayEnd.length == 1 ? "0" + dayEnd : dayEnd;
+            let dateEnd = info.endStr.substring(0,8)+dayEnd;
             $("#date-start").val(info.startStr);
             $("#date-end").val(dateEnd);
             $("#create-plan-modal").modal();
@@ -53,7 +55,7 @@
                 header: {
                     left: 'prev,next today',
                     center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                    right: 'dayGridMonth'
                 },
                 themeSystem: 'bootstrap',
                 events: function(info, success, fail) {
@@ -67,7 +69,7 @@
                                 title: r.unitAcm,
                                 start: r.dateStart,
                                 end: r.dateEnd,
-                                url: '<?= site_url('auditor/inspection_list/?plan=') ?>' + r.planID,
+                                // url: '<?= site_url('auditor/inspection_list/?plan=') ?>' + r.planID,
                                 backgroundColor: bgColor,
                                 borderColor: 'white'
                             };
