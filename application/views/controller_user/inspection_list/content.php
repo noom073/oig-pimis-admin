@@ -24,7 +24,7 @@
                 <div class="card-body">
                     <div class="mb-3">
                         <button class="btn btn-sm btn-light" onclick="return window.history.back();">ย้อนกลับ</button>
-                        <button class="btn btn-sm btn-primary" id="create-inspection">เพิ่มสายการตรวจ</button>
+                        <button class="btn btn-sm btn-success" id="create-inspection">เพิ่มสายการตรวจ</button>
                     </div>
                     <div class="card-text">
                         <div>

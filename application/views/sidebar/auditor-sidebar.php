@@ -5,6 +5,23 @@
         <p>หน้าหลัก</p>
     </a>
 </li>
+<li class="nav-item has-treeview" id="auditor-manage-inspection-section">
+    <a href="#" class="nav-link" id="auditor-manage-inspection-subject">
+        <i class="nav-icon fas fa-file-signature"></i>
+        <p>
+            การจัดการการตรวจ
+            <i class="right fas fa-angle-left"></i>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="<?= site_url('auditor_manage_inspection/set_plan') ?>" id="auditor-manage-inspection-set-paln" class="nav-link">
+                <i class="nav-icon fas fa-calendar-alt"></i>
+                <p>กำหนดแผนการตรวจ</p>
+            </a>
+        </li>
+    </ul>
+</li>
 <li class="nav-item has-treeview" id="auditor-inspection-section">
     <a href="#" class="nav-link" id="auditor-inspection-subject">
         <i class="nav-icon fas fa-file-signature"></i>

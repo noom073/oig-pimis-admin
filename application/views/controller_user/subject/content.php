@@ -27,7 +27,7 @@
                     </div>
                     <div class="card-text">
                         <div class="my-2">
-                            <button class="btn btn-sm btn-primary subject-activity-btn" id="add-subject">เพิ่มหัวข้อการตรวจ</button>
+                            <button class="btn btn-sm btn-success subject-activity-btn" id="add-subject">เพิ่มหัวข้อการตรวจ</button>
                             <button class="btn btn-sm btn-primary subject-activity-btn" id="collapse-subject-ul">แสดงทั้งหมด</button>
                             <button class="btn btn-sm btn-primary subject-activity-btn" id="show-subject-ul">ปิดทั้งหมด</button>
                         </div>

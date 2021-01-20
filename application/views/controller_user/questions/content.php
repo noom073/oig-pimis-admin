@@ -33,7 +33,7 @@
                             <label>รายการคำถาม ของ <i>หัวข้อ <?= $subject['SUBJECT_NAME'] ?></i></label>
                         </div>
                         <div>
-                            <button class="btn btn-sm btn-primary add-question">เพิ่มคำถาม</button>
+                            <button class="btn btn-sm btn-success add-question">เพิ่มคำถาม</button>
                             <div>
                                 <small class="text-danger">
                                     <b>* ข้อควรระวัง :</b>
