@@ -28,7 +28,7 @@
                     data: 'ROW_ID',
                     className: 'text-center',
                     render: (data, type, row, meta) => {
-                        let detailBtn = `<a href="<?= site_url('auditor_manage_inspection/auditor_team_member') ?>?team=${data}" class="btn btn-sm btn-primary team-detail">รายละเอียด</a>`;
+                        let detailBtn = `<a href="<?= site_url('auditor_manage_inspection/auditor_team_member') ?>?team=${data}" class="btn btn-sm btn-primary team-detail">รายชื่อ</a>`;
                         let editBtn = `<button class="btn btn-sm btn-primary edit-auditor-team" data-row-id="${data}">แก้ไข</button>`;
                         let deleteBtn = `<button class="btn btn-sm btn-danger delete-auditor-team" data-row-id="${data}" disabled>ลบ</button>`;
                         return `${detailBtn} ${editBtn} ${deleteBtn}`;

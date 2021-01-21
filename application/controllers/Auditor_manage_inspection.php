@@ -127,9 +127,10 @@ class Auditor_manage_inspection extends CI_Controller
 		$teamID = $this->input->get('team', true);
 		$team = $this->auditor_team_model->validate_team_row_id($teamID);
 		if ($team->num_rows() !== 0) {
-			$data['team'] = $team->row_array();
+			$data['team'] 		= $team->row_array();
+			$data['auditorTypes'] = $this->auditor_model->get_auditor_types()->result_array();
 			$sideBar['name'] 	= $this->session->nameth;
-			$script['custom'] = $this->load->view('auditor_manage_inspection/auditor_team_member/script', $data, true);
+			$script['custom'] 	= $this->load->view('auditor_manage_inspection/auditor_team_member/script', $data, true);
 
 			$component['header'] 			= $this->load->view('auditor_manage_inspection/component/header', '', true);
 			$component['navbar'] 			= $this->load->view('auditor_manage_inspection/component/navbar', '', true);
@@ -152,5 +153,28 @@ class Auditor_manage_inspection extends CI_Controller
 		$this->output
 			->set_content_type('apllication/json')
 			->set_output(json_encode($data));
+	}
+
+	public function ajax_add_auditor_member()
+	{
+		$input['title'] 		= $this->input->post('title', true);
+		$input['firstName'] 	= $this->input->post('firstName', true);
+		$input['lastName'] 		= $this->input->post('lastName', true);
+		$input['position'] 		= $this->input->post('position', true);
+		$input['idp'] 			= $this->input->post('idp', true);
+		$input['auditorTeam']	= $this->input->post('auditorTeam', true);
+		$input['auditorType'] 	= $this->input->post('auditorType', true);
+		$input['updater'] 		= $this->session->email;
+		$insert = $this->auditor_model->insert_auditor_member($input);
+		if ($insert) {
+			$result['status'] = true;
+			$result['text'] = 'บันทึกสำเร็จ';
+		} else {
+			$result['status'] = false;
+			$result['text'] = 'บันทึกไม่สำเร็จ';
+		}
+		$this->output
+			->set_content_type('apllication/json')
+			->set_output(json_encode($result));
 	}
 }

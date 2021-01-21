@@ -16,6 +16,7 @@ class Data_service extends CI_Controller
         $this->load->model('inspection_option_model');
         $this->load->model('data_model');
         $this->load->model('nprt_model');
+        $this->load->model('auditor_model');
     }
 
     public function ajax_get_type_user()
@@ -150,4 +151,5 @@ class Data_service extends CI_Controller
             ->set_content_type('application/json')
             ->set_output(json_encode($units));
     }
+
 }

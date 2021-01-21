@@ -34,7 +34,7 @@
                                     <tr>
                                         <th class="text-center">ลำดับ</th>
                                         <th class="text-center">ชื่อ นามสกุล</th>
-                                        <th class="text-center">ตำแหน่ง</th>
+                                        <th class="text-center">หน้าที่</th>
                                         <th class="text-center">รายละเอียด</th>
                                     </tr>
                                 </thead>
@@ -62,37 +62,43 @@
                             <div class="form-row">
                                 <div class="form-group col-md-2">
                                     <label>คำนำหน้าชื่อ</label>
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" name="title" required>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
                                     <label>ชื่อ</label>
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" name="firstName" required>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label>นามสกุล</label>
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" name="lastName" required>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
                                     <label>ตำแหน่ง</label>
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" name="position" required>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label>เลขประชาชน</label>
-                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control" name="idp" required>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
                                     <label>ชุดตรวจที่</label>
-                                    <select class="form-control" name="" id=""></select>
+                                    <select class="form-control" name="auditorTeam" required>
+                                        <option value="<?= $team['ROW_ID'] ?>"><?= $team['TEAM_NAME'] ?></option>
+                                    </select>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label>ประเภทผู้ตรวจ</label>
-                                    <select class="form-control" name="" id=""></select>
+                                    <select class="form-control" name="auditorType" required>
+                                        <?php foreach ($auditorTypes as $r) { ?>
+                                            <option value="<?= $r['ADT_T_ID'] ?>"><?= $r['AUDITOR_POSITION'] ?></option>
+                                        <?php } ?>
+                                    </select>
                                 </div>
                             </div>
                             <div id="create-auditor-member-form-result"></div>
