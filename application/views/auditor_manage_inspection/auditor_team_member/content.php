@@ -19,7 +19,7 @@
         <div class="container-fluid">
             <div class="card">
                 <div class="card-header">
-                    <div class="h3">สมาชิกชุดตรวจ "<?= $team['TEAM_NAME']?>"</div>
+                    <div class="h3">สมาชิกชุดตรวจ "<?= $team['TEAM_NAME'] ?>"</div>
                 </div>
                 <div class="card-body">
                     <div class="mb-3">
@@ -48,30 +48,54 @@
 
     <div>
         <!-- CREATE AUDITOR NAME Modal -->
-        <div class="modal fade" id="create-auditor-name-modal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog">
+        <div class="modal fade" id="create-auditor-member-modal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">กำหนดชื่อชุดตรวจ</h5>
+                        <h5 class="modal-title">เพิ่มสมาชิกชุดตรวจ</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form id="create-auditor-name-form">
-                            <div class="form-group">
-                                <label>ชื่อชุดตรวจ:</label>
-                                <input type="text" class="form-control" name="teamName" placeholder="ชื่อชุดตรวจ" required>
+                        <form id="create-auditor-member-form">
+                            <div class="form-row">
+                                <div class="form-group col-md-2">
+                                    <label>คำนำหน้าชื่อ</label>
+                                    <input type="text" class="form-control">
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label>ประจำปี</label>
-                                <select class="form-control" name="teamYear" required>
-                                    <?php for ($i = 0; $i < 3; $i++) { ?>
-                                        <option value="<?= date("Y") + 544 - $i ?>"><?= date("Y") + 544 - $i ?></option>
-                                    <?php } ?>
-                                </select>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label>ชื่อ</label>
+                                    <input type="text" class="form-control">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>นามสกุล</label>
+                                    <input type="text" class="form-control">
+                                </div>
                             </div>
-                            <div id="create-auditor-name-form-result"></div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label>ตำแหน่ง</label>
+                                    <input type="text" class="form-control">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>เลขประชาชน</label>
+                                    <input type="text" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label>ชุดตรวจที่</label>
+                                    <select class="form-control" name="" id=""></select>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>ประเภทผู้ตรวจ</label>
+                                    <select class="form-control" name="" id=""></select>
+                                </div>
+                            </div>
+                            <div id="create-auditor-member-form-result"></div>
                             <button type="submit" class="btn btn-primary">บันทึก</button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
                         </form>

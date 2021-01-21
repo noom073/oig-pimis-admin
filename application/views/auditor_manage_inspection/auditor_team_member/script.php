@@ -40,5 +40,8 @@
                 }
             ]
         });
+
+
+        $("#add-auditor-member").click(() => $("#create-auditor-member-modal").modal());
     });
 </script>
