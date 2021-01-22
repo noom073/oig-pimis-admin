@@ -76,5 +76,7 @@
                 }, 3000);
             }).fail((jhr, status, error) => console.error(jhr, status, error));
         });
+
+        
     });
 </script>
