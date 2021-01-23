@@ -18,6 +18,9 @@
     <section class="content">
         <div class="container-fluid">
             <div class="card">
+            </div>
+            
+            <div class="card">
                 <div class="card-header">
                     <div class="h3">สมาชิกชุดตรวจ "<?= $team['TEAM_NAME'] ?>"</div>
                 </div>
@@ -82,7 +85,7 @@
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label>เลขประชาชน</label>
-                                    <input type="text" class="form-control" name="idp" required>
+                                    <input type="text" class="form-control" name="idp" maxlength="13" required>
                                 </div>
                             </div>
                             <div class="form-row">
@@ -146,7 +149,7 @@
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label>เลขประชาชน</label>
-                                    <input type="text" class="form-control" name="idp" id="edit-auditor-member-form-idp" required>
+                                    <input type="text" class="form-control" name="idp" id="edit-auditor-member-form-idp" maxlength="13" required>
                                 </div>
                             </div>
                             <div class="form-row">

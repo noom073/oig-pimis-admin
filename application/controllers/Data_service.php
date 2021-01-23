@@ -152,4 +152,11 @@ class Data_service extends CI_Controller
             ->set_output(json_encode($units));
     }
 
+    public function ajax_get_auditor_types()
+    {
+        $data = $this->auditor_model->get_auditor_types()->result_array();
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($data));
+    }
 }

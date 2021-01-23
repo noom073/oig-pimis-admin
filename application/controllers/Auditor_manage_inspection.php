@@ -177,4 +177,53 @@ class Auditor_manage_inspection extends CI_Controller
 			->set_content_type('apllication/json')
 			->set_output(json_encode($result));
 	}
+
+	public function ajax_get_auditor_detail()
+	{
+		$input['rowID'] = $this->input->post('auditorID', true);
+		$data = $this->auditor_model->get_a_auditor($input)->row_array();
+		$this->output
+			->set_content_type('apllication/json')
+			->set_output(json_encode($data));
+	}
+
+	public function ajax_update_auditor_detail()
+	{
+		$input['title'] 		= $this->input->post('title', true);
+		$input['firstName'] 	= $this->input->post('firstName', true);
+		$input['lastName'] 		= $this->input->post('lastName', true);
+		$input['position'] 		= $this->input->post('position', true);
+		$input['idp'] 			= $this->input->post('idp', true);
+		$input['auditorTeam']	= $this->input->post('auditorTeam', true);
+		$input['auditorType'] 	= $this->input->post('auditorType', true);
+		$input['auditorID'] 	= $this->input->post('auditorID', true);
+		$input['updater'] 		= $this->session->email;
+		$update = $this->auditor_model->update_auditor_detail($input);
+		if ($update) {
+			$result['status'] = true;
+			$result['text'] = 'บันทึกสำเร็จ';
+		} else {
+			$result['status'] = false;
+			$result['text'] = 'บันทึกไม่สำเร็จ';
+		}
+		$this->output
+			->set_content_type('apllication/json')
+			->set_output(json_encode($result));
+	}
+
+	public function ajax_delete_auditor()
+	{
+		$input['auditorID'] = $this->input->post('auditorID', true);
+		$delete = $this->auditor_model->delete_auditor($input);
+		if ($delete) {
+			$result['status'] = true;
+			$result['text'] = 'ลบข้อมูลสำเร็จ';
+		} else {
+			$result['status'] = false;
+			$result['text'] = 'ลบข้อมูลไม่สำเร็จ';
+		}
+		$this->output
+			->set_content_type('apllication/json')
+			->set_output(json_encode($result));
+	}
 }

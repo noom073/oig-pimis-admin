@@ -17,13 +17,19 @@
         <li class="nav-item">
             <a href="<?= site_url('controller_user/inspection_list') ?>" id="controller-user-inspection" class="nav-link">
                 <i class="nav-icon far fa-question-circle"></i>
-                <p>การจัดการสายการตรวจ</p>
+                <p>สายการตรวจ</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="<?= site_url('controller_user/auditor_type') ?>" id="controller-user-auditor-type" class="nav-link">
+                <i class="nav-icon far fa-question-circle"></i>
+                <p>ประเภทผู้ตรวจ</p>
             </a>
         </li>
         <li class="nav-item">
             <a href="<?= site_url('controller_user/question_manage') ?>" id="controller-user-question-manage" class="nav-link">
                 <i class="nav-icon far fa-question-circle"></i>
-                <p title="การจัดการประเภทสายการตรวจ">การจัดการชุดคำถาม</p>
+                <p title="การจัดการประเภทสายการตรวจ">ชุดคำถาม</p>
             </a>
         </li>
         <!-- <li class="nav-item">
