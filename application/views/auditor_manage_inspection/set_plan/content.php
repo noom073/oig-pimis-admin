@@ -36,7 +36,7 @@
     </section>
 
     <div>
-        <!-- CREATE PALN Modal -->
+        <!-- CREATE PLAN Modal -->
         <div class="modal fade" id="create-plan-modal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -47,29 +47,32 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form>
+                        <form id="create-plan-form">
                             <div class="form-group">
                                 <label>หน่วย:</label>
                                 <input type="text" class="form-control" id="search-units" placeholder="ค้นหาหน่วย">
-                                <select class="form-control" id="nprt-units" required>
-                                    <option value=""></option>
-                                </select>
+                                <select class="form-control" name="unitID" id="nprt-units" required></select>
                             </div>
                             <div class="form-group">
                                 <label>วันเริ่มต้น</label>
-                                <input type="date" class="form-control" id="date-start" required>
+                                <input type="date" class="form-control" name="startDate" id="date-start" required>
                             </div>
                             <div class="form-group">
                                 <label>วันสิ้นสุด</label>
-                                <input type="date" class="form-control" id="date-end" required>
+                                <input type="date" class="form-control" name="endDate" id="date-end" required>
                             </div>
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <div class="form-group">
+                                <label>ชุดตรวจ</label>
+                                <select style="width: 100%;" class="form-control select2" name="auditorTeam[]" id="auditor-team" multiple required></select>
+                            </div>
+                            <div id="create-plan-form-result"></div>
+                            <button type="submit" class="btn btn-primary">บันทึก</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- END CREATE PALN Modal -->
+        <!-- END CREATE PLAN Modal -->
     </div>
 </div>

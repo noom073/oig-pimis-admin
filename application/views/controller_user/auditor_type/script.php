@@ -54,8 +54,8 @@
                     className: 'text-center',
                     render: (data, type, row, meta) => {
                         let editBtn = `<button class="btn btn-sm btn-primary edit-auditor-type" data-auditor-type-id="${data}">แก้ไข</button>`;
-                        // let deleteBtn = `<button class="btn btn-sm btn-danger delete-inspection" data-inspection-id="${data}">ลบ</button>`;
-                        return `${editBtn}`;
+                        let deleteBtn = `<button class="btn btn-sm btn-danger delete-auditor-type" data-auditor-type-id="${data}">ลบ</button>`;
+                        return `${editBtn} ${deleteBtn}`;
                     }
                 },
             ]
@@ -133,6 +133,30 @@
                     $("#edit-auditor-type-form-result").text('');
                 }, 3000);
             }).fail((jhr, status, error) => console.error(jhr, status, error));
+        });
+
+
+        $(document).on('click', ".delete-auditor-type", function() {
+            if (confirm('ยืนยันการลบข้อมูล ?')) {
+                let auditorTypeID = $(this).data('auditor-type-id');
+                $.post({
+                    url: '<?= site_url('controller_user/ajax_delete_auditor_type') ?>',
+                    data: {
+                        auditorTypeID: auditorTypeID
+                    },
+                    dataType: 'json'
+                }).done(res => {
+                    if (res.status) {
+                        alert(res.text);
+                        auditorTypeTable.ajax.reload();
+                    } else {
+                        alert(res.text);
+                    }
+                }).fail((jhr, status, error) => console.error(jhr, status, error));
+                return true;
+            } else {
+                return false;
+            }
         });
     });
 </script>

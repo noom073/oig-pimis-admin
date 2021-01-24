@@ -25,12 +25,19 @@
                     className: 'text-center'
                 },
                 {
+                    data: 'COLOR',
+                    className: 'text-center',
+                    render: (data, type, row, meta) => {
+                        return `<button style="background-color:${data};" class="btn btn-sm"> </button>`;
+                    }
+                },
+                {
                     data: 'ROW_ID',
                     className: 'text-center',
                     render: (data, type, row, meta) => {
                         let detailBtn = `<a href="<?= site_url('auditor_manage_inspection/auditor_team_member') ?>?team=${data}" class="btn btn-sm btn-primary team-detail">รายชื่อ</a>`;
                         let editBtn = `<button class="btn btn-sm btn-primary edit-auditor-team" data-row-id="${data}">แก้ไข</button>`;
-                        let deleteBtn = `<button class="btn btn-sm btn-danger delete-auditor-team" data-row-id="${data}" disabled>ลบ</button>`;
+                        let deleteBtn = `<button class="btn btn-sm btn-danger delete-auditor-team" data-row-id="${data}">ลบ</button>`;
                         return `${detailBtn} ${editBtn} ${deleteBtn}`;
                     }
                 }
@@ -85,6 +92,7 @@
             $("#edit-auditor-name-form").data('row-id', rowID);
             $("#edit-auditor-name-form-team-name").val(auditorTeam.TEAM_NAME);
             $("#edit-auditor-name-form-team-year").val(auditorTeam.TEAM_YEAR);
+            $("#edit-auditor-name-form-team-color").val(auditorTeam.COLOR);
             $("#edit-auditor-name-modal").modal();
         });
 
@@ -115,6 +123,30 @@
                     thisForm.trigger('reset');
                 }, 3000);
             }).fail((jhr, status, error) => console.error(jhr, status, error));
+        });
+
+
+        $(document).on('click', ".delete-auditor-team", function() {
+            let rowID = $(this).data('row-id');
+            if (confirm('ยืนยันการลบ ?')) {
+                $.post({
+                    url: '<?= site_url('auditor_manage_inspection/ajax_delete_auditor_team') ?>',
+                    data: {
+                        auditorTeamID: rowID
+                    },
+                    dataType: 'json'
+                }).done(res => {
+                    if (res.status) {
+                        alert(res.text);
+                        auditorTeamTable.ajax.reload();
+                    } else {
+                        alert(res.text);                        
+                    }
+                }).fail((jhr, status, error) => console.error(jhr, status, error));
+                return true;
+            } else {
+                return false;
+            }
         });
     });
 </script>

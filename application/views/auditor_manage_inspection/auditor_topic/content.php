@@ -35,6 +35,7 @@
                                         <th class="text-center">ลำดับ</th>
                                         <th class="text-center">ชื่อสาย</th>
                                         <th class="text-center">ปี</th>
+                                        <th class="text-center">สี</th>
                                         <th class="text-center">รายละเอียด</th>
                                     </tr>
                                 </thead>
@@ -71,6 +72,10 @@
                                     <?php } ?>
                                 </select>
                             </div>
+                            <div class="form-group">
+                                <label>เลือกสี:</label>
+                                <input type="color" class="form-control" name="color" value="#ffffff" required>
+                            </div>
                             <div id="create-auditor-name-form-result"></div>
                             <button type="submit" class="btn btn-primary">บันทึก</button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
@@ -104,6 +109,10 @@
                                         <option value="<?= date("Y") + 544 - $i ?>"><?= date("Y") + 544 - $i ?></option>
                                     <?php } ?>
                                 </select>
+                            </div>
+                            <div class="form-group">
+                                <label>เลือกสี:</label>
+                                <input type="color" class="form-control" name="color" id="edit-auditor-name-form-team-color" required>
                             </div>
                             <div id="edit-auditor-name-form-result"></div>
                             <button type="submit" class="btn btn-primary">บันทึก</button>

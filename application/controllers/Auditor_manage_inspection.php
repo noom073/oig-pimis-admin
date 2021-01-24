@@ -16,6 +16,7 @@ class Auditor_manage_inspection extends CI_Controller
 		$this->load->model('summary_model');
 		$this->load->model('auditor_team_model');
 		$this->load->model('auditor_model');
+		$this->load->model('plan_model');
 	}
 
 	public function index()
@@ -80,6 +81,7 @@ class Auditor_manage_inspection extends CI_Controller
 	{
 		$input['teamName'] 	= $this->input->post('teamName', true);
 		$input['teamYear'] 	= $this->input->post('teamYear', true);
+		$input['color'] 		= $this->input->post('color', true);
 		$input['updater'] 	= $this->session->email;
 		$insert = $this->auditor_team_model->insert_auditor_team($input);
 		if ($insert) {
@@ -107,6 +109,7 @@ class Auditor_manage_inspection extends CI_Controller
 	{
 		$input['teamName'] 	= $this->input->post('teamName', true);
 		$input['teamYear'] 	= $this->input->post('teamYear', true);
+		$input['color'] 	= $this->input->post('color', true);
 		$input['rowID'] 	= $this->input->post('rowID', true);
 		$input['updater'] 	= $this->session->email;
 		$update = $this->auditor_team_model->update_team_name($input);
@@ -221,6 +224,49 @@ class Auditor_manage_inspection extends CI_Controller
 		} else {
 			$result['status'] = false;
 			$result['text'] = 'ลบข้อมูลไม่สำเร็จ';
+		}
+		$this->output
+			->set_content_type('apllication/json')
+			->set_output(json_encode($result));
+	}
+
+	public function ajax_add_plan()
+	{
+		$input['unitID'] 		= $this->input->post('unitID', true);
+		$input['startDate'] 	= $this->input->post('startDate', true);
+		$input['endDate'] 		= $this->input->post('endDate', true);
+		$input['auditorTeam']	= $this->input->post('auditorTeam', true);
+		$input['updater'] 		= $this->session->email;
+		$insert = $this->plan_model->add_new_plan($input);
+		if ($insert['status']) {
+			$result['status'] = true;
+			$result['text'] = 'บันทึกสำเร็จ';
+			$result['data'] = $insert;
+		} else {
+			$result['status'] = false;
+			$result['text'] = 'บันทึกไม่สำเร็จ';
+		}
+		$this->output
+			->set_content_type('apllication/json')
+			->set_output(json_encode($result));
+	}
+
+	public function ajax_delete_auditor_team()
+	{
+		$input['rowID'] = $this->input->post('auditorTeamID', true);
+		$isteamInUsed = $this->auditor_team_model->is_auditor_team_in_plan($input);
+		if (!$isteamInUsed) {
+			$delete = $this->auditor_team_model->delete_auditor_team($input);
+			if ($delete) {
+				$result['status'] = true;
+				$result['text'] = 'ลบข้อมูลสำเร็จ';
+			} else {
+				$result['status'] = false;
+				$result['text'] = 'ลบข้อมูลไม่สำเร็จ';
+			}
+		} else {
+			$result['status'] = false;
+			$result['text'] = 'มีการใช้ข้อมูลอยู่';
 		}
 		$this->output
 			->set_content_type('apllication/json')

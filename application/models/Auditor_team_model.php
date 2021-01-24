@@ -21,6 +21,7 @@ class Auditor_team_model extends CI_Model
         $date = date("Y-m-d H:i:s");
         $this->oracle->set('TEAM_NAME', $array['teamName']);
         $this->oracle->set('TEAM_YEAR', $array['teamYear']);
+        $this->oracle->set('COLOR', $array['color']);
         $this->oracle->set('USER_UPDATE', $array['updater']);
         $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
         $query = $this->oracle->insert('PIMIS_AUDITOR_TEAM');
@@ -39,6 +40,7 @@ class Auditor_team_model extends CI_Model
         $date = date("Y-m-d H:i:s");
         $this->oracle->set('TEAM_NAME', $array['teamName']);
         $this->oracle->set('TEAM_YEAR', $array['teamYear']);
+        $this->oracle->set('COLOR', $array['color']);
         $this->oracle->set('USER_UPDATE', $array['updater']);
         $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
         $this->oracle->where('ROW_ID', $array['rowID']);
@@ -50,6 +52,20 @@ class Auditor_team_model extends CI_Model
     {
         $this->oracle->where('ROW_ID', $rowID);
         $query = $this->oracle->get('PIMIS_AUDITOR_TEAM');
+        return $query;
+    }
+
+    public function is_auditor_team_in_plan($array)
+    {
+        $this->oracle->where('TEAM_ID', $array['rowID']);
+        $query = $this->oracle->get('PIMIS_AUDITOR_TEAM_IN_PLAN')->num_rows();
+        return $query == 0 ? false : true;
+    }
+
+    public function delete_auditor_team($array)
+    {
+        $this->oracle->where('ROW_ID', $array['rowID']);
+        $query = $this->oracle->delete('PIMIS_AUDITOR_TEAM');
         return $query;
     }
 }

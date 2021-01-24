@@ -106,4 +106,17 @@ class Auditor_model extends CI_Model
         return $query;
     }
 
+    public function check_auditor_type_in_auditor_table($array)
+    {
+        $this->oracle->where('ADT_TYPE', $array['rowID']);
+        $query = $this->oracle->get('PIMIS_AUDITOR');
+        return $query->num_rows() == 0 ? false : true;
+    }
+
+    public function delete_auditor_type($array)
+    {
+        $this->oracle->where('ADT_T_ID', $array['rowID']);
+        $query = $this->oracle->delete('PIMIS_AUDITOR_TYPE');
+        return $query;
+    }
 }

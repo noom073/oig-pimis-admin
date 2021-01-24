@@ -36,11 +36,20 @@ class Questionaire_model extends CI_Model
 
     public function get_inspections_date_data()
     {
-        $this->oracle->select("A.ID, A.SET, TO_CHAR(A.INS_DATE, 'YYYY-MM-DD') as INS_DATE,
-            TO_CHAR(A.FINISH_DATE, 'YYYY-MM-DD') as FINISH_DATE,
-            B.DEPARTMENT_NAME, B.STANDFOR ");
-        $this->oracle->join('PITS_UNIT B', 'A.INS_UNIT = B.ID');
-        $result = $this->oracle->get('PITS_PLAN A');
+        $sql = "SELECT a.ID, a.INS_UNIT, a.ID, a.INS_UNIT, 
+            TO_CHAR(a.INS_DATE, 'YYYY-MM-DD HH24:MI:SS') AS INS_DATE,
+            TO_CHAR(a.FINISH_DATE, 'YYYY-MM-DD HH24:MI:SS') AS FINISH_DATE,
+            b.ROW_ID, b.TEAM_ID,
+            c.TEAM_NAME, c.TEAM_YEAR, c.COLOR,
+            d.NPRT_NAME, d.NPRT_ACM
+            FROM PITS_PLAN a 
+            RIGHT JOIN PIMIS_AUDITOR_TEAM_IN_PLAN b 
+                ON a.ID = b.PLAN_ID 
+            INNER JOIN PIMIS_AUDITOR_TEAM c 
+                ON b.TEAM_ID = c.ROW_ID 
+            INNER JOIN PER_NPRT_TAB d
+                ON d.NPRT_UNIT = a.INS_UNIT ";
+        $result = $this->oracle->query($sql);
         return $result;
     }
 

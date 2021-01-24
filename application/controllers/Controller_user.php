@@ -488,7 +488,7 @@ class Controller_user extends CI_Controller
         } else {
             $result['status'] = false;
             $result['text'] = 'บันทึกไม่สำเร็จ';
-        }        
+        }
         $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode($result));
@@ -506,7 +506,29 @@ class Controller_user extends CI_Controller
         } else {
             $result['status'] = false;
             $result['text'] = 'บันทึกไม่สำเร็จ';
-        }        
+        }
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($result));
+    }
+
+    public function ajax_delete_auditor_type()
+    {
+        $input['rowID'] = $this->input->post('auditorTypeID', true);
+        $checkIsUsed = $this->auditor_model->check_auditor_type_in_auditor_table($input);
+        if ($checkIsUsed) {
+            $result['status'] = false;
+            $result['text'] = 'มีการใช้ข้อมูลอยู่';
+        } else {
+            $delete = $this->auditor_model->delete_auditor_type($input);
+            if ($delete) {
+                $result['status'] = true;
+                $result['text'] = 'ลบข้อมูลสำเร็จ';
+            } else {
+                $result['status'] = false;
+                $result['text'] = 'ลบข้อมูลไม่สำเร็จ';
+            }
+        }
         $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode($result));
