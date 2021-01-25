@@ -77,7 +77,7 @@
 
         const updateEventModal = async groupID => {
             let eventDetail = await getEventDetail(groupID);
-            console.log(eventDetail);
+            console.log(groupID);
             let option = '';
             units.forEach(r => {
                 option += `<option value="${r.NPRT_UNIT}" title="${r.NPRT_NAME}">${r.NPRT_ACM}</option>`;
@@ -138,7 +138,6 @@
                 });
             },
             eventClick: function(info) {
-                // console.log(info);
                 updateEventModal(info.event.groupId);
             },
             loading: isLoading => {
@@ -176,24 +175,34 @@
                 setTimeout(() => {
                     $("#create-plan-form-result").prop('class', '');
                     $("#create-plan-form-result").text('');
-                    thisForm.trigger('reset');
-                }, 3000);
+                }, 2500);
             }).fail((jhr, status, error) => console.error(jhr, status, error));
         });
 
 
         $("#edit-plan-form").submit(function(event) {
             event.preventDefault();
-            let thisForm    = $(this);
-            let planID      = thisForm.data('planID');
-            let formData    = thisForm.serialize()+`&planID=${planID}`;;
+            let thisForm = $(this);
+            let planID = thisForm.data('planID');
+            let formData = thisForm.serialize() + `&planID=${planID}`;;
             $.post({
                 url: '<?= site_url('auditor_manage_inspection/ajax_update_plan') ?>',
                 data: formData,
                 dataType: 'json'
-            }).done(res=> {
+            }).done(res => {
                 console.log(res);
-                calendar.refetchEvents();
+                if (res.updatePlan) {
+                    $("#edit-plan-form-result").prop('class', 'alert alert-success');
+                    $("#edit-plan-form-result").text('บันทึกสำเร็จ');
+                    calendar.refetchEvents();
+                } else {
+                    $("#edit-plan-form-result").prop('class', 'alert alert-danger');
+                    $("#edit-plan-form-result").text('บันทึกไม่สำเร็จ');
+                }
+                setTimeout(() => {
+                    $("#edit-plan-form-result").prop('class', '');
+                    $("#edit-plan-form-result").text('');
+                }, 2500);
             }).fail((jhr, status, error) => console.error(jhr, status, error));
         });
     });

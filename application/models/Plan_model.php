@@ -46,7 +46,7 @@ class Plan_model extends CI_Model
 
     public function get_id_plan($array)
     {
-        $this->oracle->select('ID');
+        $this->oracle->select('MAX(ID) AS ID');
         $this->oracle->where('INS_UNIT', $array['unitID']);
         $this->oracle->where('INS_DATE', "TO_DATE('{$array['startDate']}','YYYY/MM/DD HH24:MI:SS')", false);
         $this->oracle->where('FINISH_DATE', "TO_DATE('{$array['endDate']}','YYYY/MM/DD HH24:MI:SS')", false);
