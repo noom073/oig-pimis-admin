@@ -97,7 +97,7 @@ class Plan_model extends CI_Model
         return $query;
     }
 
-    private function get_a_plan_by_id($planID)
+    public function get_a_plan_by_id($planID)
     {
         $sql = "SELECT ID AS PLAN_ID, INS_UNIT, 
             TO_CHAR(INS_DATE, 'YYYY-MM-DD') AS INS_DATE,
@@ -190,6 +190,13 @@ class Plan_model extends CI_Model
         $this->oracle->set('FINISH_DATE', "TO_DATE('{$array['endDate']}','YYYY/MM/DD HH24:MI:SS')", false);
         $this->oracle->where('ID', $array['planID']);
         $query = $this->oracle->update('PITS_PLAN');
+        return $query;
+    }
+
+    public function delete_plan($id)
+    {
+        $this->oracle->where('ID', $id);
+        $query = $this->oracle->delete('PITS_PLAN');
         return $query;
     }
 }
