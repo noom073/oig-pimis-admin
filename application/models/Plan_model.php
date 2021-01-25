@@ -70,22 +70,6 @@ class Plan_model extends CI_Model
         $result['plan'] = $this->get_a_plan_by_id($array['planID'])->row_array();
         $result['teamPlan'] = $this->get_team_plan_detail_by_plan_id($array['planID'])->result_array();
         return $result;
-        // $sql = "SELECT a.ID AS PLAN_ID, a.INS_UNIT, 
-        //     TO_CHAR(a.INS_DATE, 'YYYY-MM-DD HH24:MI:SS') AS INS_DATE,
-        //     TO_CHAR(a.FINISH_DATE, 'YYYY-MM-DD HH24:MI:SS') AS FINISH_DATE,
-        //     b.ROW_ID AS TEAM_PLAN_ID, b.TEAM_ID,
-        //     c.TEAM_NAME, c.TEAM_YEAR, c.COLOR,
-        //     d.NPRT_NAME, d.NPRT_ACM
-        //     FROM PITS_PLAN a 
-        //     RIGHT JOIN PIMIS_AUDITOR_TEAM_IN_PLAN b 
-        //         ON a.ID = b.PLAN_ID 
-        //     INNER JOIN PIMIS_AUDITOR_TEAM c 
-        //         ON b.TEAM_ID = c.ROW_ID 
-        //     INNER JOIN PER_NPRT_TAB d
-        //         ON d.NPRT_UNIT = a.INS_UNIT
-        //     WHERE b.ROW_ID LIKE ?";
-        // $result = $this->oracle->query($sql, array($array['rowID']));
-        // return $result;
     }
 
     public function get_team_plan_detail_by_plan_id($planID)
