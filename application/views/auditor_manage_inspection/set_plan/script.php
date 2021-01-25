@@ -64,6 +64,43 @@
         };
 
 
+        const getEventDetail = groupID => {
+            return $.post({
+                url: '<?= site_url('auditor_manage_inspection/ajax_get_event_detail') ?>',
+                data: {
+                    groupID: groupID
+                },
+                dataType: 'json'
+            }).done().fail((jhr, status, error) => console.error(jhr, status, error));
+        };
+
+
+        const updateEventModal = async groupID => {
+            let eventDetail = await getEventDetail(groupID);
+            console.log(eventDetail);
+            let option = '';
+            units.forEach(r => {
+                option += `<option value="${r.NPRT_UNIT}" title="${r.NPRT_NAME}">${r.NPRT_ACM}</option>`;
+            });
+            $("#edit-plan-modal-nprt-units").html(option);
+
+            let auditorTeams = await getAuditorTeams();
+            option = '';
+            auditorTeams.forEach(r => {
+                option += `<option value="${r.ROW_ID}">${r.TEAM_NAME} (${r.TEAM_YEAR})</option>`;
+            });
+            $("#edit-plan-modal-auditor-team").html(option);
+
+            let teamVal = eventDetail.teamPlan.map(r => r.TEAM_ID);
+            $("#edit-plan-modal-nprt-units").val(eventDetail.plan.INS_UNIT);
+            $("#edit-plan-modal-date-start").val(eventDetail.plan.INS_DATE);
+            $("#edit-plan-modal-date-end").val(eventDetail.plan.FINISH_DATE);
+            $("#edit-plan-modal-auditor-team").val(teamVal);
+            $("#edit-plan-form").data('planID', eventDetail.plan.PLAN_ID);
+            $("#edit-plan-modal").modal();
+        };
+
+
         const calendarEl = document.getElementById('calendar');
         let calendar = new FullCalendar.Calendar(calendarEl, {
             height: 650,
@@ -84,6 +121,7 @@
                     let events = res.map(r => {
                         return {
                             id: r.teamPlanID,
+                            groupId: r.planID,
                             title: `${r.unitAcm} (${r.teamName})`,
                             start: r.dateStart,
                             end: r.dateEnd,
@@ -93,7 +131,6 @@
                             borderColor: 'white'
                         };
                     });
-                    console.log(events);
                     success(events);
                 }).fail((jhr, status, error) => {
                     fail(error);
@@ -101,7 +138,8 @@
                 });
             },
             eventClick: function(info) {
-                console.log(info);
+                // console.log(info);
+                updateEventModal(info.event.groupId);
             },
             loading: isLoading => {
                 if (isLoading) {
@@ -116,7 +154,6 @@
             }
         });
         calendar.render();
-        // calendar.refetchEvents();
 
 
         $("#create-plan-form").submit(function(event) {
@@ -128,7 +165,6 @@
                 data: formData,
                 dataType: 'json'
             }).done(res => {
-                console.log(res);
                 if (res.status) {
                     $("#create-plan-form-result").prop('class', 'alert alert-success');
                     $("#create-plan-form-result").text(res.text);
@@ -142,6 +178,22 @@
                     $("#create-plan-form-result").text('');
                     thisForm.trigger('reset');
                 }, 3000);
+            }).fail((jhr, status, error) => console.error(jhr, status, error));
+        });
+
+
+        $("#edit-plan-form").submit(function(event) {
+            event.preventDefault();
+            let thisForm    = $(this);
+            let planID      = thisForm.data('planID');
+            let formData    = thisForm.serialize()+`&planID=${planID}`;;
+            $.post({
+                url: '<?= site_url('auditor_manage_inspection/ajax_update_plan') ?>',
+                data: formData,
+                dataType: 'json'
+            }).done(res=> {
+                console.log(res);
+                calendar.refetchEvents();
             }).fail((jhr, status, error) => console.error(jhr, status, error));
         });
     });

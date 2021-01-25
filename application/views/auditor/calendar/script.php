@@ -39,13 +39,14 @@
                         dataType: 'json'
                     }).done(function(res) {
                         let events = res.map(r => {
-                            let bgColor = r.squad == 1 ? '#007bff' : '#00A170';
                             return {
-                                title: r.unitAcm,
+                                id: r.teamPlanID,
+                                title: `${r.unitAcm} (${r.teamName})`,
                                 start: r.dateStart,
                                 end: r.dateEnd,
-                                url: '<?= site_url('auditor/inspection_list/?plan=') ?>'+r.planID,
-                                backgroundColor: bgColor,
+                                allDay: true,
+                                url: '<?= site_url('auditor/inspection_list/?plan=') ?>' + r.planID,
+                                backgroundColor: r.color,
                                 borderColor: 'white'
                             };
                         });
@@ -57,7 +58,7 @@
                 },
                 eventClick: function(info) {
                     console.log(info);
-                } ,
+                },
                 loading: isLoading => {
                     if (isLoading) {
                         $("#load-calendar").prop('class', 'visible');

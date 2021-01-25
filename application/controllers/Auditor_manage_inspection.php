@@ -272,4 +272,28 @@ class Auditor_manage_inspection extends CI_Controller
 			->set_content_type('apllication/json')
 			->set_output(json_encode($result));
 	}
+
+	public function ajax_get_event_detail()
+	{
+		$input['planID'] = $this->input->post('groupID', true);
+		$data = $this->plan_model->get_event_detail($input);
+		$this->output
+			->set_content_type('apllication/json')
+			->set_output(json_encode($data));
+	}
+
+	public function ajax_update_plan()
+	{
+		$input['unitID'] 		= $this->input->post('unitID', true);
+		$input['startDate'] 	= $this->input->post('startDate', true);
+		$input['endDate'] 		= $this->input->post('endDate', true);
+		$input['auditorTeam'] 	= is_array($this->input->post('auditorTeam', true)) ? $this->input->post('auditorTeam', true) : array();
+		$input['planID'] 		= $this->input->post('planID', true);
+		$input['updater'] 		= $this->session->email;
+		$result['updatePlan'] = $this->plan_model->update_plan($input);
+		$result['updateTeamToPlan'] = $this->plan_model->update_team_to_plan($input['planID'], $input['auditorTeam'], $input['updater']);
+		$this->output
+			->set_content_type('apllication/json')
+			->set_output(json_encode($result));
+	}
 }

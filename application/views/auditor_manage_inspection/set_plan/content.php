@@ -74,5 +74,45 @@
             </div>
         </div>
         <!-- END CREATE PLAN Modal -->
+
+        <!-- EDIT PLAN Modal -->
+        <div class="modal fade" id="edit-plan-modal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">กำหนดหน่วย และวันที่ออกตรวจฯ</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="edit-plan-form">
+                            <div class="form-group">
+                                <label>หน่วย:</label>
+                                <input type="text" class="form-control" id="edit-plan-modal-search-units" placeholder="ค้นหาหน่วย">
+                                <select class="form-control" name="unitID" id="edit-plan-modal-nprt-units" required></select>
+                            </div>
+                            <div class="form-group">
+                                <label>วันเริ่มต้น</label>
+                                <input type="date" class="form-control" name="startDate" id="edit-plan-modal-date-start" required>
+                            </div>
+                            <div class="form-group">
+                                <label>วันสิ้นสุด</label>
+                                <input type="date" class="form-control" name="endDate" id="edit-plan-modal-date-end" required>
+                            </div>
+                            <div class="form-group">
+                                <label>ชุดตรวจ</label>
+                                <select style="width: 100%;" class="form-control select2" name="auditorTeam[]" id="edit-plan-modal-auditor-team" multiple></select>
+                            </div>
+                            <div id="edit-plan-form-result"></div>
+                            <button type="submit" class="btn btn-primary">บันทึก</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END EDIT PLAN Modal -->
+        
     </div>
 </div>
