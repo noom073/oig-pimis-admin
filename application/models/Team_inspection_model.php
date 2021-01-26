@@ -23,6 +23,45 @@ class Team_inspection_model extends CI_Model
         $oldTeamInspectionID = array_map(function ($r) {
             return $r['ROW_ID'];
         }, $oldTeamInspection);
-        return $oldTeamInspectionID;
+        $teamInspection['toAdd'] = array_diff($array['teamInspection'], $oldTeamInspectionID);
+        $teamInspection['toRemove'] = array_diff($oldTeamInspectionID, $array['teamInspection']);
+        $toAdd = array();
+        foreach ($teamInspection['toAdd'] as $r) {
+            $insert = $this->add_team_inspection($r, $array['teamPlanID'], $array['updater']);
+            $data['status'] = $insert;
+            $data['teamPlanID'] = $array['teamPlanID'];
+            $data['teamInspection'] = $r;
+            $toAdd[] = $data;
+        }
+        $toRemove = array();
+        foreach ($teamInspection['toRemove'] as $r) {
+            $delete = $this->remove_team_inspection($r, $array['teamPlanID']);
+            $data['status'] = $delete;
+            $data['teamPlanID'] = $array['teamPlanID'];
+            $data['teamInspection'] = $r;
+            $toRemove[] = $data;
+        }
+        $result['toAdd'] = $toAdd;
+        $result['toRemove'] = $toRemove;
+        return $result;
+    }
+
+    public function add_team_inspection($inspectionOptionID, $teamPlanID, $updator)
+    {
+        $date = date("Y-m-d H:i:s");
+        $this->oracle->set('TEAMPLAN_ID', $teamPlanID);
+        $this->oracle->set('INSPECTION_OPTION_ID', $inspectionOptionID);
+        $this->oracle->set('USER_UPDATE', $updator);
+        $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
+        $query = $this->oracle->insert('PIMIS_TEAM_INSPECTION');
+        return $query;
+    }
+
+    public function remove_team_inspection($inspectionOptionID, $teamPlanID)
+    {
+        $this->oracle->where('TEAMPLAN_ID', $teamPlanID);
+        $this->oracle->where('INSPECTION_OPTION_ID', $inspectionOptionID);
+        $query = $this->oracle->delete('PIMIS_TEAM_INSPECTION');
+        return $query;
     }
 }
