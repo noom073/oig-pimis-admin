@@ -14,6 +14,8 @@ class Auditor extends CI_Controller
 
 		$this->load->model('questionaire_model');
 		$this->load->model('summary_model');
+		$this->load->model('team_inspection_model');
+		$this->load->model('plan_model');
 	}
 
 	public function index()
@@ -60,41 +62,59 @@ class Auditor extends CI_Controller
 
 	public function inspection_list()
 	{
-		$planID = $this->input->get('plan');
-		$planData = $this->questionaire_model->get_plan($planID);
-		if ($planData->num_rows() == 1) {
-			//พบ planID 
-			$username = $this->session->nameth;
-			$userType = $this->session_services->get_user_type_name($this->session->usertype);
+		$teamPlanID = $this->input->get('team_plan_id', true);
+		$data['teamPlan'] = $this->plan_model->get_a_team_plan($teamPlanID)->row_array();
+		$data['planDetail'] = $this->plan_model->get_a_plan_by_id($data['teamPlan']['PLAN_ID'])->row_array();
+		// $data['inspectionOptions'] = $this->team_inspection_model->get_inspection_option_for_inspect_by_team_plan_id($teamPlanID)->result_array();
+		// var_dump($data);
+		$sideBar['name'] 	= $this->session->nameth;
+		$dataForScript['planID'] = $teamPlanID;
+		$script['custom'] = $this->load->view('auditor/inspection_list/script', $dataForScript, true);
 
-			$sideBar['name'] 	= $this->session->nameth;
-			$sideBar['userType'] 	= array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
-			$dataForScript['planID'] = $planID;
-			$script['custom'] = $this->load->view('auditor/inspection_list/script', $dataForScript, true);
+		$component['header'] 			= $this->load->view('auditor/component/header', '', true);
+		$component['navbar'] 			= $this->load->view('auditor/component/navbar', '', true);
+		$component['mainSideBar'] 		= $this->load->view('sidebar/main-sidebar', $sideBar, true);
+		$component['mainFooter'] 		= $this->load->view('auditor/component/footer_text', '', true);
+		$component['controllerSidebar'] = $this->load->view('auditor/component/controller_sidebar', '', true);
+		$component['contentWrapper'] 	= $this->load->view('auditor/inspection_list/content', $data, true);
+		$component['jsScript'] 			= $this->load->view('auditor/component/main_script', $script, true);
 
-			$data['plan'] = $planData->row_array();
+		$this->load->view('auditor/template', $component);
 
-			$component['header'] 			= $this->load->view('auditor/component/header', '', true);
-			$component['navbar'] 			= $this->load->view('auditor/component/navbar', '', true);
-			$component['mainSideBar'] 		= $this->load->view('sidebar/main-sidebar', $sideBar, true);
-			$component['mainFooter'] 		= $this->load->view('auditor/component/footer_text', '', true);
-			$component['controllerSidebar'] = $this->load->view('auditor/component/controller_sidebar', '', true);
-			$component['contentWrapper'] 	= $this->load->view('auditor/inspection_list/content', $data, true);
-			$component['jsScript'] 			= $this->load->view('auditor/component/main_script', $script, true);
+		// $planID = $this->input->get('team_plan_id', true);
+		// $planData = $this->questionaire_model->get_plan($planID);
+		// if ($planData->num_rows() == 1) {
+		// 	//พบ planID 
+		// 	$username = $this->session->nameth;
+		// 	$userType = $this->session_services->get_user_type_name($this->session->usertype);
 
-			$this->load->view('auditor/template', $component);
-		} else {
-			// ไม่พบ planID ให้กลับไปหน้า calendar
-			redirect('auditor/calendar');
-		}
+		// 	$sideBar['name'] 	= $this->session->nameth;
+		// 	$sideBar['userType'] 	= array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
+		// 	$dataForScript['planID'] = $planID;
+		// 	$script['custom'] = $this->load->view('auditor/inspection_list/script', $dataForScript, true);
+
+		// 	$data['plan'] = $planData->row_array();
+
+		// 	$component['header'] 			= $this->load->view('auditor/component/header', '', true);
+		// 	$component['navbar'] 			= $this->load->view('auditor/component/navbar', '', true);
+		// 	$component['mainSideBar'] 		= $this->load->view('sidebar/main-sidebar', $sideBar, true);
+		// 	$component['mainFooter'] 		= $this->load->view('auditor/component/footer_text', '', true);
+		// 	$component['controllerSidebar'] = $this->load->view('auditor/component/controller_sidebar', '', true);
+		// 	$component['contentWrapper'] 	= $this->load->view('auditor/inspection_list/content', $data, true);
+		// 	$component['jsScript'] 			= $this->load->view('auditor/component/main_script', $script, true);
+
+		// 	$this->load->view('auditor/template', $component);
+		// } else {
+		// 	// ไม่พบ planID ให้กลับไปหน้า calendar
+		// 	redirect('auditor/calendar');
+		// }
 	}
 
 	public function inspect()
 	{
 		$planID = $this->input->get('plan');
 		$planData = $this->questionaire_model->get_plan($planID);
-		if ($planData->num_rows() == 1) {
-			//พบ planID 
+		if ($planData->num_rows() == 1) { //พบ planID 
 			$username = $this->session->nameth;
 			$userType = $this->session_services->get_user_type_name($this->session->usertype);
 
@@ -127,8 +147,7 @@ class Auditor extends CI_Controller
 			$component['jsScript'] 			= $this->load->view('auditor/component/main_script', $script, true);
 
 			$this->load->view('auditor/template', $component);
-		} else {
-			// ไม่พบ planID ให้กลับไปหน้า calendar
+		} else { // ไม่พบ planID ให้กลับไปหน้า calendar
 			redirect('auditor/calendar');
 		}
 	}

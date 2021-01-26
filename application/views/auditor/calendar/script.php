@@ -38,14 +38,17 @@
                         url: '<?= site_url('data_service/ajax_inspection_data_calendar') ?>',
                         dataType: 'json'
                     }).done(function(res) {
+                        let link = '<?= site_url('auditor/inspection_list') ?>';
                         let events = res.map(r => {
                             return {
                                 id: r.teamPlanID,
+                                groupId: r.planID,
                                 title: `${r.unitAcm} (${r.teamName})`,
                                 start: r.dateStart,
                                 end: r.dateEnd,
                                 allDay: true,
-                                url: '<?= site_url('auditor/inspection_list/?plan=') ?>' + r.planID,
+                                // url: '<?= site_url('auditor/inspection_list?team_plan_id=') ?>' + r.teamPlanID,
+                                url: `${link}?team_plan_id=${r.teamPlanID}`,
                                 backgroundColor: r.color,
                                 borderColor: 'white'
                             };

@@ -17,11 +17,26 @@ class Team_inspection_model extends CI_Model
         return $query;
     }
 
+    public function get_inspection_option_for_inspect_by_team_plan_id($teamPlanID)
+    {
+        $sql ="SELECT a.ROW_ID, a.TEAMPLAN_ID, 
+        b.INSPECTION_NAME as INSPECTION_OPTION_NAME, b.ROW_ID,
+        c.INSPE_NAME AS INSPECTION_NAME
+        FROM PIMIS_TEAM_INSPECTION a
+        INNER JOIN PIMIS_INSPECTION_OPTION b 
+            ON a.INSPECTION_OPTION_ID = b.ROW_ID 
+        INNER JOIN PIMIS_INSPECTIONS c 
+            ON b.INSPECTION_ID = c.INSPE_ID 
+        WHERE a.TEAMPLAN_ID = ?";
+        $query = $this->oracle->query($sql, array($teamPlanID));
+        return $query;
+    }
+
     public function update_team_inspection($array)
     {
         $oldTeamInspection = $this->get_team_inspection($array['teamPlanID'])->result_array();
         $oldTeamInspectionID = array_map(function ($r) {
-            return $r['ROW_ID'];
+            return $r['INSPECTION_OPTION_ID'];
         }, $oldTeamInspection);
         $teamInspection['toAdd'] = array_diff($array['teamInspection'], $oldTeamInspectionID);
         $teamInspection['toRemove'] = array_diff($oldTeamInspectionID, $array['teamInspection']);

@@ -123,11 +123,12 @@
             });
             $("#edit-team-inspection-form-inspection").html(option);
 
-            // let teamVal = eventDetail.teamPlan.map(r => r.TEAM_ID);
+            let inspectionOptionVal = teamPlanInspection.map(r => r.INSPECTION_OPTION_ID);
             $("#edit-team-inspection-form-nprt-units").val(planDetail.INS_UNIT);
             $("#edit-team-inspection-form-date-start").val(planDetail.INS_DATE);
             $("#edit-team-inspection-form-date-end").val(planDetail.FINISH_DATE);
             $("#edit-team-inspection-form-auditor-team").val(teamPlanDetail.TEAM_ID);
+            $("#edit-team-inspection-form-inspection").val(inspectionOptionVal);
             $("#edit-team-inspection-form").data('teamPlanID', teamPlanDetail.ROW_ID);
             $("#edit-team-inspection-modal").modal();
         };
@@ -196,6 +197,7 @@
                 dataType: 'json'
             }).done(res => {
                 console.log(res);
+                alert('บันทึกข้อมูลเรียบร้อย');
             }).fail((jhr, status, error) => console.error(jhr, status, error));
         });
     });

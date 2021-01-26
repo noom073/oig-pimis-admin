@@ -65,7 +65,7 @@
                             </div>
                             <div class="form-group">
                                 <label>สายการตรวจ</label>
-                                <select style="width: 100%;" class="form-control select2" name="teamInspection[]" id="edit-team-inspection-form-inspection" multiple required></select>
+                                <select style="width: 100%;" class="form-control select2" name="teamInspection[]" id="edit-team-inspection-form-inspection" multiple></select>
                             </div>
                             <div id="edit-plan-form-result"></div>
                             <button type="submit" class="btn btn-primary">บันทึก</button>

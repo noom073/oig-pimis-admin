@@ -293,7 +293,7 @@ class Auditor_manage_inspection extends CI_Controller
 		$input['updater'] 		= $this->session->email;
 		$result['updatePlan'] = $this->plan_model->update_plan($input);
 		$result['updateTeamToPlan'] = $this->plan_model->update_team_to_plan($input['planID'], $input['auditorTeam'], $input['updater']);
-		
+
 		$planToRemove = $this->plan_model->get_team_plan_detail_by_plan_id($input['planID'])->num_rows();
 		if ($planToRemove == 0) {
 			$result['removePlan'] = $this->plan_model->delete_plan($input['planID']);
@@ -324,7 +324,7 @@ class Auditor_manage_inspection extends CI_Controller
 
 	public function ajax_update_team_inspection()
 	{
-		$input['teamInspection']= $this->input->post('teamInspection', true);
+		$input['teamInspection'] = is_array($this->input->post('teamInspection', true)) ? $this->input->post('teamInspection', true) : [];
 		$input['teamPlanID'] 	= $this->input->post('teamPlanID', true);
 		$input['updater'] 		= $this->session->email;
 
@@ -332,6 +332,5 @@ class Auditor_manage_inspection extends CI_Controller
 		$this->output
 			->set_content_type('apllication/json')
 			->set_output(json_encode($update));
-
 	}
 }

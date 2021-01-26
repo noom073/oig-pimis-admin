@@ -83,11 +83,14 @@ class Plan_model extends CI_Model
 
     public function get_a_plan_by_id($planID)
     {
-        $sql = "SELECT ID AS PLAN_ID, INS_UNIT, 
-            TO_CHAR(INS_DATE, 'YYYY-MM-DD') AS INS_DATE,
-            TO_CHAR(FINISH_DATE, 'YYYY-MM-DD') AS FINISH_DATE
-            FROM PITS_PLAN
-            WHERE ID = ?";
+        $sql = "SELECT a.ID AS PLAN_ID, a.INS_UNIT, 
+            TO_CHAR(a.INS_DATE, 'YYYY-MM-DD') AS INS_DATE,
+            TO_CHAR(a.FINISH_DATE, 'YYYY-MM-DD') AS FINISH_DATE,
+            b.NPRT_ACM, b.NPRT_NAME
+            FROM PITS_PLAN a
+            INNER JOIN PER_NPRT_TAB B 
+                ON a.INS_UNIT = b.NPRT_UNIT
+            WHERE a.ID = ?";
         $query = $this->oracle->query($sql, array($planID));
         return $query;
     }

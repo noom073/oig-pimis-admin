@@ -20,16 +20,9 @@
             <div class="card">
                 <div class="card-header">
                     <div class="h3">การตรวจราชการ</div>
-                    <div class="h4">
-                        <u><?= $plan['STANDFOR'] ?></u>
-                    </div>
-                    <div>
-                        <small class="text-danger">ห้วงวันที่:
-                            <?= date("d/m/Y", strtotime($plan['INS_DATE'])) ?>
-                            -
-                            <?= date("d/m/Y", strtotime($plan['FINISH_DATE'])) ?>
-                        </small>
-                    </div>
+                    <u class="h4 d-block"><?= $planDetail['NPRT_ACM'] ?></u>
+                    <small class="text-muted d-block"><?= $planDetail['NPRT_NAME'] ?></small>
+                    <small class="text-danger d-block">ห้วงวันที่: <?= "{$planDetail['INS_DATE']} ถึง {$planDetail['FINISH_DATE']}" ?></small>
                 </div>
                 <div class="card-body">
                     <h5 class="card-title"></h5>
@@ -38,18 +31,40 @@
                             <button class="btn btn-sm btn-light" onclick="return window.history.back();">ย้อนกลับ</button>
                         </div>
                         <div class="pt-3">
-                            <a href="<?= site_url("auditor/inspect?plan={$plan['ID']}") ?>" class="btn btn-info">
-                                <i class="far fa-file-alt"></i>
-                                การตรวจตามสายงาน
-                            </a>
-                            <a href="<?= site_url("auditor/inspection_result?plan={$plan['ID']}") ?>" class="btn btn-info">
-                                <i class="far fa-file-alt"></i>
-                                บันทึกผลการตรวจ
-                            </a>
-                            <a href="<?= site_url("auditor/inspection_summary?plan={$plan['ID']}") ?>" class="btn btn-info">
-                                <i class="far fa-file-alt"></i>
-                                สรุปผลการตรวจ
-                            </a>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="card text-center">
+                                        <div class="card-body">
+                                            <h5 class="card-title"></h5>
+                                            <p class="card-text">
+                                                <a href="<?= site_url("auditor/inspect?plan={$teamPlan['ROW_ID']}") ?>" class="card-link">การตรวจตามสายงาน</a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col">
+                                    <div class="card text-center">
+                                        <div class="card-body">
+                                            <h5 class="card-title"></h5>
+                                            <p class="card-text">
+                                                <a href="<?= site_url("auditor/inspection_result?plan={$teamPlan['ROW_ID']}") ?>" class="card-link">บันทึกผลการตรวจ</a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col">
+                                    <div class="card text-center">
+                                        <div class="card-body">
+                                            <h5 class="card-title"></h5>
+                                            <p class="card-text">
+                                                <a href="<?= site_url("auditor/inspection_summary?plan={$teamPlan['ROW_ID']}") ?>" class="card-link">สรุปผลการตรวจ</a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
