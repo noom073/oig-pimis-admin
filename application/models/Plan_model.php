@@ -183,4 +183,11 @@ class Plan_model extends CI_Model
         $query = $this->oracle->delete('PITS_PLAN');
         return $query;
     }
+
+    public function get_a_team_plan($id)
+    {
+        $this->oracle->where('ROW_ID', $id);
+        $query = $this->oracle->get('PIMIS_AUDITOR_TEAM_IN_PLAN');
+        return $query;
+    }
 }

@@ -17,6 +17,7 @@ class Auditor_manage_inspection extends CI_Controller
 		$this->load->model('auditor_team_model');
 		$this->load->model('auditor_model');
 		$this->load->model('plan_model');
+		$this->load->model('team_inspection_model');
 	}
 
 	public function index()
@@ -40,7 +41,7 @@ class Auditor_manage_inspection extends CI_Controller
 	{
 		$sideBar['name'] 	= $this->session->nameth;
 		$script['custom'] = $this->load->view('auditor_manage_inspection/set_plan/script', '', true);
-		$header['custom'] = $this->load->view('auditor_manage_inspection/set_plan/custom_header', '', true);;
+		$header['custom'] = $this->load->view('auditor_manage_inspection/set_plan/custom_header', '', true);
 
 		$component['header'] 			= $this->load->view('auditor_manage_inspection/component/header', $header, true);
 		$component['navbar'] 			= $this->load->view('auditor_manage_inspection/component/navbar', '', true);
@@ -299,9 +300,38 @@ class Auditor_manage_inspection extends CI_Controller
 		} else {
 			$result['removePlan'] = false;
 		}
-		
 		$this->output
 			->set_content_type('apllication/json')
 			->set_output(json_encode($result));
+	}
+
+	public function set_inspection()
+	{
+		$sideBar['name'] 	= $this->session->nameth;
+		$script['custom'] = $this->load->view('auditor_manage_inspection/set_inspection/script', '', true);
+		$header['custom'] = $this->load->view('auditor_manage_inspection/set_inspection/custom_header', '', true);
+
+		$component['header'] 			= $this->load->view('auditor_manage_inspection/component/header', $header, true);
+		$component['navbar'] 			= $this->load->view('auditor_manage_inspection/component/navbar', '', true);
+		$component['mainSideBar'] 		= $this->load->view('sidebar/main-sidebar', $sideBar, true);
+		$component['mainFooter'] 		= $this->load->view('auditor_manage_inspection/component/footer_text', '', true);
+		$component['controllerSidebar'] = $this->load->view('auditor_manage_inspection/component/controller_sidebar', '', true);
+		$component['contentWrapper'] 	= $this->load->view('auditor_manage_inspection/set_inspection/content', '', true);
+		$component['jsScript'] 			= $this->load->view('auditor_manage_inspection/component/main_script', $script, true);
+
+		$this->load->view('auditor_manage_inspection/template', $component);
+	}
+
+	public function ajax_update_team_inspection()
+	{
+		$input['teamInspection']= $this->input->post('teamInspection', true);
+		$input['teamPlanID'] 	= $this->input->post('teamPlanID', true);
+		$input['updater'] 		= $this->session->email;
+
+		$update = $this->team_inspection_model->update_team_inspection($input);
+		$this->output
+			->set_content_type('apllication/json')
+			->set_output(json_encode($update));
+
 	}
 }

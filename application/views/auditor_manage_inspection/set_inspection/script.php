@@ -56,48 +56,80 @@
         };
 
 
-        const createPlanModalCall = (info) => {
-            $("#date-start").val(info.startStr);
-            $("#date-end").val(info.endStr);
-            setAuditorTeamOptionSelect();
-            $("#create-plan-modal").modal();
-        };
-
-
-        const getEventDetail = groupID => {
+        const getPlan = planID => {
             return $.post({
-                url: '<?= site_url('auditor_manage_inspection/ajax_get_event_detail') ?>',
+                url: '<?= site_url('data_service/ajax_get_a_plan') ?>',
                 data: {
-                    groupID: groupID
+                    planID: planID
                 },
                 dataType: 'json'
             }).done().fail((jhr, status, error) => console.error(jhr, status, error));
         };
 
 
-        const updateEventModal = async groupID => {
-            let eventDetail = await getEventDetail(groupID);
-            console.log(groupID);
+        const getTeamPlan = teamPlanID => {
+            return $.post({
+                url: '<?= site_url('data_service/ajax_get_a_team_plan') ?>',
+                data: {
+                    teamPlanID: teamPlanID
+                },
+                dataType: 'json'
+            }).done().fail((jhr, status, error) => console.error(jhr, status, error));
+        };
+
+
+        const getInspectionOptions = () => {
+            return $.post({
+                url: '<?= site_url('data_service/ajax_get_inspection_options') ?>',
+                dataType: 'json'
+            }).done().fail((jhr, status, error) => console.error(jhr, status, error));
+        };
+
+
+        const getTeamInspection = teamPlanID => {
+            return $.post({
+                url: '<?= site_url('data_service/ajax_get_team_inspection') ?>',
+                data: {
+                    teamPlanID: teamPlanID
+                },
+                dataType: 'json'
+            }).done().fail((jhr, status, error) => console.error(jhr, status, error));
+        };
+
+
+        const updateInspaectionModal = async (teamPlanID, groupID) => {
+            let planDetail = await getPlan(groupID);
+            let teamPlanDetail = await getTeamPlan(teamPlanID);
+            let auditorTeams = await getAuditorTeams();
+            let inspectionOptions = await getInspectionOptions();
+            let teamPlanInspection = await getTeamInspection(teamPlanID);
+            console.log(teamPlanInspection);
             let option = '';
+
             units.forEach(r => {
                 option += `<option value="${r.NPRT_UNIT}" title="${r.NPRT_NAME}">${r.NPRT_ACM}</option>`;
             });
-            $("#edit-plan-modal-nprt-units").html(option);
+            $("#edit-team-inspection-form-nprt-units").html(option);
 
-            let auditorTeams = await getAuditorTeams();
             option = '';
             auditorTeams.forEach(r => {
                 option += `<option value="${r.ROW_ID}">${r.TEAM_NAME} (${r.TEAM_YEAR})</option>`;
             });
-            $("#edit-plan-modal-auditor-team").html(option);
+            $("#edit-team-inspection-form-auditor-team").html(option);
 
-            let teamVal = eventDetail.teamPlan.map(r => r.TEAM_ID);
-            $("#edit-plan-modal-nprt-units").val(eventDetail.plan.INS_UNIT);
-            $("#edit-plan-modal-date-start").val(eventDetail.plan.INS_DATE);
-            $("#edit-plan-modal-date-end").val(eventDetail.plan.FINISH_DATE);
-            $("#edit-plan-modal-auditor-team").val(teamVal);
-            $("#edit-plan-form").data('planID', eventDetail.plan.PLAN_ID);
-            $("#edit-plan-modal").modal();
+            option = '';
+            inspectionOptions.forEach(r => {
+                option += `<option value="${r.ROW_ID}">${r.INSPECTION_NAME} (${r.OPTION_YEAR})</option>`;
+            });
+            $("#edit-team-inspection-form-inspection").html(option);
+
+            // let teamVal = eventDetail.teamPlan.map(r => r.TEAM_ID);
+            $("#edit-team-inspection-form-nprt-units").val(planDetail.INS_UNIT);
+            $("#edit-team-inspection-form-date-start").val(planDetail.INS_DATE);
+            $("#edit-team-inspection-form-date-end").val(planDetail.FINISH_DATE);
+            $("#edit-team-inspection-form-auditor-team").val(teamPlanDetail.TEAM_ID);
+            $("#edit-team-inspection-form").data('teamPlanID', teamPlanDetail.ROW_ID);
+            $("#edit-team-inspection-modal").modal();
         };
 
 
@@ -126,7 +158,7 @@
                             start: r.dateStart,
                             end: r.dateEnd,
                             allDay: true,
-                            // url: '<?= site_url('auditor_manage_inspection/set_inspection/?teamPlan=') ?>' + r.teamPlanID,
+                            // url: '<?= site_url('auditor/inspection_list/?plan=') ?>' + r.planID,
                             backgroundColor: r.color,
                             borderColor: 'white'
                         };
@@ -138,7 +170,7 @@
                 });
             },
             eventClick: function(info) {
-                updateEventModal(info.event.groupId);
+                updateInspaectionModal(info.event.id, info.event.groupId);
             },
             loading: isLoading => {
                 if (isLoading) {
@@ -147,62 +179,23 @@
                     $("#load-calendar").prop('class', 'invisible');
                 }
             },
-            selectable: true,
-            select: (info) => {
-                createPlanModalCall(info);
-            }
+            selectable: true
         });
         calendar.render();
 
 
-        $("#create-plan-form").submit(function(event) {
+        $("#edit-team-inspection-form").submit(function(event) {
             event.preventDefault();
             let thisForm = $(this);
-            let formData = thisForm.serialize();
+            let teamPlanID = thisForm.data('teamPlanID');
+            let formData = thisForm.serialize() + `&teamPlanID=${teamPlanID}`;
+            console.log(formData);
             $.post({
-                url: '<?= site_url('auditor_manage_inspection/ajax_add_plan') ?>',
-                data: formData,
-                dataType: 'json'
-            }).done(res => {
-                if (res.status) {
-                    $("#create-plan-form-result").prop('class', 'alert alert-success');
-                    $("#create-plan-form-result").text(res.text);
-                    calendar.refetchEvents();
-                } else {
-                    $("#create-plan-form-result").prop('class', 'alert alert-danger');
-                    $("#create-plan-form-result").text(res.text);
-                }
-                setTimeout(() => {
-                    $("#create-plan-form-result").prop('class', '');
-                    $("#create-plan-form-result").text('');
-                }, 2500);
-            }).fail((jhr, status, error) => console.error(jhr, status, error));
-        });
-
-
-        $("#edit-plan-form").submit(function(event) {
-            event.preventDefault();
-            let thisForm = $(this);
-            let planID = thisForm.data('planID');
-            let formData = thisForm.serialize() + `&planID=${planID}`;;
-            $.post({
-                url: '<?= site_url('auditor_manage_inspection/ajax_update_plan') ?>',
+                url: '<?= site_url('auditor_manage_inspection/ajax_update_team_inspection') ?>',
                 data: formData,
                 dataType: 'json'
             }).done(res => {
                 console.log(res);
-                if (res.updatePlan) {
-                    $("#edit-plan-form-result").prop('class', 'alert alert-success');
-                    $("#edit-plan-form-result").text('บันทึกสำเร็จ');
-                    calendar.refetchEvents();
-                } else {
-                    $("#edit-plan-form-result").prop('class', 'alert alert-danger');
-                    $("#edit-plan-form-result").text('บันทึกไม่สำเร็จ');
-                }
-                setTimeout(() => {
-                    $("#edit-plan-form-result").prop('class', '');
-                    $("#edit-plan-form-result").text('');
-                }, 2500);
             }).fail((jhr, status, error) => console.error(jhr, status, error));
         });
     });

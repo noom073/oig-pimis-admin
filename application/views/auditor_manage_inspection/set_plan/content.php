@@ -24,6 +24,7 @@
                 <div class="card-body">
                     <div class="mb-3">
                         <button class="btn btn-sm btn-light" onclick="return window.history.back();">ย้อนกลับ</button>
+                        <a href="<?= site_url('auditor_manage_inspection/set_inspection') ?>" class="btn btn-sm btn-success" >กำหนดสายการตรวจ</a>
                     </div>
                     <h5 class="card-title"></h5>
                     <div class="card-text">

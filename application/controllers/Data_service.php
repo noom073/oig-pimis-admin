@@ -17,6 +17,8 @@ class Data_service extends CI_Controller
         $this->load->model('data_model');
         $this->load->model('nprt_model');
         $this->load->model('auditor_model');
+        $this->load->model('plan_model');
+        $this->load->model('team_inspection_model');
     }
 
     public function ajax_get_type_user()
@@ -160,6 +162,33 @@ class Data_service extends CI_Controller
     public function ajax_get_auditor_types()
     {
         $data = $this->auditor_model->get_auditor_types()->result_array();
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($data));
+    }
+
+    public function ajax_get_a_plan()
+    {
+        $input = $this->input->post('planID', true);
+        $data = $this->plan_model->get_a_plan($input)->row_array();
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($data));
+    }
+
+    public function ajax_get_a_team_plan()
+    {
+        $input = $this->input->post('teamPlanID', true);
+        $data = $this->plan_model->get_a_team_plan($input)->row_array();
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($data));
+    }
+
+    public function ajax_get_team_inspection()
+    {
+        $input = $this->input->post('teamPlanID', true);
+        $data = $this->team_inspection_model->get_team_inspection($input)->result_array();
         $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode($data));
