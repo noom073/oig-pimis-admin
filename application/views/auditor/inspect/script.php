@@ -95,12 +95,12 @@
 
 
         $(".inspect-list").click(async function() {
-            let inspectionID = $(this).data('inspection-id');
-            await drawQuestionForm(inspectionID);
+            let inspectionOptionID = $(this).data('inspection-option-id');
+            await drawQuestionForm(inspectionOptionID);
             showScore();
             $(".inspect-list").removeClass('active');
             $(this).addClass('active');
-            $("#auditor-inspect-form").data('inspection-id', inspectionID);
+            $("#auditor-inspect-form").data('inspection-option-id', inspectionOptionID);
             $("#auditor-inspect-form").removeClass('d-none');
         });
 
@@ -119,9 +119,10 @@
         $("#auditor-inspect-form").submit(function(event) {
             event.preventDefault();
             let thisForm = $(this);
-            let inspectionID = thisForm.data('inspection-id');
-            let planID = '<?= $planID ?>';
-            let formData = thisForm.serialize() + `&inspectionID=${inspectionID}&planID=${planID}`;
+            let teamPlanID = thisForm.data('team-plan-id');
+            let inspectionOptionID = thisForm.data('inspection-option-id');
+            let planID = '<?= '' ?>';
+            let formData = thisForm.serialize() + `&teamPlanID=${teamPlanID}&inspectionOptionID=${inspectionOptionID}`;
 
             $.post({
                 url: '<?= site_url('auditor/ajax_auditor_add_inpect_score') ?>',

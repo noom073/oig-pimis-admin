@@ -37,7 +37,7 @@
                                         <div class="card-body">
                                             <h5 class="card-title"></h5>
                                             <p class="card-text">
-                                                <a href="<?= site_url("auditor/inspect?plan={$teamPlan['ROW_ID']}") ?>" class="card-link">การตรวจตามสายงาน</a>
+                                                <a href="<?= site_url("auditor/inspect?team_plan_id={$teamPlan['ROW_ID']}") ?>" class="card-link">การตรวจตามสายงาน</a>
                                             </p>
                                         </div>
                                     </div>
@@ -48,7 +48,7 @@
                                         <div class="card-body">
                                             <h5 class="card-title"></h5>
                                             <p class="card-text">
-                                                <a href="<?= site_url("auditor/inspection_result?plan={$teamPlan['ROW_ID']}") ?>" class="card-link">บันทึกผลการตรวจ</a>
+                                                <a href="<?= site_url("auditor/inspection_result?team_plan_id={$teamPlan['ROW_ID']}") ?>" class="card-link">บันทึกผลการตรวจ</a>
                                             </p>
                                         </div>
                                     </div>
@@ -59,7 +59,7 @@
                                         <div class="card-body">
                                             <h5 class="card-title"></h5>
                                             <p class="card-text">
-                                                <a href="<?= site_url("auditor/inspection_summary?plan={$teamPlan['ROW_ID']}") ?>" class="card-link">สรุปผลการตรวจ</a>
+                                                <a href="<?= site_url("auditor/inspection_summary?team_plan_id={$teamPlan['ROW_ID']}") ?>" class="card-link">สรุปผลการตรวจ</a>
                                             </p>
                                         </div>
                                     </div>

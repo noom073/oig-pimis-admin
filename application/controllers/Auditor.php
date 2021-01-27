@@ -112,53 +112,85 @@ class Auditor extends CI_Controller
 
 	public function inspect()
 	{
-		$planID = $this->input->get('plan');
-		$planData = $this->questionaire_model->get_plan($planID);
-		if ($planData->num_rows() == 1) { //พบ planID 
-			$username = $this->session->nameth;
-			$userType = $this->session_services->get_user_type_name($this->session->usertype);
-
-			$sideBar['name'] 	= $this->session->nameth;
-			$sideBar['userType'] 	= array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
-			$dataForScript['planID'] = $planID;
-			$script['custom'] = $this->load->view('auditor/inspect/script', $dataForScript, true);
-			$header['custom'] = $this->load->view('auditor/inspect/custom_header', '', true);
-
-			$inspections = $this->questionaire_model
-				->get_inspections_with_inpected_check($planID)
-				->result_array();
-			$inspectionsDivide = array('odd' => array(), 'even' => array());
-			foreach ($inspections as $index => $r) {
-				if ($index % 2 == 1) {
-					array_push($inspectionsDivide['even'], $r);
-				} else {
-					array_push($inspectionsDivide['odd'], $r);
-				}
+		$teamPlanID = $this->input->get('team_plan_id', true);
+		$teamInspections = $this->team_inspection_model->get_team_inspection($teamPlanID)->result_array();
+		$data['teamPlan'] = $this->plan_model->get_a_team_plan($teamPlanID)->row_array();
+		$data['planDetail'] = $this->plan_model->get_a_plan_by_id($data['teamPlan']['PLAN_ID'])->row_array();
+		
+		$sideBar['name'] 	= $this->session->nameth;
+		$sideBar['userType'] 	= array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
+		$script['custom'] = $this->load->view('auditor/inspect/script', $data, true);
+		$header['custom'] = $this->load->view('auditor/inspect/custom_header', '', true);
+		
+		$inspectionsDivide = array('odd' => array(), 'even' => array());
+		foreach ($teamInspections as $index => $r) {
+			if ($index % 2 == 1) {
+				array_push($inspectionsDivide['even'], $r);
+			} else {
+				array_push($inspectionsDivide['odd'], $r);
 			}
-			$data['inspections'] = $inspectionsDivide;
-			$data['plan'] = $planData->row_array();
-
-			$component['header'] 			= $this->load->view('auditor/component/header', $header, true);
-			$component['navbar'] 			= $this->load->view('auditor/component/navbar', '', true);
-			$component['mainSideBar'] 		= $this->load->view('sidebar/main-sidebar', $sideBar, true);
-			$component['mainFooter'] 		= $this->load->view('auditor/component/footer_text', '', true);
-			$component['controllerSidebar'] = $this->load->view('auditor/component/controller_sidebar', '', true);
-			$component['contentWrapper'] 	= $this->load->view('auditor/inspect/content', $data, true);
-			$component['jsScript'] 			= $this->load->view('auditor/component/main_script', $script, true);
-
-			$this->load->view('auditor/template', $component);
-		} else { // ไม่พบ planID ให้กลับไปหน้า calendar
-			redirect('auditor/calendar');
 		}
+		$data['inspections'] = $inspectionsDivide;
+		// var_dump($data['inspections']);
+
+		$component['header'] 			= $this->load->view('auditor/component/header', $header, true);
+		$component['navbar'] 			= $this->load->view('auditor/component/navbar', '', true);
+		$component['mainSideBar'] 		= $this->load->view('sidebar/main-sidebar', $sideBar, true);
+		$component['mainFooter'] 		= $this->load->view('auditor/component/footer_text', '', true);
+		$component['controllerSidebar'] = $this->load->view('auditor/component/controller_sidebar', '', true);
+		$component['contentWrapper'] 	= $this->load->view('auditor/inspect/content', $data, true);
+		$component['jsScript'] 			= $this->load->view('auditor/component/main_script', $script, true);
+
+		$this->load->view('auditor/template', $component);
+		/** */
+
+		// $planID = $this->input->get('plan');
+		// $planData = $this->questionaire_model->get_plan($planID);
+		// if ($planData->num_rows() == 1) { //พบ planID 
+		// 	$username = $this->session->nameth;
+		// 	$userType = $this->session_services->get_user_type_name($this->session->usertype);
+
+		// 	$sideBar['name'] 	= $this->session->nameth;
+		// 	$sideBar['userType'] 	= array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
+		// 	$dataForScript['planID'] = $planID;
+		// 	$script['custom'] = $this->load->view('auditor/inspect/script', $dataForScript, true);
+		// 	$header['custom'] = $this->load->view('auditor/inspect/custom_header', '', true);
+
+		// 	$inspections = $this->questionaire_model
+		// 		->get_inspections_with_inpected_check($planID)
+		// 		->result_array();
+		// 	$inspectionsDivide = array('odd' => array(), 'even' => array());
+		// 	foreach ($inspections as $index => $r) {
+		// 		if ($index % 2 == 1) {
+		// 			array_push($inspectionsDivide['even'], $r);
+		// 		} else {
+		// 			array_push($inspectionsDivide['odd'], $r);
+		// 		}
+		// 	}
+		// 	$data['inspections'] = $inspectionsDivide;
+		// 	$data['plan'] = $planData->row_array();
+
+		// 	$component['header'] 			= $this->load->view('auditor/component/header', $header, true);
+		// 	$component['navbar'] 			= $this->load->view('auditor/component/navbar', '', true);
+		// 	$component['mainSideBar'] 		= $this->load->view('sidebar/main-sidebar', $sideBar, true);
+		// 	$component['mainFooter'] 		= $this->load->view('auditor/component/footer_text', '', true);
+		// 	$component['controllerSidebar'] = $this->load->view('auditor/component/controller_sidebar', '', true);
+		// 	$component['contentWrapper'] 	= $this->load->view('auditor/inspect/content', $data, true);
+		// 	$component['jsScript'] 			= $this->load->view('auditor/component/main_script', $script, true);
+
+		// 	$this->load->view('auditor/template', $component);
+		// } else { // ไม่พบ planID ให้กลับไปหน้า calendar
+		// 	redirect('auditor/calendar');
+		// }
 	}
 
 	public function ajax_auditor_add_inpect_score()
 	{
+		$data['inspectionOptionID'] = $this->input->post('inspectionOptionID', true);
+		$data['teamPlanID'] = $this->input->post('teamPlanID', true);
 		$input = $this->input->post();
-		$data['inspectionID'] = $input['inspectionID'];
-		$data['planID'] = $input['planID'];
-		unset($input['inspectionID']); //clear inspectionID ในชุดข้อมูล ก่อนจะ loop array score
-		unset($input['planID']); //clear planID ในชุดข้อมูล ก่อนจะ loop array score
+		unset($input['inspectionOptionID']); //clear inspectionID ในชุดข้อมูล ก่อนจะ loop array score
+		unset($input['teamPlanID']); //clear planID ในชุดข้อมูล ก่อนจะ loop array score
 		$data['scores'] = $input;
 		$result = $this->questionaire_model->insert_inspection_score($data);
 

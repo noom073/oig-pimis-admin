@@ -12,14 +12,19 @@ class Team_inspection_model extends CI_Model
 
     public function get_team_inspection($teamPlanID)
     {
-        $this->oracle->where('TEAMPLAN_ID', $teamPlanID);
-        $query = $this->oracle->get('PIMIS_TEAM_INSPECTION');
+        $sql = "SELECT a.ROW_ID AS TEAM_INSPECTION_ID, A.TEAMPLAN_ID,
+            b.ROW_ID AS INSPECTION_OPTION_ID, b.INSPECTION_NAME , b.INSPECTION_ID 
+            FROM PIMIS_TEAM_INSPECTION a
+            INNER JOIN PIMIS_INSPECTION_OPTION b
+                ON a.INSPECTION_OPTION_ID = b.ROW_ID
+            WHERE a.TEAMPLAN_ID = ? ";
+        $query = $this->oracle->query($sql, array($teamPlanID));
         return $query;
     }
 
     public function get_inspection_option_for_inspect_by_team_plan_id($teamPlanID)
     {
-        $sql ="SELECT a.ROW_ID, a.TEAMPLAN_ID, 
+        $sql = "SELECT a.ROW_ID, a.TEAMPLAN_ID, 
         b.INSPECTION_NAME as INSPECTION_OPTION_NAME, b.ROW_ID,
         c.INSPE_NAME AS INSPECTION_NAME
         FROM PIMIS_TEAM_INSPECTION a
@@ -77,6 +82,18 @@ class Team_inspection_model extends CI_Model
         $this->oracle->where('TEAMPLAN_ID', $teamPlanID);
         $this->oracle->where('INSPECTION_OPTION_ID', $inspectionOptionID);
         $query = $this->oracle->delete('PIMIS_TEAM_INSPECTION');
+        return $query;
+    }
+
+    public function get_team_inspection_and_check_question($teamPlanID)
+    {
+        $sql = "SELECT a.ROW_ID AS TEAM_INSPECTION_ID, A.TEAMPLAN_ID,
+            b.ROW_ID AS INSPECTION_OPTION_ID, b.INSPECTION_NAME , b.INSPECTION_ID 
+            FROM PIMIS_TEAM_INSPECTION a
+            INNER JOIN PIMIS_INSPECTION_OPTION b
+                ON a.INSPECTION_OPTION_ID = b.ROW_ID
+            WHERE a.TEAMPLAN_ID = ? ";
+        $query = $this->oracle->query($sql, array($teamPlanID));
         return $query;
     }
 }

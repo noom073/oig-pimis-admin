@@ -103,7 +103,6 @@
             let auditorTeams = await getAuditorTeams();
             let inspectionOptions = await getInspectionOptions();
             let teamPlanInspection = await getTeamInspection(teamPlanID);
-            console.log(teamPlanInspection);
             let option = '';
 
             units.forEach(r => {
@@ -190,7 +189,6 @@
             let thisForm = $(this);
             let teamPlanID = thisForm.data('teamPlanID');
             let formData = thisForm.serialize() + `&teamPlanID=${teamPlanID}`;
-            console.log(formData);
             $.post({
                 url: '<?= site_url('auditor_manage_inspection/ajax_update_team_inspection') ?>',
                 data: formData,

@@ -68,8 +68,8 @@ class Questionaire_model extends CI_Model
     public function insert_inspection_score($array)
     {
         $this->oracle->trans_begin();
-        $data['planID'] = $array['planID'];
-        $data['inspectionID'] = $array['inspectionID'];
+        $data['teamPlanID'] = $array['teamPlanID'];
+        $data['inspectionOptionID'] = $array['inspectionOptionID'];
 
         $response = array();
         foreach ($array['scores'] as $key => $val) {
@@ -78,8 +78,8 @@ class Questionaire_model extends CI_Model
             $data['score'] = $val;
 
             $date = date("Y-m-d H:i:s");
-            $this->oracle->set("PLAN_ID", $data['planID']);
-            $this->oracle->set("INSPECTION_ID", $data['inspectionID']);
+            $this->oracle->set("TEAMPLAN_ID", $data['teamPlanID']);
+            $this->oracle->set("INSPECTION_OPTION_ID", $data['inspectionOptionID']);
             $this->oracle->set("QUESTION_ID", $data['questionID']);
             $this->oracle->set("SCORE", $data['score']);
             $this->oracle->set("TIME_UPDATE", "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
@@ -87,10 +87,10 @@ class Questionaire_model extends CI_Model
             $insert = $this->oracle->insert('PIMIS_INSPECTION_SCORE_AUDITOR');
             if ($insert) {
                 $result['status'] = true;
-                $result['text'] = $array;
+                $result['result'] = $data;
             } else {
                 $result['status'] = false;
-                $result['text'] = $array;
+                $result['result'] = $data;
             }
             array_push($response, $result);
         }
