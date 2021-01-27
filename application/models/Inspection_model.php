@@ -177,14 +177,14 @@ class Inspection_model extends CI_Model
         return $query;
     }
 
-    public function get_inspection_options($array)
-    {
-        if($array['inspectionID'] != null && $array['inspectionID'] != ''){
-            $this->oracle->where('INSPECTION_ID', $array['inspectionID']);
-        }
-        $query = $this->oracle->get('PIMIS_INSPECTION_OPTION');
-        return $query;
-    }
+    // public function get_inspection_options($array)
+    // {
+    //     if($array['inspectionID'] != null && $array['inspectionID'] != ''){
+    //         $this->oracle->where('INSPECTION_ID', $array['inspectionID']);
+    //     }
+    //     $query = $this->oracle->get('PIMIS_INSPECTION_OPTION');
+    //     return $query;
+    // }
 
     public function add_inspection_option($array)
     {

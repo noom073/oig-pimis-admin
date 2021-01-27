@@ -63,16 +63,16 @@ class Question_model extends CI_Model
         return $query;
     }
 
-    public function get_question_and_score($planID, $subjectID)
+    public function get_question_and_score($teamPlanID, $subjectID)
     {
         $sql = "SELECT a.Q_ID, a.Q_NAME, TO_CHAR(b.SCORE) AS SCORE
         FROM PIMIS_QUESTION a
         INNER JOIN PIMIS_INSPECTION_SCORE_AUDITOR b 
             ON a.Q_ID = b.QUESTION_ID 
-            AND  b.PLAN_ID = ?
+            AND  b.TEAMPLAN_ID = ?
         WHERE a.SUBJECT_ID = ?";
 
-        $query = $this->oracle->query($sql, array($planID, $subjectID));
+        $query = $this->oracle->query($sql, array($teamPlanID, $subjectID));
         return $query;
     }
 

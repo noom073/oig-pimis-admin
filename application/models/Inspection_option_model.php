@@ -10,11 +10,9 @@ class Inspection_option_model extends CI_Model
         $this->oracle = $this->load->database('oracle', true);
     }
 
-    public function get_inspection_options($array)
+    public function get_inspection_option_by_inspection_id($array) // old name get_inspection_options
     {
-        if ($array['inspectionID'] != null && $array['inspectionID'] != '') {
-            $this->oracle->where('INSPECTION_ID', $array['inspectionID']);
-        }
+        $this->oracle->where('INSPECTION_ID', $array['inspectionID']);
         $this->oracle->where('STATUS', 'y');
         $query = $this->oracle->get('PIMIS_INSPECTION_OPTION');
         return $query;
@@ -42,7 +40,7 @@ class Inspection_option_model extends CI_Model
 
     public function check_inspection_option_in_subject($inspectionOptionID)
     {
-        $this->oracle->where('INSPECTION_ID', $inspectionOptionID);
+        $this->oracle->where('INSPECTION_OPTION_ID', $inspectionOptionID);
         $this->oracle->where('SUBJECT_STATUS', 'y');
         $query = $this->oracle->get('PIMIS_SUBJECT');
         return $query;
@@ -50,7 +48,7 @@ class Inspection_option_model extends CI_Model
 
     public function check_inspection_option_in_auditor_score($inspectionOptionID)
     {
-        $this->oracle->where('INSPECTION_ID', $inspectionOptionID);
+        $this->oracle->where('INSPECTION_OPTION_ID', $inspectionOptionID);
         $query = $this->oracle->get('PIMIS_INSPECTION_SCORE_AUDITOR');
         return $query;
     }
@@ -65,4 +63,5 @@ class Inspection_option_model extends CI_Model
         $query = $this->oracle->update('PIMIS_INSPECTION_OPTION');
         return $query;
     }
+    
 }

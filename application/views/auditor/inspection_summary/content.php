@@ -20,16 +20,9 @@
             <div class="card">
                 <div class="card-header">
                     <div class="h3">สรุปผลการตรวจราชการ</div>
-                    <div class="h4">
-                        <u><?= $plan['STANDFOR'] ?></u>
-                    </div>
-                    <div>
-                        <small class="text-danger">ห้วงวันที่:
-                            <?= date("d/m/Y", strtotime($plan['INS_DATE'])) ?>
-                            -
-                            <?= date("d/m/Y", strtotime($plan['FINISH_DATE'])) ?>
-                        </small>
-                    </div>
+                    <u class="h4 d-block"><?= $planDetail['NPRT_ACM'] ?></u>
+                    <small class="text-muted d-block"><?= $planDetail['NPRT_NAME'] ?></small>
+                    <small class="text-danger d-block">ห้วงวันที่: <?= "{$planDetail['INS_DATE']} ถึง {$planDetail['FINISH_DATE']}" ?></small>
                 </div>
                 <div class="card-body">
                     <h5 class="card-title"></h5>
@@ -60,16 +53,9 @@
             <div class="card">
                 <div class="card-header">
                     <div class="h3">สรุปผลคะแนน</div>
-                    <div class="h4">
-                        <u><?= $plan['STANDFOR'] ?></u>
-                    </div>
-                    <div>
-                        <small class="text-danger">ห้วงวันที่:
-                            <?= date("d/m/Y", strtotime($plan['INS_DATE'])) ?>
-                            -
-                            <?= date("d/m/Y", strtotime($plan['FINISH_DATE'])) ?>
-                        </small>
-                    </div>
+                    <u class="h4 d-block"><?= $planDetail['NPRT_ACM'] ?></u>
+                    <small class="text-muted d-block"><?= $planDetail['NPRT_NAME'] ?></small>
+                    <small class="text-danger d-block">ห้วงวันที่: <?= "{$planDetail['INS_DATE']} ถึง {$planDetail['FINISH_DATE']}" ?></small>
                 </div>
                 <div class="card-body">
                     <h5 class="card-title"></h5>
@@ -78,17 +64,17 @@
                             <div class="mb-2">
                                 <div>กรอกคะแนนสรุปผล</div>
                                 <div>
-                                    <form id="set-plan-score" data-plan-id="<?=$plan['ID']?>">
+                                    <form id="set-plan-score" data-team-plan-id="<?= $teamPlan['ROW_ID'] ?>">
                                         <div class="form-row">
                                             <div class="form-group col-md-5">
                                                 <label>ผลการปฏิบัติงานตามนโยบาย ผบช.</label>
-                                                <input type="text" class="form-control" name="policyScore" value="<?=$plan['POLICY_SCORE']?>">
+                                                <input type="text" class="form-control" name="policyScore" value="<?= $teamPlan['POLICY_SCORE'] ?>">
                                             </div>
                                         </div>
                                         <div class="form-row">
                                             <div class="form-group col-md-5">
                                                 <label>ความพร้อมในการเตรียมการรับตรวจ</label>
-                                                <input type="text" class="form-control" name="prepareScore" value="<?=$plan['PREPARE_SCORE']?>">
+                                                <input type="text" class="form-control" name="prepareScore" value="<?= $teamPlan['PREPARE_SCORE'] ?>">
                                             </div>
                                         </div>
                                         <div id="set-plan-score-result"></div>
@@ -99,16 +85,16 @@
 
                             <div>
                                 <div>
-                                    <span>ผลการประเมินแต่ละสายงานเฉลี่ย: (<?= $sumScore['SCORE']?> *0.8) =</span>
-                                    <span id="sum-score-avg"><?= $sumScore['SCORE']*0.8 ?></span> คะแนน
+                                    <span>ผลการประเมินแต่ละสายงานเฉลี่ย: (<?= $sumScore['SCORE'] ?> *0.8) =</span>
+                                    <span id="sum-score-avg"><?= $sumScore['SCORE'] * 0.8 ?></span> คะแนน
                                 </div>
                                 <div>
                                     <span>ผลการปฏิบัติงานตามนโยบาย ผบช.:</span>
-                                    <span id="policy-score-avg"><?=$plan['POLICY_SCORE']*0.1?></span> คะแนน
+                                    <span id="policy-score-avg"><?= $teamPlan['POLICY_SCORE'] * 0.1 ?></span> คะแนน
                                 </div>
                                 <div>
                                     <span>ความพร้อมในการเตรียมการรับตรวจ:</span>
-                                    <span id="prepare-score-avg"><?=$plan['PREPARE_SCORE']*0.1?></span> คะแนน
+                                    <span id="prepare-score-avg"><?= $teamPlan['PREPARE_SCORE'] * 0.1 ?></span> คะแนน
                                 </div>
                                 <div>
                                     <span>รวม:</span>
@@ -134,10 +120,14 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form id="create-summary-form" data-plan-id="<?= $plan['ID'] ?>">
+                        <form id="create-summary-form" data-plan-id="<?= $teamPlan['ROW_ID'] ?>">
                             <div class="form-group">
                                 <label>สายการตรวจ</label>
-                                <select class="form-control" name="inspectionID" id="create-summary-inspections"></select>
+                                <select class="form-control" name="inspectionID" id="create-summary-inspections">
+                                    <?php foreach ($teamInspections as $teamInspection) { ?>
+                                        <option value="<?= $teamInspection['INSPECTION_OPTION_ID'] ?>"><?= $teamInspection['INSPECTION_NAME'] ?></option>
+                                    <?php } ?>
+                                </select>
                             </div>
                             <div class="form-group">
                                 <label>รายละเอียด</label>
@@ -168,7 +158,11 @@
                         <form id="update-summary-form">
                             <div class="form-group">
                                 <label>สายการตรวจ</label>
-                                <select class="form-control" name="inspectionID" id="update-summary-inspections"></select>
+                                <select class="form-control" name="inspectionID" id="update-summary-inspections">
+                                    <?php foreach ($teamInspections as $teamInspection) { ?>
+                                        <option value="<?= $teamInspection['INSPECTION_OPTION_ID'] ?>"><?= $teamInspection['INSPECTION_NAME'] ?></option>
+                                    <?php } ?>
+                                </select>
                             </div>
                             <div class="form-group">
                                 <label>รายละเอียด</label>

@@ -31,35 +31,33 @@
                             <button class="btn btn-sm btn-light" onclick="return window.history.back();">ย้อนกลับ</button>
                         </div>
                         <div class="row mb-2">
-                            <div class="col-6">
-                                <div class="list-group">
-                                    <?php foreach ($inspections['odd'] as $inspection) { ?>
-                                        <button type="button" class="list-group-item list-group-item-action inspect-list" data-inspection-option-id="<?= $inspection['INSPECTION_OPTION_ID'] ?>">
-                                            <?= $inspection['INSPECTION_NAME'] ?>
-                                        </button>
-                                    <?php } ?>
+                            <?php foreach ($inspections as $inspection) { ?>
+                                <div class="col-6">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <?php if ($inspection['INSPECTED'] == null) { ?>
+                                                <button type="button" class="list-group-item list-group-item-action inspect-list" data-inspection-option-id="<?= $inspection['INSPECTION_OPTION_ID'] ?>">
+                                                    <?= $inspection['INSPECTION_NAME'] ?>
+                                                </button>
+                                            <?php } else { ?>
+                                                <a href="<?= site_url("auditor/inspected?teamPlanID={$teamPlan['ROW_ID']}&inspectionOptionID={$inspection['INSPECTION_OPTION_ID']}") ?>" class="list-group-item list-group-item-action" data-inspection-option-id="<?= $inspection['INSPECTION_OPTION_ID'] ?>">
+                                                    <?= $inspection['INSPECTION_NAME'] ?>
+                                                </a>
+                                                <small class="mt-2 d-block text-success text-right">บันทึกข้อมูลแล้ว</small>
+                                            <?php } ?>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-
-                            <div class="col-6">
-                                <div class="list-group">
-                                    <?php foreach ($inspections['even'] as $inspection) { ?>
-                                        <button type="button" class="list-group-item list-group-item-action inspect-list" data-inspection-option-id="<?= $inspection['INSPECTION_OPTION_ID'] ?>">
-                                            <?= $inspection['INSPECTION_NAME'] ?>
-                                        </button>
-                                    <?php } ?>
-                                </div>
-                            </div>
+                            <?php } ?>
                         </div>
 
                         <div>
                             <div class="mb-3">
-                            <?php var_dump($teamPlan); ?>
                                 <form id="auditor-inspect-form" class="d-none" data-team-plan-id="<?= $teamPlan['ROW_ID'] ?>">
                                     <h5>ฟอร์ม</h5>
                                     <div id="form-questionaire"></div>
                                     <div>
-                                        <button class="btn btn-sm btn-primary">บันทึก</button>
+                                        <button class="btn btn-sm btn-primary" id="auditor-inspect-form-submit">บันทึก</button>
                                         <button class="btn btn-sm btn-light" type="button">ปิด</button>
                                     </div>
                                     <div id="result-auditor-score" class="invisible">

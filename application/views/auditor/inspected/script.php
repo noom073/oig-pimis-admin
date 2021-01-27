@@ -5,12 +5,12 @@
         $("a#auditor-calendar").addClass('active');
 
 
-        const getQuestionsAndSubject = (inspectionID) => {
+        const getQuestionsAndSubject = (inspectionOptionID) => {
             return $.post({
                 url: '<?= site_url('data_service/ajax_get_questions_and_score') ?>',
                 data: {
-                    inspectionID: inspectionID,
-                    plan: '<?= $planID ?>'
+                    inspectionOptionID: inspectionOptionID,
+                    teamPlanID: '<?= $teamPlan['ROW_ID'] ?>'
                 },
                 dataType: 'json'
             }).done().fail((jhr, status, error) => console.error(jhr, status, error));
@@ -29,13 +29,19 @@
                                     <div>- ${question.Q_NAME} ?</div>
                                     <div class="pl-5">
                                         <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="1" ${question.SCORE == '1' ? 'checked':''}>   
-                                        <label class="text-success choice">Yes</label>
+                                        <label class="text-success choice">1</label>
                                         &nbsp;&nbsp;                                   
+                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.75" ${question.SCORE == '.75' ? 'checked':''}>                                        
+                                        <label class="text-info choice">0.75</label>
+                                        &nbsp;&nbsp; 
                                         <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.5" ${question.SCORE == '.5' ? 'checked':''}>                                        
-                                        <label class="text-info choice">N/A</label>
+                                        <label class="text-danger choice">0.50</label>
+                                        &nbsp;&nbsp; 
+                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.25" ${question.SCORE == '.25' ? 'checked':''}>                                        
+                                        <label class="text-danger choice">0.25</label>
                                         &nbsp;&nbsp; 
                                         <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0" ${question.SCORE == '0' ? 'checked':''}>                                        
-                                        <label class="text-danger choice">No</label>
+                                        <label class="text-danger choice">0</label>
                                     </div>
                                 </div>`;
                     });
@@ -52,13 +58,19 @@
                                     <div>- ${question.Q_NAME} ?</div>
                                     <div class="pl-5">
                                         <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="1" ${question.SCORE == '1' ? 'checked':''}>   
-                                        <label class="text-success choice">Yes</label>
+                                        <label class="text-success choice">1</label>
                                         &nbsp;&nbsp;                                   
+                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.75" ${question.SCORE == '.75' ? 'checked':''}>                                        
+                                        <label class="text-info choice">0.75</label>
+                                        &nbsp;&nbsp; 
                                         <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.5" ${question.SCORE == '.5' ? 'checked':''}>                                        
-                                        <label class="text-info choice">N/A</label>
+                                        <label class="text-danger choice">0.50</label>
+                                        &nbsp;&nbsp; 
+                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.25" ${question.SCORE == '.25' ? 'checked':''}>                                        
+                                        <label class="text-danger choice">0.25</label>
                                         &nbsp;&nbsp; 
                                         <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0" ${question.SCORE == '0' ? 'checked':''}>                                        
-                                        <label class="text-danger choice">No</label>
+                                        <label class="text-danger choice">0</label>
                                     </div>
                                 </div>`;
                     });
@@ -87,9 +99,9 @@
         };
 
 
-        const drawQuestionForm = async inspectionID => {
+        const drawQuestionForm = async inspectionOptionID => {
             questionsAmount = 0; // reset ค่าจำนวนคำถาม
-            let questions = await getQuestionsAndSubject(inspectionID);
+            let questions = await getQuestionsAndSubject(inspectionOptionID);
             let html = generateTreeView(questions);
             $("#form-loading").addClass('d-none');
             $("#form-questionaire").html(html);
@@ -108,15 +120,15 @@
         });
 
 
-        let inspectionID = '<?= $inspection['INSPE_ID'] ?>';
-        drawQuestionForm(inspectionID);
+        let inspectionOptionID = '<?= $inspectionOption['ROW_ID'] ?>';
+        drawQuestionForm(inspectionOptionID);
 
 
         $("#auditor-inspect-form").submit(function(event) {
             event.preventDefault();
             let thisForm = $(this);
-            let planID = <?= $planID ?>;
-            let formData = thisForm.serialize() + `&planID=${planID}`;
+            let teamPlanID = <?= $teamPlan['ROW_ID'] ?>;
+            let formData = thisForm.serialize() + `&teamPlanID=${teamPlanID}`;
             $.post({
                 url: '<?= site_url('auditor/ajax_update_inspect_score') ?>',
                 data: formData,

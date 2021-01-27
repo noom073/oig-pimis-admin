@@ -85,14 +85,20 @@ class Team_inspection_model extends CI_Model
         return $query;
     }
 
-    public function get_team_inspection_and_check_question($teamPlanID)
+    public function get_team_inspection_and_check_inspected($teamPlanID)
     {
-        $sql = "SELECT a.ROW_ID AS TEAM_INSPECTION_ID, A.TEAMPLAN_ID,
-            b.ROW_ID AS INSPECTION_OPTION_ID, b.INSPECTION_NAME , b.INSPECTION_ID 
+        $sql = "SELECT a.TEAMPLAN_ID, a.INSPECTION_OPTION_ID,
+            b.INSPECTION_NAME, 
+            c.INSPECTION_OPTION_ID  AS INSPECTED 
             FROM PIMIS_TEAM_INSPECTION a
-            INNER JOIN PIMIS_INSPECTION_OPTION b
-                ON a.INSPECTION_OPTION_ID = b.ROW_ID
-            WHERE a.TEAMPLAN_ID = ? ";
+            INNER JOIN PIMIS_INSPECTION_OPTION b 
+                ON a.INSPECTION_OPTION_ID = b.ROW_ID 
+            LEFT JOIN PIMIS_INSPECTION_SCORE_AUDITOR c 
+                ON a.TEAMPLAN_ID = c.TEAMPLAN_ID 
+                AND a.INSPECTION_OPTION_ID = c.INSPECTION_OPTION_ID 
+            WHERE a.TEAMPLAN_ID = ?
+            GROUP BY a.TEAMPLAN_ID, a.INSPECTION_OPTION_ID, b.INSPECTION_NAME, c.INSPECTION_OPTION_ID
+            ORDER BY a.INSPECTION_OPTION_ID";
         $query = $this->oracle->query($sql, array($teamPlanID));
         return $query;
     }

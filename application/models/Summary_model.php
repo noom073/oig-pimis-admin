@@ -13,8 +13,8 @@ class Summary_model extends CI_Model
     public function add_summary($array)
     {
         $date = date("Y-m-d H:i:s");
-        $this->oracle->set('PLAN_ID', $array['planID']);
-        $this->oracle->set('INSPECTION_ID', $array['inspectionID']);
+        $this->oracle->set('TEAMPLAN_ID', $array['teamPlanID']);
+        $this->oracle->set('INSPECTION_OPTION_ID', $array['inspectionOptionID']);
         $this->oracle->set('COMMENTION', $array['comment']);
         $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
         $this->oracle->set('USER_UPDATE', $this->session->email);
@@ -22,19 +22,24 @@ class Summary_model extends CI_Model
         return $query;
     }
 
-    public function get_summaries($planID)
+    public function get_summaries($teamPlanID)
     {
-        $sql = "SELECT a.INSPE_ID,a.INSPE_NAME, SUM(b.SCORE) AS SCORE, c.ROW_ID, c.COMMENTION, TO_CHAR(c.TIME_UPDATE, 'YYYY/MM/DD HH24:MI:SS') AS TIME_UPDATE
-        FROM PIMIS_INSPECTIONS a
+        $sql = "SELECT a.TEAMPLAN_ID, a.INSPECTION_OPTION_ID ,
+        sum(b.SCORE) AS SCORE, 
+        c.ROW_ID, c.COMMENTION, TO_CHAR(c.TIME_UPDATE, 'YYYY/MM/DD HH24:MI:SS') AS TIME_UPDATE,
+        d.INSPECTION_NAME
+        FROM PIMIS_TEAM_INSPECTION a
         LEFT JOIN PIMIS_INSPECTION_SCORE_AUDITOR b 
-            ON a.INSPE_ID = b.INSPECTION_ID 
-            AND b.PLAN_ID = ?
+            ON a.INSPECTION_OPTION_ID = b.INSPECTION_OPTION_ID 
+        --	AND b.TEAMPLAN_ID = 97
         LEFT JOIN PIMIS_INSPECTION_SUMMARY c
-            ON a.INSPE_ID = c.INSPECTION_ID 
-            AND c.PLAN_ID = ?
-        GROUP BY a.INSPE_ID, a.INSPE_NAME, c.ROW_ID, c.COMMENTION, c.TIME_UPDATE
-        ORDER BY a.INSPE_ID ";
-        $query = $this->oracle->query($sql, array($planID, $planID));
+            ON a.TEAMPLAN_ID = c.TEAMPLAN_ID 
+            AND a.INSPECTION_OPTION_ID  = c.INSPECTION_OPTION_ID 
+        INNER JOIN PIMIS_INSPECTION_OPTION d 
+            ON a.INSPECTION_OPTION_ID = d.ROW_ID 
+        WHERE a.TEAMPLAN_ID = ?
+        GROUP BY A.TEAMPLAN_ID, a.INSPECTION_OPTION_ID, c.ROW_ID, c.COMMENTION, c.TIME_UPDATE, d.INSPECTION_NAME";
+        $query = $this->oracle->query($sql, array($teamPlanID));
         return $query;
     }
 
@@ -48,7 +53,7 @@ class Summary_model extends CI_Model
     public function update_summary($array)
     {
         $date = date("Y-m-d H:i:s");
-        $this->oracle->set('INSPECTION_ID', $array['inspectionID']);
+        $this->oracle->set('INSPECTION_OPTION_ID', $array['inspectionID']);
         $this->oracle->set('COMMENTION', $array['comment']);
         $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
         $this->oracle->set('USER_UPDATE', $this->session->email);

@@ -5,11 +5,11 @@
         $("a#auditor-calendar").addClass('active');
 
 
-        const getQuestionsAndSubject = (inspectionID) => {
+        const getQuestionsAndSubject = (inspectionOptionID) => {
             return $.post({
                 url: '<?= site_url('data_service/ajax_get_questions_by_inspection') ?>',
                 data: {
-                    inspectionID: inspectionID
+                    inspectionOptionID: inspectionOptionID
                 },
                 dataType: 'json'
             }).done().fail((jhr, status, error) => console.error(jhr, status, error));
@@ -27,14 +27,20 @@
                         questions += `<div class="pl-3 border-left my-2 question">
                                     <div>- ${question.Q_NAME} ?</div>
                                     <div class="pl-5">
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="1">   
-                                        <label class="text-success choice">Yes</label>
-                                        &nbsp;&nbsp;                                   
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.5" checked>                                        
-                                        <label class="text-info choice">N/A</label>
-                                        &nbsp;&nbsp; 
+                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="1.00" checked>   
+                                        <label class="text-success choice">1</label>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;                                    
+                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.75">                                        
+                                        <label class="text-info choice">0.75</label>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;  
+                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.50">                                        
+                                        <label class="text-danger choice">0.50</label>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;  
+                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.25">                                        
+                                        <label class="text-danger choice">0.25</label>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;  
                                         <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0">                                        
-                                        <label class="text-danger choice">No</label>
+                                        <label class="text-danger choice">0</label>
                                     </div>
                                 </div>`;
                     });
@@ -50,14 +56,20 @@
                         html += `<div class="pl-3 border-left my-2 question">
                                     <div>- ${question.Q_NAME} ?</div>
                                     <div class="pl-5">
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="1">   
-                                        <label class="text-success choice">Yes</label>
-                                        &nbsp;&nbsp;                                   
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.5" checked>                                        
-                                        <label class="text-info choice">N/A</label>
-                                        &nbsp;&nbsp; 
+                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="1.00" checked>   
+                                        <label class="text-success choice">1</label>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;                                    
+                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.75">                                        
+                                        <label class="text-info choice">0.75</label>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;  
+                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.50">                                        
+                                        <label class="text-danger choice">0.50</label>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;  
+                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.25">                                        
+                                        <label class="text-danger choice">0.25</label>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;  
                                         <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0">                                        
-                                        <label class="text-danger choice">No</label>
+                                        <label class="text-danger choice">0</label>
                                     </div>
                                 </div>`;
                     });
@@ -69,9 +81,9 @@
         };
 
 
-        const drawQuestionForm = async inspectionID => {
+        const drawQuestionForm = async inspectionOptionID => {
             questionsAmount = 0; // reset ค่าจำนวนคำถาม
-            let questions = await getQuestionsAndSubject(inspectionID);
+            let questions = await getQuestionsAndSubject(inspectionOptionID);
             let html = generateTreeView(questions);
             $("#form-questionaire").html(html);
         };
@@ -117,6 +129,7 @@
 
 
         $("#auditor-inspect-form").submit(function(event) {
+            $("#auditor-inspect-form-submit").prop('disabled', true);
             event.preventDefault();
             let thisForm = $(this);
             let teamPlanID = thisForm.data('team-plan-id');

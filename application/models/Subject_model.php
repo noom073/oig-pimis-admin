@@ -15,7 +15,7 @@ class Subject_model extends CI_Model
         $date = date("Y-m-d H:i:s");
         $this->oracle->set('SUBJECT_NAME', $array['subjectName']);
         $this->oracle->set('SUBJECT_PARENT_ID', '0');
-        $this->oracle->set('INSPECTION_ID', $array['inspectionID']);
+        $this->oracle->set('INSPECTION_OPTION_ID', $array['inspectionID']);
         $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
         $this->oracle->set('USER_UPDATE', $this->session->email);
         $this->oracle->set('SUBJECT_ORDER', $array['subjectOrder']);
@@ -30,7 +30,7 @@ class Subject_model extends CI_Model
         $date = date("Y-m-d H:i:s");
         $this->oracle->set('SUBJECT_NAME', $array['subjectName']);
         $this->oracle->set('SUBJECT_PARENT_ID', $array['subjectParent']);
-        $this->oracle->set('INSPECTION_ID', $array['inspectionID']);
+        $this->oracle->set('INSPECTION_OPTION_ID', $array['inspectionID']);
         $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
         $this->oracle->set('USER_UPDATE', $this->session->email);
         $this->oracle->set('SUBJECT_ORDER', $array['subjectOrder']);
@@ -44,7 +44,7 @@ class Subject_model extends CI_Model
         $date = date("Y-m-d H:i:s");
         $this->oracle->set('SUBJECT_NAME', $array['subjectName']);
         $this->oracle->set('SUBJECT_PARENT_ID', $array['subjectParent']);
-        $this->oracle->set('INSPECTION_ID', $array['inspectionID']);
+        $this->oracle->set('INSPECTION_OPTION_ID', $array['inspectionID']);
         $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
         $this->oracle->set('USER_UPDATE', $this->session->email);
         $this->oracle->set('SUBJECT_ORDER', $array['subjectOrder']);
@@ -72,16 +72,16 @@ class Subject_model extends CI_Model
 
     public function get_a_subject($subjectID)
     {
-        $this->oracle->select('SUBJECT_ID, SUBJECT_NAME, SUBJECT_PARENT_ID, INSPECTION_ID, SUBJECT_ORDER');
+        $this->oracle->select('SUBJECT_ID, SUBJECT_NAME, SUBJECT_PARENT_ID, INSPECTION_OPTION_ID, SUBJECT_ORDER');
         $this->oracle->where('SUBJECT_ID', $subjectID);
         $result = $this->oracle->get('PIMIS_SUBJECT');
         return $result;
     }
 
-    public function get_subject_by_inspection($inspectionID)
+    public function get_subject_by_inspection_option($inspectionOptionID) // old name get_subject_by_inspection
     {
-        $this->oracle->select('SUBJECT_ID, SUBJECT_NAME, SUBJECT_PARENT_ID, INSPECTION_ID, SUBJECT_ORDER, SUBJECT_LEVEL');
-        $this->oracle->where('INSPECTION_ID', $inspectionID);
+        $this->oracle->select('SUBJECT_ID, SUBJECT_NAME, SUBJECT_PARENT_ID, INSPECTION_OPTION_ID, SUBJECT_ORDER, SUBJECT_LEVEL');
+        $this->oracle->where('INSPECTION_OPTION_ID', $inspectionOptionID);
         $this->oracle->where('SUBJECT_STATUS', 'y');
         $this->oracle->order_by('SUBJECT_ORDER');
         $result = $this->oracle->get('PIMIS_SUBJECT');

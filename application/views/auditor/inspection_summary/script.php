@@ -10,7 +10,7 @@
                 url: '<?= site_url('auditor/ajax_get_summary') ?>',
                 type: 'post',
                 data: {
-                    planID: '<?= $planID ?>'
+                    teamPlanID: '<?= $teamPlan['ROW_ID'] ?>'
                 },
                 dataSrc: ''
             },
@@ -20,7 +20,7 @@
                     render: (data, type, row, meta) => meta.row + 1
                 },
                 {
-                    data: 'INSPE_NAME'
+                    data: 'INSPECTION_NAME'
                 },
                 {
                     data: 'SCORE',
@@ -39,7 +39,7 @@
                     render: (data, type, row, meta) => {
                         let btn = '';
                         if (data === null) {
-                            btn = `<button class="btn btn-sm btn-primary create-summary-btn" data-summary-id="${data}" data-inspection-id="${row.INSPE_ID}">เพิ่ม</button>`;
+                            btn = `<button class="btn btn-sm btn-primary create-summary-btn" data-inspection-option-id="${row.INSPECTION_OPTION_ID}">เพิ่ม</button>`;
                         } else {
                             let editBtn = `<button class="btn btn-sm btn-primary edit-btn" data-summary-id="${data}">แก้ไข</button>`;
                             let deleteBtn = `<button class="btn btn-sm btn-danger delete-btn" data-summary-id="${data}">ลบ</button>`;
@@ -55,29 +55,21 @@
         });
 
 
-        const getInspections = () => {
-            console.log('Loading inspections...');
-            return $.get({
-                url: '<?= site_url('data_service/ajax_get_inspection') ?>',
-                dataType: 'json'
-            }).done(res => {
-                console.log('Loading inspections complete');
-            }).fail((jhr, status, error) => console.error(jhr, status, error));
-        };
+        // const getInspections = () => {
+        //     console.log('Loading inspections...');
+        //     return $.get({
+        //         url: '<?= site_url('data_service/ajax_get_inspection') ?>',
+        //         dataType: 'json'
+        //     }).done(res => {
+        //         console.log('Loading inspections complete');
+        //     }).fail((jhr, status, error) => console.error(jhr, status, error));
+        // };
 
 
-        $(document).on('click', ".create-summary-btn", async function() {
-            let inspectionID = $(this).data('inspection-id');
-            let inspections = await getInspections();
-            console.log(inspectionID);
-            let option = '';
-            inspections.filter(r => {
-                return r.INSPE_ID == inspectionID
-            }).forEach(r => {
-                option += `<option value="${r.INSPE_ID}">${r.INSPE_NAME}</option>`;
-            });
-            $("#create-summary-inspections").html(option);
-            $("#create-summary-modal").modal();
+        $(document).on('click', ".create-summary-btn", function() {
+            let inspectionOptionID = $(this).data('inspection-option-id');
+            $("#create-summary-form").data('inspection-option-id', inspectionOptionID);
+            $("#create-summary-modal").modal()
         });
 
 
@@ -95,8 +87,9 @@
             event.preventDefault();
             $("#loading-table").removeClass('invisible');
             let thisForm = $(this);
-            let planID = thisForm.data('plan-id');
-            let formData = thisForm.serialize() + `&planID=${planID}`;
+            let teamPlanID = '<?= $teamPlan['ROW_ID'] ?>';
+            let inspectionOptionID = $(this).data('inspection-option-id');
+            let formData = thisForm.serialize() + `&teamPlanID=${teamPlanID}&inspectionOptionID=${inspectionOptionID}`;
             $.post({
                 url: '<?= site_url('auditor/ajax_add_summary') ?>',
                 data: formData,
@@ -125,8 +118,8 @@
         $("#set-plan-score").submit(function(event) {
             event.preventDefault();
             let thisForm = $(this);
-            let planID = thisForm.data('plan-id');
-            let formData = thisForm.serialize() + `&plan=${planID}`;
+            let teamPlanID = thisForm.data('team-plan-id');
+            let formData = thisForm.serialize() + `&teamPlanID=${teamPlanID}`;
             $.post({
                 url: '<?= site_url('auditor/ajax_update_plan_score') ?>',
                 data: formData,
@@ -170,14 +163,8 @@
         $(document).on('click', ".edit-btn", async function() {
             let summaryID = $(this).data('summary-id');
             let summaryData = await getsummaryDetail(summaryID);
-            let inspections = await getInspections();
-            let option = '';
-            inspections.forEach(r => {
-                option += `<option value="${r.INSPE_ID}">${r.INSPE_NAME}</option>`;
-            });
             $("#update-summary-form").data('summary-id', summaryID);
-            $("#update-summary-inspections").html(option);
-            $("#update-summary-inspections").val(summaryData.INSPECTION_ID);
+            $("#update-summary-inspections").val(summaryData.INSPECTION_OPTION_ID);
             $("#update-summary-comment").val(summaryData.COMMENTION);
             $("#update-summary-modal").modal();
         });
@@ -215,13 +202,15 @@
 
         $(document).on('click', '.delete-btn', function() {
             $("#loading-table").removeClass('invisible');
-            let summaryID = $(this).data('summary-id');            
+            let summaryID = $(this).data('summary-id');
             if (confirm('ยืนยันการลบข้อนี้')) {
                 $.post({
-                    url: '<?= site_url('auditor/ajax_delete_summary')?>',
-                    data: {summaryID:summaryID},
+                    url: '<?= site_url('auditor/ajax_delete_summary') ?>',
+                    data: {
+                        summaryID: summaryID
+                    },
                     dataType: 'json'
-                }).done(res=> {
+                }).done(res => {
                     alert(res.text);
                     summaryTable.ajax.reload(() => {
                         $("#loading-table").addClass('invisible');

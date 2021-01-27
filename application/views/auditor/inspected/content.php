@@ -20,16 +20,9 @@
             <div class="card">
                 <div class="card-header">
                     <div class="h3">การตรวจราชการ</div>
-                    <div class="h4">
-                        <u><?= $plan['STANDFOR'] ?></u>
-                    </div>
-                    <div>
-                        <small class="text-danger">ห้วงวันที่:
-                            <?= date("d/m/Y", strtotime($plan['INS_DATE'])) ?>
-                            -
-                            <?= date("d/m/Y", strtotime($plan['FINISH_DATE'])) ?>
-                        </small>
-                    </div>
+                    <u class="h4 d-block"><?= $planDetail['NPRT_ACM'] ?></u>
+                    <small class="text-muted d-block"><?= $planDetail['NPRT_NAME'] ?></small>
+                    <small class="text-danger d-block">ห้วงวันที่: <?= "{$planDetail['INS_DATE']} ถึง {$planDetail['FINISH_DATE']}" ?></small>
                 </div>
                 <div class="card-body">
                     <h5 class="card-title"></h5>
@@ -40,7 +33,7 @@
                         <div class="row mb-2">
                             <div class="col-6">
                                 <div class="list-group">
-                                    <button type="button" class="list-group-item list-group-item-action inspect-list"><?= $inspection['INSPE_NAME'] ?></button>
+                                    <button type="button" class="list-group-item list-group-item-action inspect-list"><?= $inspectionOption['INSPECTION_NAME'] ?></button>
                                 </div>
                             </div>
                         </div>

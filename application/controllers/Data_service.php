@@ -45,7 +45,7 @@ class Data_service extends CI_Controller
     public function ajax_get_subjects()
     {
         $inspectionOptionID = $this->input->post('inspectionOptionID');
-        $subjects = $this->subject_model->get_subject_by_inspection($inspectionOptionID)->result_array();
+        $subjects = $this->subject_model->get_subject_by_inspection_option($inspectionOptionID)->result_array();
         $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode($subjects));
@@ -80,8 +80,8 @@ class Data_service extends CI_Controller
 
     public function ajax_get_questions_by_inspection()
     {
-        $inspectionID = $this->input->post('inspectionID');
-        $subjects = $this->subject_model->get_subject_by_inspection($inspectionID)->result_array();
+        $inspectionID = $this->input->post('inspectionOptionID');
+        $subjects = $this->subject_model->get_subject_by_inspection_option($inspectionID)->result_array();
         $array = $this->data_model->make_array_tree($subjects);
         $this->output
             ->set_content_type('application/json')
@@ -112,10 +112,10 @@ class Data_service extends CI_Controller
 
     public function ajax_get_questions_and_score()
     {
-        $inspectionID = $this->input->post('inspectionID');
-        $planID = $this->input->post('plan');
-        $subjects = $this->subject_model->get_subject_by_inspection($inspectionID)->result_array();
-        $array = $this->data_model->make_tree_with_score($subjects, $planID);
+        $inspectionOptionID = $this->input->post('inspectionOptionID');
+        $teamPlanID = $this->input->post('teamPlanID');
+        $subjects = $this->subject_model->get_subject_by_inspection_option($inspectionOptionID)->result_array();
+        $array = $this->data_model->make_tree_with_score($subjects, $teamPlanID);
         $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode($array));
@@ -145,7 +145,7 @@ class Data_service extends CI_Controller
     public function ajax_get_inspection_options()
     {
         $input['inspectionID'] = $this->input->post('inspectionID', true);
-        $data = $this->inspection_option_model->get_inspection_options($input)->result_array();
+        $data = $this->inspection_option_model->get_inspection_option_by_inspection_id($input)->result_array();
         $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode($data));

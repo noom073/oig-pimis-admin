@@ -32,21 +32,21 @@ class Data_model extends CI_Model
         return $result;
     }
 
-    public function make_tree_with_score($subjects, $planID)
+    public function make_tree_with_score($subjects, $teamPlanID)
     {
-        return $this->get_questions_and_score($subjects, $planID);
+        return $this->get_questions_and_score($subjects, $teamPlanID);
     }
 
-    private function get_questions_and_score($dataArray, $planID, $parentID = 0)
+    private function get_questions_and_score($dataArray, $teamPlanID, $parentID = 0)
     {
         $array = array_filter($dataArray, function ($r) use ($parentID) {
             return $r['SUBJECT_PARENT_ID'] == $parentID;
         });
 
-        $data = array_map(function ($r) use ($dataArray, $planID) {
-            $child = $this->get_questions_and_score($dataArray, $planID, $r['SUBJECT_ID']);
+        $data = array_map(function ($r) use ($dataArray, $teamPlanID) {
+            $child = $this->get_questions_and_score($dataArray, $teamPlanID, $r['SUBJECT_ID']);
             if ($child) $r['child'] = array_merge(array(), $child);
-            $r['questions'] = $this->question_model->get_question_and_score($planID, $r['SUBJECT_ID'])->result_array();
+            $r['questions'] = $this->question_model->get_question_and_score($teamPlanID, $r['SUBJECT_ID'])->result_array();
             return $r;
         }, $array);
         $result = array_merge(array(), $data);
