@@ -131,7 +131,7 @@
                             </div>
                             <div class="form-group">
                                 <label>รายละเอียด</label>
-                                <textarea class="form-control" name="comment"></textarea>
+                                <textarea class="form-control" id="create-summary-form-commention" rows="20" name="comment"></textarea>
                             </div>
                             <div id="create-summary-result"></div>
                             <button type="submit" class="btn btn-primary">บันทึก</button>
@@ -166,7 +166,7 @@
                             </div>
                             <div class="form-group">
                                 <label>รายละเอียด</label>
-                                <textarea class="form-control" name="comment" id="update-summary-comment"></textarea>
+                                <textarea class="form-control" name="comment" rows="20" id="update-summary-comment"></textarea>
                             </div>
                             <div id="update-summary-result"></div>
                             <button type="submit" class="btn btn-primary">บันทึก</button>

@@ -18,6 +18,13 @@ class Inspection_option_model extends CI_Model
         return $query;
     }
 
+    public function get_all_inspection_option()
+    {
+        $this->oracle->where('STATUS', 'y');
+        $query = $this->oracle->get('PIMIS_INSPECTION_OPTION');
+        return $query;
+    }
+
     public function add_inspection_option($array)
     {
         $date = date("Y-m-d H:i:s");

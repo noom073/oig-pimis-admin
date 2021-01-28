@@ -53,6 +53,14 @@ class Inspection_notes_model extends CI_Model
         return $query;
     }
 
+    public function get_inspection_note_by_team_plan_id_n_inspection_option_id($teamPlanID, $inspectionOptionID)
+    {
+        $this->oracle->where('TEAMPLAN_ID', $teamPlanID);
+        $this->oracle->where('INSPECTION_OPTION_ID', $inspectionOptionID);
+        $query = $this->oracle->get('PIMIS_INSPECTION_NOTES');
+        return $query;
+    }
+
     public function update_inspection_note($array)
     {
         $date = date("Y-m-d H:i:s");

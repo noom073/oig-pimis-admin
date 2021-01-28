@@ -49,7 +49,6 @@
             let thisForm = $(this);
             let teamPlanID = '<?= $teamPlan['ROW_ID'] ?>';
             let formData = thisForm.serialize() + `&teamPlanID=${teamPlanID}`;
-            console.log(formData);
             $.post({
                 url: '<?= site_url('auditor/ajax_add_note_inspection_result') ?>',
                 data: formData,

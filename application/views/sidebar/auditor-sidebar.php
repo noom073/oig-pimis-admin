@@ -26,6 +26,12 @@
                 <p>กำหนดแผนการตรวจ</p>
             </a>
         </li>
+        <li class="nav-item">
+            <a href="<?= site_url('auditor_manage_inspection/set_inspection') ?>" id="auditor-manage-inspection-set-inspection" class="nav-link">
+                <i class="nav-icon fas fa-calendar-alt"></i>
+                <p>กำหนดสายการตรวจ</p>
+            </a>
+        </li>
     </ul>
 </li>
 <li class="nav-item has-treeview" id="auditor-inspection-section">

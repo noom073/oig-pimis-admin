@@ -144,8 +144,7 @@ class Data_service extends CI_Controller
 
     public function ajax_get_inspection_options()
     {
-        $input['inspectionID'] = $this->input->post('inspectionID', true);
-        $data = $this->inspection_option_model->get_inspection_option_by_inspection_id($input)->result_array();
+        $data = $this->inspection_option_model->get_all_inspection_option()->result_array();
         $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode($data));

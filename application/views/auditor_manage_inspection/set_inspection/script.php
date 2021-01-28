@@ -11,7 +11,7 @@
     $(document).ready(function() {
         $("li#auditor-manage-inspection-section").addClass('menu-open');
         $("a#auditor-manage-inspection-subject").addClass('active');
-        $("a#auditor-manage-inspection-set-paln").addClass('active');
+        $("a#auditor-manage-inspection-set-inspection").addClass('active');
         $(".select2").select2();
 
 
@@ -104,6 +104,8 @@
             let inspectionOptions = await getInspectionOptions();
             let teamPlanInspection = await getTeamInspection(teamPlanID);
             let option = '';
+
+            console.log(inspectionOptions);
 
             units.forEach(r => {
                 option += `<option value="${r.NPRT_UNIT}" title="${r.NPRT_NAME}">${r.NPRT_ACM}</option>`;

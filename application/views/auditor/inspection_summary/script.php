@@ -6,6 +6,7 @@
 
 
         let summaryTable = $("#summary-table").DataTable({
+            responsive: true,
             ajax: {
                 url: '<?= site_url('auditor/ajax_get_summary') ?>',
                 type: 'post',
@@ -66,8 +67,32 @@
         // };
 
 
-        $(document).on('click', ".create-summary-btn", function() {
+        const getNoteByTeamIDAndInspectionOptionID = (teamPlanID, inspectionOptionID) => {
+            return $.post({
+                url: '<?= site_url('auditor/ajax_get_inspection_note_by_team_plan_id_n_inspection_option_id') ?>',
+                data: {
+                    teamPlanID: teamPlanID,
+                    inspectionOptionID: inspectionOptionID
+                },
+                dataType: 'json'
+            }).done(res => {
+                console.log('Loading inspections complete');
+            }).fail((jhr, status, error) => console.error(jhr, status, error));
+        };
+
+
+        $(document).on('click', ".create-summary-btn", async function() {
+            $("#create-summary-form-commention").html('');
             let inspectionOptionID = $(this).data('inspection-option-id');
+            let teamPlanID = '<?= $teamPlan['ROW_ID'] ?>';
+            let noteDetail = await getNoteByTeamIDAndInspectionOptionID(teamPlanID, inspectionOptionID);
+            if ($.isEmptyObject(noteDetail) == false) {
+                let summary = 'ข้อควรแก้ไข: \n' + noteDetail.CAN_IMPROVE + '\n\n' +
+                    'ข้อบกพร่อง: \n' + noteDetail.FAILING + '\n\n' +
+                    'ข้อบกพร่องสำคัญมาก: \n' + noteDetail.IMPORTANT_FAILING + '\n\n' +
+                    'ข้อสังเกตจากการตรวจและข้อแนะนำ: \n' + noteDetail.COMMENTIONS;
+                $("#create-summary-form-commention").html(summary);
+            }
             $("#create-summary-form").data('inspection-option-id', inspectionOptionID);
             $("#create-summary-modal").modal()
         });

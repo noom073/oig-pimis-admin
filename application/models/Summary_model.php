@@ -26,20 +26,21 @@ class Summary_model extends CI_Model
     {
         $sql = "SELECT a.TEAMPLAN_ID, a.INSPECTION_OPTION_ID ,
         sum(b.SCORE) AS SCORE, 
-        c.ROW_ID, c.COMMENTION, TO_CHAR(c.TIME_UPDATE, 'YYYY/MM/DD HH24:MI:SS') AS TIME_UPDATE,
+        c.ROW_ID, TO_CHAR(c.TIME_UPDATE, 'YYYY/MM/DD HH24:MI:SS') AS TIME_UPDATE,
         d.INSPECTION_NAME
         FROM PIMIS_TEAM_INSPECTION a
         LEFT JOIN PIMIS_INSPECTION_SCORE_AUDITOR b 
             ON a.INSPECTION_OPTION_ID = b.INSPECTION_OPTION_ID 
-        --	AND b.TEAMPLAN_ID = 97
+        	AND b.TEAMPLAN_ID = ?
         LEFT JOIN PIMIS_INSPECTION_SUMMARY c
             ON a.TEAMPLAN_ID = c.TEAMPLAN_ID 
             AND a.INSPECTION_OPTION_ID  = c.INSPECTION_OPTION_ID 
         INNER JOIN PIMIS_INSPECTION_OPTION d 
             ON a.INSPECTION_OPTION_ID = d.ROW_ID 
         WHERE a.TEAMPLAN_ID = ?
-        GROUP BY A.TEAMPLAN_ID, a.INSPECTION_OPTION_ID, c.ROW_ID, c.COMMENTION, c.TIME_UPDATE, d.INSPECTION_NAME";
-        $query = $this->oracle->query($sql, array($teamPlanID));
+        GROUP BY a.TEAMPLAN_ID, a.INSPECTION_OPTION_ID, c.ROW_ID, c.TIME_UPDATE, d.INSPECTION_NAME
+        ORDER BY a.INSPECTION_OPTION_ID";
+        $query = $this->oracle->query($sql, array($teamPlanID, $teamPlanID));
         return $query;
     }
 
@@ -54,7 +55,11 @@ class Summary_model extends CI_Model
     {
         $date = date("Y-m-d H:i:s");
         $this->oracle->set('INSPECTION_OPTION_ID', $array['inspectionID']);
-        $this->oracle->set('COMMENTION', $array['comment']);
+        if ($array['comment'] == '') {
+            $this->oracle->set('COMMENTION','EMPTY_CLOB()', false);
+        } else {
+            $this->oracle->set('COMMENTION', $array['comment']);
+        }        
         $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
         $this->oracle->set('USER_UPDATE', $this->session->email);
         $this->oracle->where('ROW_ID', $array['summaryID']);

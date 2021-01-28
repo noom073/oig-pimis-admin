@@ -266,10 +266,19 @@ class Auditor extends CI_Controller
 	public function ajax_get_summary_detail()
 	{
 		$summaryID = $this->input->post('summaryID');
-		$detail = $this->summary_model->get_summary_detail($summaryID)->row_array();
+		$getData = $this->summary_model->get_summary_detail($summaryID);
+		if ($getData->num_rows()) {
+			$data = $getData->row_array();
+			$result['ROW_ID'] 		= $data['ROW_ID'];
+			$result['TEAMPLAN_ID'] 	= $data['TEAMPLAN_ID'];
+			$result['INSPECTION_OPTION_ID'] = $data['INSPECTION_OPTION_ID'];
+			$result['USER_UPDATE'] 	= $data['USER_UPDATE'];
+			$result['TIME_UPDATE'] 	= $data['TIME_UPDATE'];
+			$result['COMMENTION'] 	= $data['COMMENTION']->load();
+		}
 		$this->output
 			->set_content_type('application/json')
-			->set_output(json_encode($detail));
+			->set_output(json_encode($result));
 	}
 
 	public function ajax_update_summary()
@@ -285,9 +294,10 @@ class Auditor extends CI_Controller
 			$result['status'] = false;
 			$result['text'] = 'บันทึกไม่สำเร็จ';
 		}
-		$this->output
-			->set_content_type('application/json')
-			->set_output(json_encode($result));
+		echo json_encode($result);
+		// $this->output
+		// 	->set_content_type('application/json')
+		// 	->set_output(json_encode($result));
 	}
 
 	public function ajax_delete_summary()
@@ -373,25 +383,29 @@ class Auditor extends CI_Controller
 	public function ajax_get_inspection_note_detail()
 	{
 		$input = $this->input->post('rowID', true);
-		$data = $this->inspection_notes_model->get_inspection_note_by_id($input)->row_array();
-		$rs['TEAMPLAN_ID'] 		= $data['TEAMPLAN_ID'];
-		$rs['INSPECTION_OPTION_ID'] = $data['INSPECTION_OPTION_ID'];
-		$rs['UNIT_COMMANDER'] 	= $data['UNIT_COMMANDER'];
-		$rs['AUDITEE_NAME'] 	= $data['AUDITEE_NAME'];
-		$rs['AUDITEE_POS'] 		= $data['AUDITEE_POS'];
-		$rs['AUDITOR_EMAIL'] 	= $data['AUDITOR_EMAIL'];
-		$rs['INSPECTION_SCORE'] = $data['INSPECTION_SCORE'];
-		$rs['WORKING_SCORE'] 	= $data['WORKING_SCORE'];
-		$rs['CAN_IMPROVE'] 		= $data['CAN_IMPROVE']->read($data['CAN_IMPROVE']->size());
-		$rs['FAILING'] 			= $data['FAILING']->read($data['FAILING']->size());
-		$rs['IMPORTANT_FAILING'] = $data['IMPORTANT_FAILING']->read($data['IMPORTANT_FAILING']->size());
-		$rs['COMMENTIONS'] 		= $data['COMMENTIONS']->read($data['COMMENTIONS']->size());
-		$rs['DATE_INSPECT'] 	= date('Y-m-d', strtotime($data['DATE_INSPECT']));
-		$rs['USER_UPDATE'] 		= $data['USER_UPDATE'];
-		$rs['TIME_UPDATE'] 		= $data['TIME_UPDATE'];
+		$getData = $this->inspection_notes_model->get_inspection_note_by_id($input);
+		$result = [];
+		if ($getData->num_rows()) {
+			$data = $getData->row_array();
+			$result['TEAMPLAN_ID'] 		= $data['TEAMPLAN_ID'];
+			$result['INSPECTION_OPTION_ID'] = $data['INSPECTION_OPTION_ID'];
+			$result['UNIT_COMMANDER'] 	= $data['UNIT_COMMANDER'];
+			$result['AUDITEE_NAME'] 	= $data['AUDITEE_NAME'];
+			$result['AUDITEE_POS'] 		= $data['AUDITEE_POS'];
+			$result['AUDITOR_EMAIL'] 	= $data['AUDITOR_EMAIL'];
+			$result['INSPECTION_SCORE'] = $data['INSPECTION_SCORE'];
+			$result['WORKING_SCORE'] 	= $data['WORKING_SCORE'];
+			$result['CAN_IMPROVE'] 		= $data['CAN_IMPROVE']->load();
+			$result['FAILING'] 			= $data['FAILING']->load();
+			$result['IMPORTANT_FAILING'] = $data['IMPORTANT_FAILING']->load();
+			$result['COMMENTIONS'] 		= $data['COMMENTIONS']->load();
+			$result['DATE_INSPECT'] 	= date('Y-m-d', strtotime($data['DATE_INSPECT']));
+			$result['USER_UPDATE'] 		= $data['USER_UPDATE'];
+			$result['TIME_UPDATE'] 		= $data['TIME_UPDATE'];
+		}
 		$this->output
 			->set_content_type('application/json')
-			->set_output(json_encode($rs));
+			->set_output(json_encode($result));
 	}
 
 	public function ajax_update_inspection_note()
@@ -437,5 +451,35 @@ class Auditor extends CI_Controller
 		$this->output
 			->set_content_type('application/json')
 			->set_output(json_encode($result));
+	}
+
+	public function ajax_get_inspection_note_by_team_plan_id_n_inspection_option_id()
+	{
+		$teamPlanID = $this->input->post('teamPlanID', true);
+		$inspectionOptionID = $this->input->post('inspectionOptionID', true);
+		$note = $this->inspection_notes_model
+			->get_inspection_note_by_team_plan_id_n_inspection_option_id($teamPlanID, $inspectionOptionID);
+		if ($note->num_rows()) {
+			$data = $note->row_array();
+			$rs['TEAMPLAN_ID'] 		= $data['TEAMPLAN_ID'];
+			$rs['INSPECTION_OPTION_ID'] = $data['INSPECTION_OPTION_ID'];
+			$rs['UNIT_COMMANDER'] 	= $data['UNIT_COMMANDER'];
+			$rs['AUDITEE_NAME'] 	= $data['AUDITEE_NAME'];
+			$rs['AUDITEE_POS'] 		= $data['AUDITEE_POS'];
+			$rs['AUDITOR_EMAIL'] 	= $data['AUDITOR_EMAIL'];
+			$rs['INSPECTION_SCORE'] = $data['INSPECTION_SCORE'];
+			$rs['WORKING_SCORE'] 	= $data['WORKING_SCORE'];
+			$rs['CAN_IMPROVE'] 		= $data['CAN_IMPROVE']->load();
+			$rs['FAILING'] 			= $data['FAILING']->load();
+			$rs['IMPORTANT_FAILING'] = $data['IMPORTANT_FAILING']->load();
+			$rs['COMMENTIONS'] 		= $data['COMMENTIONS']->load();
+			$rs['DATE_INSPECT'] 	= date('Y-m-d', strtotime($data['DATE_INSPECT']));
+			$rs['USER_UPDATE'] 		= $data['USER_UPDATE'];
+			$rs['TIME_UPDATE'] 		= $data['TIME_UPDATE'];
+		} else {
+			$rs = [];
+		}
+
+		echo json_encode($rs);
 	}
 }

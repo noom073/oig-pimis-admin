@@ -257,7 +257,9 @@ class Auditor_manage_inspection extends CI_Controller
 		$input['rowID'] = $this->input->post('auditorTeamID', true);
 		$isteamInUsed = $this->auditor_team_model->is_auditor_team_in_plan($input);
 		if (!$isteamInUsed) {
-			$delete = $this->auditor_team_model->delete_auditor_team($input);
+			$data['updater'] = $this->session->email;
+			$data['rowID'] = $input['rowID'];
+			$delete = $this->auditor_team_model->delete_auditor_team($data);
 			if ($delete) {
 				$result['status'] = true;
 				$result['text'] = 'ลบข้อมูลสำเร็จ';
