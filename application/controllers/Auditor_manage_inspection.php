@@ -302,7 +302,9 @@ class Auditor_manage_inspection extends CI_Controller
 
 		$planToRemove = $this->plan_model->get_team_plan_detail_by_plan_id($input['planID'])->num_rows();
 		if ($planToRemove == 0) {
-			$result['removePlan'] = $this->plan_model->delete_plan($input['planID']);
+			$deleteData['id'] 		= $input['planID'];
+			$deleteData['updater'] 	= $this->session->email;
+			$result['removePlan'] 	= $this->plan_model->delete_plan($deleteData);
 		} else {
 			$result['removePlan'] = false;
 		}

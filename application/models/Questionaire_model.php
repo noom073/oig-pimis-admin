@@ -45,6 +45,7 @@ class Questionaire_model extends CI_Model
             FROM PITS_PLAN a 
             RIGHT JOIN PIMIS_AUDITOR_TEAM_IN_PLAN b 
                 ON a.ID = b.PLAN_ID 
+                AND b.STATUS = 'y'
             INNER JOIN PIMIS_AUDITOR_TEAM c 
                 ON b.TEAM_ID = c.ROW_ID 
             INNER JOIN PER_NPRT_TAB d

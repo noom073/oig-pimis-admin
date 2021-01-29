@@ -257,8 +257,8 @@
                         alert(res.text);
                         drawSubjectList(inspectionOptionID);
                     } else {
-                        let text = res.inSubjectTable.status == true ? '' : res.inSubjectTable.text + '\n';
-                        text += res.InQuestiontTable.status == true ? '' : res.InQuestiontTable.text;
+                        let text = res.inSubjectTable.status == true ? res.inSubjectTable.text + '\n' : '';
+                        text += res.InQuestiontTable.status == true ? res.InQuestiontTable.text : '';
                         alert(`!Error: ${text}`);
                     }
                 }).fail((jhr, status, error) => console.error(jhr, status, error));

@@ -262,22 +262,22 @@ class Controller_user extends CI_Controller
         $hasInSubjectTable = $this->subject_model->check_parent_subject($subjectID)->num_rows() > 0 ? true : false;
         $hasInQuestiontTable = $this->subject_model->get_subject_in_question($subjectID)->num_rows() > 0 ? true : false;
         if ($hasInSubjectTable) {
-            $inSubjectTable['status'] = false;
+            $inSubjectTable['status'] = true;
             $inSubjectTable['text'] = 'มีการใช้ข้อมูลนี้ในตารางหัวข้อคำถาม';
         } else {
-            $inSubjectTable['status'] = true;
+            $inSubjectTable['status'] = false;
             $inSubjectTable['text'] = 'ไม่พบการใช้ข้อมูลนี้ในตารางหัวข้อคำถาม';
         }
 
         if ($hasInQuestiontTable) {
-            $InQuestiontTable['status'] = false;
+            $InQuestiontTable['status'] = true;
             $InQuestiontTable['text'] = 'มีการใช้ข้อมูลนี้ในตารางคำถาม';
         } else {
-            $InQuestiontTable['status'] = true;
+            $InQuestiontTable['status'] = false;
             $InQuestiontTable['text'] = 'ไม่พบการใช้ข้อมูลนี้ในตารางคำถาม';
         }
 
-        if ($inSubjectTable['status'] && $InQuestiontTable['status']) {
+        if ($inSubjectTable['status'] == false && $InQuestiontTable['status'] == false) {
             $delete = $this->subject_model->delete_subject($subjectID);
             if ($delete) {
                 $result['status']   = true;

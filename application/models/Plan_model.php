@@ -59,6 +59,7 @@ class Plan_model extends CI_Model
         $date = date("Y-m-d H:i:s");
         $this->oracle->set('PLAN_ID', $array['planID']);
         $this->oracle->set('TEAM_ID', $array['teamID']);
+        $this->oracle->set('STATUS', 'y');
         $this->oracle->set('USER_UPDATE', $array['updater']);
         $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
         $query = $this->oracle->insert('PIMIS_AUDITOR_TEAM_IN_PLAN');
@@ -76,7 +77,8 @@ class Plan_model extends CI_Model
     {
         $sql = "SELECT ROW_ID AS TEAM_PLAN_ID, TEAM_ID
             FROM PIMIS_AUDITOR_TEAM_IN_PLAN
-            WHERE PLAN_ID = ?";
+            WHERE PLAN_ID = ?
+            AND STATUS = 'y'";
         $query = $this->oracle->query($sql, array($planID));
         return $query;
     }
@@ -109,6 +111,7 @@ class Plan_model extends CI_Model
     public function get_team_plan_by_plan_id($id)
     {
         $this->oracle->where('PLAN_ID', $id);
+        $this->oracle->where('STATUS', 'y');
         $query = $this->oracle->get('PIMIS_AUDITOR_TEAM_IN_PLAN');
         return $query;
     }
@@ -152,10 +155,12 @@ class Plan_model extends CI_Model
     private function update_team_to_plan_remove($planID, $teamArray)
     {
         $result = array();
+        // add check in  PIMIS_INSPECTION_SCORE_AUDITOR, PIMIS_INSPECTION_NOTES, PIMIS_INSPECTION_SUMMARY
         foreach ($teamArray as $r) {
+            $this->oracle->set('STATUS', 'n');
             $this->oracle->where('PLAN_ID', $planID);
             $this->oracle->where('TEAM_ID', $r);
-            $delete = $this->oracle->delete('PIMIS_AUDITOR_TEAM_IN_PLAN');
+            $delete = $this->oracle->update('PIMIS_AUDITOR_TEAM_IN_PLAN');
             if ($delete) {
                 $data['planID'] = $planID;
                 $data['teamID'] = $r;
@@ -180,10 +185,13 @@ class Plan_model extends CI_Model
         return $query;
     }
 
-    public function delete_plan($id)
+    public function delete_plan($array)
     {
-        $this->oracle->where('ID', $id);
-        $query = $this->oracle->delete('PITS_PLAN');
+        $this->oracle->set('STATUS', 'n');
+        $this->oracle->set('USER_UPDATE', $array['updator']);
+        $this->oracle->set('TIME_UPDATE', 'SYSDATE', false);
+        $this->oracle->where('ID', $array['id']);
+        $query = $this->oracle->update('PITS_PLAN');
         return $query;
     }
 
