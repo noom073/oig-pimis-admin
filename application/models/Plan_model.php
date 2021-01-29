@@ -155,23 +155,40 @@ class Plan_model extends CI_Model
     private function update_team_to_plan_remove($planID, $teamArray)
     {
         $result = array();
-        // add check in  PIMIS_INSPECTION_SCORE_AUDITOR, PIMIS_INSPECTION_NOTES, PIMIS_INSPECTION_SUMMARY
         foreach ($teamArray as $r) {
-            $this->oracle->set('STATUS', 'n');
-            $this->oracle->where('PLAN_ID', $planID);
-            $this->oracle->where('TEAM_ID', $r);
-            $delete = $this->oracle->update('PIMIS_AUDITOR_TEAM_IN_PLAN');
-            if ($delete) {
+            // check TEAMPLAN_ID in  PIMIS_INSPECTION_SCORE_AUDITOR, PIMIS_INSPECTION_NOTES, PIMIS_INSPECTION_SUMMARY
+            $teamPlanID = $this->get_team_plan_id_by_plan_n_team_id($planID, $r);
+            $isTeamPlanInScoreAuditor = $this->check_team_plan_in_score_auditor($teamPlanID);
+            $isTeamPlanInInspectionNotes = $this->check_team_plan_in_inspection_notes($teamPlanID);
+            $isTeamPlanInInspectionSummary = $this->check_team_plan_in_inspection_summary($teamPlanID);
+            if (!$isTeamPlanInScoreAuditor && !$isTeamPlanInInspectionNotes && !$isTeamPlanInInspectionSummary) {
+                $this->oracle->set('STATUS', 'n');
+                $this->oracle->where('PLAN_ID', $planID);
+                $this->oracle->where('TEAM_ID', $r);
+                $delete = $this->oracle->update('PIMIS_AUDITOR_TEAM_IN_PLAN');
+                if ($delete) {
+                    $data['status'] = true;
+                } else {
+                    $data['status'] = false;
+                }
+                $data['text']   = '';
                 $data['planID'] = $planID;
                 $data['teamID'] = $r;
-                $data['status'] = true;
+                $data['teamPlanID'] = $teamPlanID;
             } else {
+                $text = '';
+                $text .= $isTeamPlanInScoreAuditor == true ? 'มีการใช้ TEAMPLAN_ID ใน ScoreAuditor ' : '';
+                $text .= $isTeamPlanInInspectionNotes == true ? 'มีการใช้ TEAMPLAN_ID ใน InspectionNotes ' : '';
+                $text .= $isTeamPlanInInspectionSummary == true ? 'มีการใช้ TEAMPLAN_ID ใน InspectionSummary ' : '';
+                $data['text']   = $text;
                 $data['planID'] = $planID;
                 $data['teamID'] = $r;
+                $data['teamPlanID'] = $teamPlanID;
                 $data['status'] = false;
             }
             $result[] = $data;
         }
+
         return $result;
     }
 
@@ -200,5 +217,38 @@ class Plan_model extends CI_Model
         $this->oracle->where('ROW_ID', $id);
         $query = $this->oracle->get('PIMIS_AUDITOR_TEAM_IN_PLAN');
         return $query;
+    }
+
+    public function get_team_plan_id_by_plan_n_team_id($planID, $teamID)
+    {
+        $this->oracle->select('ROW_ID');
+        $this->oracle->where('TEAM_ID', $teamID);
+        $this->oracle->where('PLAN_ID', $planID);
+        $query = $this->oracle->get('PIMIS_AUDITOR_TEAM_IN_PLAN')->row_array();
+        return $query['ROW_ID'];
+    }
+
+    public function check_team_plan_in_score_auditor($planID)
+    {
+        $this->oracle->where('TEAMPLAN_ID', $planID);
+        $this->oracle->where('STATUS', 'y');
+        $query = $this->oracle->get('PIMIS_INSPECTION_SCORE_AUDITOR');
+        return $query->num_rows() == 0 ? false : true;
+    }
+
+    public function check_team_plan_in_inspection_notes($planID)
+    {
+        $this->oracle->where('TEAMPLAN_ID', $planID);
+        $this->oracle->where('STATUS', 'y');
+        $query = $this->oracle->get('PIMIS_INSPECTION_NOTES');
+        return $query->num_rows() == 0 ? false : true;
+    }
+
+    public function check_team_plan_in_inspection_summary($planID)
+    {
+        $this->oracle->where('TEAMPLAN_ID', $planID);
+        $this->oracle->where('STATUS', 'y');
+        $query = $this->oracle->get('PIMIS_INSPECTION_SUMMARY');
+        return $query->num_rows() == 0 ? false : true;
     }
 }

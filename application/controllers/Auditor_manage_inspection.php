@@ -308,9 +308,11 @@ class Auditor_manage_inspection extends CI_Controller
 		} else {
 			$result['removePlan'] = false;
 		}
-		$this->output
-			->set_content_type('apllication/json')
-			->set_output(json_encode($result));
+
+		echo json_encode($result);
+		// $this->output
+		// 	->set_content_type('apllication/json')
+		// 	->set_output(json_encode($result));
 	}
 
 	public function set_inspection()

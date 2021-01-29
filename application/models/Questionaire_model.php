@@ -71,6 +71,7 @@ class Questionaire_model extends CI_Model
         $this->oracle->trans_begin();
         $data['teamPlanID'] = $array['teamPlanID'];
         $data['inspectionOptionID'] = $array['inspectionOptionID'];
+        $data['updator'] = $array['updator'];
 
         $response = array();
         foreach ($array['scores'] as $key => $val) {
@@ -83,8 +84,9 @@ class Questionaire_model extends CI_Model
             $this->oracle->set("INSPECTION_OPTION_ID", $data['inspectionOptionID']);
             $this->oracle->set("QUESTION_ID", $data['questionID']);
             $this->oracle->set("SCORE", $data['score']);
+            $this->oracle->set("STATUS", 'y');
+            $this->oracle->set("USER_UPDATE", $data['updator']);
             $this->oracle->set("TIME_UPDATE", "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
-            $this->oracle->set("USER_UPDATE", $this->session->email);
             $insert = $this->oracle->insert('PIMIS_INSPECTION_SCORE_AUDITOR');
             if ($insert) {
                 $result['status'] = true;
@@ -126,6 +128,8 @@ class Questionaire_model extends CI_Model
         $date = date("Y-m-d H:i:s");
         $this->oracle->set('POLICY_SCORE', $array['policyScore']);
         $this->oracle->set('PREPARE_SCORE', $array['prepareScore']);
+        $this->oracle->set("USER_UPDATE", $array['updator']);
+        $this->oracle->set("TIME_UPDATE", "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
         $this->oracle->where('ROW_ID', $array['teamPlanID']);
         $update = $this->oracle->update('PIMIS_AUDITOR_TEAM_IN_PLAN');
         return $update;
@@ -140,12 +144,12 @@ class Questionaire_model extends CI_Model
         return $query;
     }
 
-    public function update_inspection_score($score, $teamPlanID, $questionID)
+    public function update_inspection_score($score, $teamPlanID, $questionID, $updator)
     {
         $date = date("Y-m-d H:i:s");
         $this->oracle->set('SCORE', $score);
+        $this->oracle->set("USER_UPDATE", $updator);
         $this->oracle->set("TIME_UPDATE", "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
-        $this->oracle->set("USER_UPDATE", $this->session->email);
         $this->oracle->where('TEAMPLAN_ID', $teamPlanID);
         $this->oracle->where('QUESTION_ID', $questionID);
         $query = $this->oracle->update('PIMIS_INSPECTION_SCORE_AUDITOR');

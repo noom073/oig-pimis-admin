@@ -107,6 +107,7 @@ class Auditor extends CI_Controller
 		unset($input['inspectionOptionID']); //clear inspectionID ในชุดข้อมูล ก่อนจะ loop array score
 		unset($input['teamPlanID']); //clear planID ในชุดข้อมูล ก่อนจะ loop array score
 		$data['scores'] = $input;
+		$data['updator'] = $this->session->email;
 		$result = $this->questionaire_model->insert_inspection_score($data);
 
 		$this->output
@@ -222,6 +223,7 @@ class Auditor extends CI_Controller
 		$data['teamPlanID'] = $this->input->post('teamPlanID');
 		$data['inspectionOptionID'] = $this->input->post('inspectionOptionID');
 		$data['comment'] = $this->input->post('comment');
+		$data['updator'] = $this->session->email;
 		$insert = $this->summary_model->add_summary($data);
 		if ($insert) {
 			$result['status'] = true;
@@ -249,6 +251,7 @@ class Auditor extends CI_Controller
 		$data['teamPlanID'] = $this->input->post('teamPlanID');
 		$data['policyScore'] = $this->input->post('policyScore');
 		$data['prepareScore'] = $this->input->post('prepareScore');
+		$data['updator'] = $this->session->email;
 		$update = $this->questionaire_model->update_team_plan_score($data);
 		if ($update) {
 			$result['status'] = true;
@@ -283,9 +286,10 @@ class Auditor extends CI_Controller
 
 	public function ajax_update_summary()
 	{
-		$data['summaryID'] = $this->input->post('summaryID');
-		$data['inspectionID'] = $this->input->post('inspectionID');
-		$data['comment'] = $this->input->post('comment');
+		$data['summaryID'] = $this->input->post('summaryID', true);
+		$data['inspectionID'] = $this->input->post('inspectionID', true);
+		$data['comment'] = $this->input->post('comment', true);
+		$data['updator'] = $this->session->email;
 		$insert = $this->summary_model->update_summary($data);
 		if ($insert) {
 			$result['status'] = true;
@@ -294,16 +298,16 @@ class Auditor extends CI_Controller
 			$result['status'] = false;
 			$result['text'] = 'บันทึกไม่สำเร็จ';
 		}
-		echo json_encode($result);
-		// $this->output
-		// 	->set_content_type('application/json')
-		// 	->set_output(json_encode($result));
+		$this->output
+			->set_content_type('application/json')
+			->set_output(json_encode($result));
 	}
 
 	public function ajax_delete_summary()
 	{
 		$summaryID = $this->input->post('summaryID');
-		$delete = $this->summary_model->delete_summary($summaryID);
+		$updator = $this->session->email;
+		$delete = $this->summary_model->delete_summary($summaryID, $updator);
 		if ($delete) {
 			$result['status'] = true;
 			$result['text'] = 'ลบข้อมูลสำเร็จ';
@@ -320,11 +324,12 @@ class Auditor extends CI_Controller
 	{
 		$teamPlanID = $this->input->post('teamPlanID', true);
 		$scores = $this->input->post();
+		$updator = $this->session->email;
 		unset($scores['teamPlanID']);
 		$result = array();
 		foreach ($scores as $key => $val) {
 			$questionID = explode('score-', $key)[1];
-			$update = $this->questionaire_model->update_inspection_score($val, $teamPlanID, $questionID);
+			$update = $this->questionaire_model->update_inspection_score($val, $teamPlanID, $questionID, $updator);
 			if ($update) {
 				$data['questionID'] = $questionID;
 				$data['planID'] = $teamPlanID;

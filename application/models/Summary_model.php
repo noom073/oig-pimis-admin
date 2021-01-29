@@ -16,8 +16,9 @@ class Summary_model extends CI_Model
         $this->oracle->set('TEAMPLAN_ID', $array['teamPlanID']);
         $this->oracle->set('INSPECTION_OPTION_ID', $array['inspectionOptionID']);
         $this->oracle->set('COMMENTION', $array['comment']);
+        $this->oracle->set('STATUS', 'y');
         $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
-        $this->oracle->set('USER_UPDATE', $this->session->email);
+        $this->oracle->set('USER_UPDATE', $array['updator']);
         $query = $this->oracle->insert('PIMIS_INSPECTION_SUMMARY');
         return $query;
     }
@@ -35,6 +36,7 @@ class Summary_model extends CI_Model
         LEFT JOIN PIMIS_INSPECTION_SUMMARY c
             ON a.TEAMPLAN_ID = c.TEAMPLAN_ID 
             AND a.INSPECTION_OPTION_ID  = c.INSPECTION_OPTION_ID 
+            And c.STATUS = 'y'
         INNER JOIN PIMIS_INSPECTION_OPTION d 
             ON a.INSPECTION_OPTION_ID = d.ROW_ID 
         WHERE a.TEAMPLAN_ID = ?
@@ -61,16 +63,20 @@ class Summary_model extends CI_Model
             $this->oracle->set('COMMENTION', $array['comment']);
         }        
         $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
-        $this->oracle->set('USER_UPDATE', $this->session->email);
+        $this->oracle->set('USER_UPDATE', $array['updator']);
         $this->oracle->where('ROW_ID', $array['summaryID']);
         $query = $this->oracle->update('PIMIS_INSPECTION_SUMMARY');
         return $query;
     }
 
-    public function delete_summary($summaryID)
+    public function delete_summary($summaryID, $updator)
     {
+        $date = date("Y-m-d H:i:s");
+        $this->oracle->set('STATUS', 'n');
+        $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
+        $this->oracle->set('USER_UPDATE', $updator);
         $this->oracle->where('ROW_ID', $summaryID);
-        $query = $this->oracle->delete('PIMIS_INSPECTION_SUMMARY');
+        $query = $this->oracle->update('PIMIS_INSPECTION_SUMMARY');
         return $query;
     }
 }
