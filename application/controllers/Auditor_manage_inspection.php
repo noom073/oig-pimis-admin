@@ -165,7 +165,8 @@ class Auditor_manage_inspection extends CI_Controller
 		$input['firstName'] 	= $this->input->post('firstName', true);
 		$input['lastName'] 		= $this->input->post('lastName', true);
 		$input['position'] 		= $this->input->post('position', true);
-		$input['idp'] 			= $this->input->post('idp', true);
+		$email = explode('@', $this->input->post('email', true));
+		$input['email'] 		= $email[0];
 		$input['auditorTeam']	= $this->input->post('auditorTeam', true);
 		$input['auditorType'] 	= $this->input->post('auditorType', true);
 		$input['updater'] 		= $this->session->email;
@@ -186,6 +187,7 @@ class Auditor_manage_inspection extends CI_Controller
 	{
 		$input['rowID'] = $this->input->post('auditorID', true);
 		$data = $this->auditor_model->get_a_auditor($input)->row_array();
+		$data['ADT_EMAIL'] = explode('@', $data['ADT_EMAIL'])[0];
 		$this->output
 			->set_content_type('apllication/json')
 			->set_output(json_encode($data));
@@ -197,7 +199,8 @@ class Auditor_manage_inspection extends CI_Controller
 		$input['firstName'] 	= $this->input->post('firstName', true);
 		$input['lastName'] 		= $this->input->post('lastName', true);
 		$input['position'] 		= $this->input->post('position', true);
-		$input['idp'] 			= $this->input->post('idp', true);
+		$email = explode('@', $this->input->post('email', true));
+		$input['email'] 		= $email[0];
 		$input['auditorTeam']	= $this->input->post('auditorTeam', true);
 		$input['auditorType'] 	= $this->input->post('auditorType', true);
 		$input['auditorID'] 	= $this->input->post('auditorID', true);
@@ -218,6 +221,7 @@ class Auditor_manage_inspection extends CI_Controller
 	public function ajax_delete_auditor()
 	{
 		$input['auditorID'] = $this->input->post('auditorID', true);
+		$input['updater'] 	= $this->session->email;
 		$delete = $this->auditor_model->delete_auditor($input);
 		if ($delete) {
 			$result['status'] = true;

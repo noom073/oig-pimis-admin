@@ -19,7 +19,7 @@
         <div class="container-fluid">
             <div class="card">
             </div>
-            
+
             <div class="card">
                 <div class="card-header">
                     <div class="h3">สมาชิกชุดตรวจ "<?= $team['TEAM_NAME'] ?>"</div>
@@ -84,8 +84,13 @@
                                     <input type="text" class="form-control" name="position" required>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label>เลขประชาชน</label>
-                                    <input type="text" class="form-control" name="idp" maxlength="13" required>
+                                    <label>RTARF MAIL</label>
+                                    <div class="input-group mb-3">
+                                        <input type="text" class="form-control" name="email" placeholder="RTARF Mail" required>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" style="background-color:#f1f1f1;">@rtarf.mi.th</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-row">
@@ -116,7 +121,7 @@
 
         <!-- EDIT AUDITOR NAME Modal -->
         <div class="modal fade" id="edit-auditor-member-modal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-xl">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">แก้ไขสมาชิกชุดตรวจ</h5>
@@ -148,8 +153,13 @@
                                     <input type="text" class="form-control" name="position" id="edit-auditor-member-form-position" required>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label>เลขประชาชน</label>
-                                    <input type="text" class="form-control" name="idp" id="edit-auditor-member-form-idp" maxlength="13" required>
+                                    <label>RTARF MAIL</label>
+                                    <div class="input-group mb-3">
+                                        <input type="text" class="form-control" name="email" id="edit-auditor-member-form-email" placeholder="RTARF Mail" required>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" style="background-color:#f1f1f1;">@rtarf.mi.th</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-row">

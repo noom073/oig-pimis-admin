@@ -6,7 +6,8 @@
 
 
         const inspectionOptionsTable = $("#inspection-option-table").DataTable({
-            data: [],
+            responsive: true,
+            // data: [],
             columns: [{
                     data: null,
                     render: (data, type, row, meta) => meta.row + 1,

@@ -24,6 +24,7 @@
         };
 
         const inspectionTable = $("#inspection-table").DataTable({
+            responsive: true,
             pageLength: 25,
             ajax: {
                 url: '<?= site_url('data_service/ajax_get_inspection') ?>',

@@ -6,7 +6,7 @@
 
 
         let auditorTeamTable = $("#auditor-team-table").DataTable({
-            // responsive: true,
+            responsive: true,
             ajax: {
                 url: '<?= site_url('auditor_manage_inspection/ajax_get_auditor_team') ?>',
                 dataSrc: ''

@@ -105,6 +105,7 @@
             let html = generateTreeView(questions);
             $("#form-loading").addClass('d-none');
             $("#form-questionaire").html(html);
+            $("#auditor-inspect-form").removeClass('d-none');
             showScore();
         };
 

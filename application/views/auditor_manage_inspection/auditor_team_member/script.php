@@ -6,7 +6,7 @@
 
 
         let auditorMemberTable = $("#auditor-member-table").DataTable({
-            // responsive: true,
+            responsive: true,
             ajax: {
                 url: '<?= site_url('auditor_manage_inspection/ajax_get_team_member') ?>',
                 data: {
@@ -96,7 +96,7 @@
             $("#edit-auditor-member-form-first-name").val(auditorDetail.ADT_FIRSTNAME);
             $("#edit-auditor-member-form-last-name").val(auditorDetail.ADT_LASTNAME);
             $("#edit-auditor-member-form-position").val(auditorDetail.POSITION);
-            $("#edit-auditor-member-form-idp").val(auditorDetail.ADT_IDP);
+            $("#edit-auditor-member-form-email").val(auditorDetail.ADT_EMAIL);
             $("#edit-auditor-member-form-auditor-team").val(auditorDetail.ADT_TEAM);
             $("#edit-auditor-member-form-auditor-type").val(auditorDetail.ADT_TYPE);
             $("#edit-auditor-member-form").data('row-id', auditorID);

@@ -40,9 +40,9 @@
 
                         <div>
                             <div>
-                                <form id="auditor-inspect-form">
+                                <div id="form-loading">Loading data...</div>
+                                <form id="auditor-inspect-form" class="d-none">
                                     <h5>ฟอร์ม</h5>
-                                    <div id="form-loading">Loading data...</div>
                                     <div id="form-questionaire"></div>
                                     <div>
                                         <div id="form-questionaire-result"></div>

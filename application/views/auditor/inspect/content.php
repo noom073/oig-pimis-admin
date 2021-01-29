@@ -53,6 +53,7 @@
 
                         <div>
                             <div class="mb-3">
+                                <div id="form-loading" class="d-none">Loading data...</div>
                                 <form id="auditor-inspect-form" class="d-none" data-team-plan-id="<?= $teamPlan['ROW_ID'] ?>">
                                     <h5>ฟอร์ม</h5>
                                     <div id="form-questionaire"></div>

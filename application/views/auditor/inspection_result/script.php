@@ -10,6 +10,7 @@
 
 
         let noteTable = $("#note-table").DataTable({
+            responsive: true,
             ajax: {
                 url: '<?= site_url('auditor/ajax_get_inspection_notes_list_by_team_plan_id') ?>',
                 type: 'post',

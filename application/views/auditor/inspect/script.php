@@ -83,6 +83,7 @@
 
         const drawQuestionForm = async inspectionOptionID => {
             questionsAmount = 0; // reset ค่าจำนวนคำถาม
+            $("#form-questionaire").html('');
             let questions = await getQuestionsAndSubject(inspectionOptionID);
             let html = generateTreeView(questions);
             $("#form-questionaire").html(html);
@@ -107,10 +108,12 @@
 
 
         $(".inspect-list").click(async function() {
+            $("#form-loading").removeClass('d-none');
             let inspectionOptionID = $(this).data('inspection-option-id');
             await drawQuestionForm(inspectionOptionID);
             showScore();
             $(".inspect-list").removeClass('active');
+            $("#form-loading").addClass('d-none');
             $(this).addClass('active');
             $("#auditor-inspect-form").data('inspection-option-id', inspectionOptionID);
             $("#auditor-inspect-form").removeClass('d-none');
