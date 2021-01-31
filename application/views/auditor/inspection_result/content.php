@@ -65,7 +65,7 @@
                     <form id="create-note-form">
                         <div class="form-group">
                             <label for="exampleInputEmail1">เรื่อง</label>
-                            <select class="form-control" name="inspectionOptionID">
+                            <select class="form-control" name="inspectionOptionID" required>
                                 <?php foreach ($teamInspections as $teamInspection) { ?>
                                     <option value="<?= $teamInspection['INSPECTION_OPTION_ID'] ?>"><?= $teamInspection['INSPECTION_NAME'] ?></option>
                                 <?php } ?>

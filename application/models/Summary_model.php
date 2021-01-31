@@ -40,6 +40,7 @@ class Summary_model extends CI_Model
         INNER JOIN PIMIS_INSPECTION_OPTION d 
             ON a.INSPECTION_OPTION_ID = d.ROW_ID 
         WHERE a.TEAMPLAN_ID = ?
+        AND a.STATUS = 'y'
         GROUP BY a.TEAMPLAN_ID, a.INSPECTION_OPTION_ID, c.ROW_ID, c.TIME_UPDATE, d.INSPECTION_NAME
         ORDER BY a.INSPECTION_OPTION_ID";
         $query = $this->oracle->query($sql, array($teamPlanID, $teamPlanID));

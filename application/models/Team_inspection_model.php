@@ -17,7 +17,8 @@ class Team_inspection_model extends CI_Model
             FROM PIMIS_TEAM_INSPECTION a
             INNER JOIN PIMIS_INSPECTION_OPTION b
                 ON a.INSPECTION_OPTION_ID = b.ROW_ID
-            WHERE a.TEAMPLAN_ID = ? ";
+            WHERE a.TEAMPLAN_ID = ? 
+            AND a.STATUS = 'y'";
         $query = $this->oracle->query($sql, array($teamPlanID));
         return $query;
     }
@@ -45,6 +46,7 @@ class Team_inspection_model extends CI_Model
         }, $oldTeamInspection);
         $teamInspection['toAdd'] = array_diff($array['teamInspection'], $oldTeamInspectionID);
         $teamInspection['toRemove'] = array_diff($oldTeamInspectionID, $array['teamInspection']);
+
         $toAdd = array();
         foreach ($teamInspection['toAdd'] as $r) {
             $insert = $this->add_team_inspection($r, $array['teamPlanID'], $array['updater']);
@@ -53,14 +55,33 @@ class Team_inspection_model extends CI_Model
             $data['teamInspection'] = $r;
             $toAdd[] = $data;
         }
+
         $toRemove = array();
         foreach ($teamInspection['toRemove'] as $r) {
-            $delete = $this->remove_team_inspection($r, $array['teamPlanID']);
-            $data['status'] = $delete;
-            $data['teamPlanID'] = $array['teamPlanID'];
-            $data['teamInspection'] = $r;
+            // CHECK IN PIMIS_INSPECTION_SCORE_AUDITOR, PIMIS_INSPECTION_NOTES, PIMIS_INSPECTION_SUMMARY
+            $inScoreAuditor = $this->check_team_plan_in_score_auditor($array['teamPlanID'], $r);
+            $inNotes = $this->check_team_plan_in_inspection_notes($array['teamPlanID'], $r);
+            $inSummary = $this->check_team_plan_in_inspection_summary($array['teamPlanID'], $r);
+            if (!$inScoreAuditor && !$inNotes && !$inSummary) {
+                $delete = $this->remove_team_inspection($r, $array['teamPlanID'], $array['updater']);
+                $data['status'] = $delete;
+                $data['teamPlanID'] = $array['teamPlanID'];
+                $data['teamInspection'] = $r;
+                $data['text'] = 'สามารถลบได้ ไม่พบข้อมูลใน Table อื่น';
+            } else {
+                $data['status'] = false;
+                $data['teamPlanID'] = $array['teamPlanID'];
+                $data['teamInspection'] = $r;
+                $text = '';
+                $text .= $inScoreAuditor ? 'พบการใช้ใน PIMIS_INSPECTION_SCORE_AUDITOR ':'';
+                $text .= $inNotes ? 'พบการใช้ใน PIMIS_INSPECTION_NOTES ':'';
+                $text .= $inSummary ? 'พบการใช้ใน PIMIS_INSPECTION_SUMMARY ':'';
+                $data['text'] = $text;
+            }
+            
             $toRemove[] = $data;
         }
+
         $result['toAdd'] = $toAdd;
         $result['toRemove'] = $toRemove;
         return $result;
@@ -71,17 +92,22 @@ class Team_inspection_model extends CI_Model
         $date = date("Y-m-d H:i:s");
         $this->oracle->set('TEAMPLAN_ID', $teamPlanID);
         $this->oracle->set('INSPECTION_OPTION_ID', $inspectionOptionID);
+        $this->oracle->set('STATUS', 'y');
         $this->oracle->set('USER_UPDATE', $updator);
         $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
         $query = $this->oracle->insert('PIMIS_TEAM_INSPECTION');
         return $query;
     }
 
-    public function remove_team_inspection($inspectionOptionID, $teamPlanID)
+    public function remove_team_inspection($inspectionOptionID, $teamPlanID, $updator)
     {
+        $date = date("Y-m-d H:i:s");
+        $this->oracle->set('STATUS', 'n');
+        $this->oracle->set('USER_UPDATE', $updator);
+        $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
         $this->oracle->where('TEAMPLAN_ID', $teamPlanID);
         $this->oracle->where('INSPECTION_OPTION_ID', $inspectionOptionID);
-        $query = $this->oracle->delete('PIMIS_TEAM_INSPECTION');
+        $query = $this->oracle->update('PIMIS_TEAM_INSPECTION');
         return $query;
     }
 
@@ -97,9 +123,37 @@ class Team_inspection_model extends CI_Model
                 ON a.TEAMPLAN_ID = c.TEAMPLAN_ID 
                 AND a.INSPECTION_OPTION_ID = c.INSPECTION_OPTION_ID 
             WHERE a.TEAMPLAN_ID = ?
+            AND a.STATUS = 'y'
             GROUP BY a.TEAMPLAN_ID, a.INSPECTION_OPTION_ID, b.INSPECTION_NAME, c.INSPECTION_OPTION_ID
             ORDER BY a.INSPECTION_OPTION_ID";
         $query = $this->oracle->query($sql, array($teamPlanID));
         return $query;
+    }
+
+    public function check_team_plan_in_score_auditor($teamPlanID, $inspectionOptionID)
+    {
+        $this->oracle->where('TEAMPLAN_ID', $teamPlanID);
+        $this->oracle->where('INSPECTION_OPTION_ID', $inspectionOptionID);
+        $this->oracle->where('STATUS', 'y');
+        $query = $this->oracle->get('PIMIS_INSPECTION_SCORE_AUDITOR');
+        return $query->num_rows() == 0 ? false : true;
+    }
+    
+    public function check_team_plan_in_inspection_notes($teamPlanID, $inspectionOptionID)
+    {
+        $this->oracle->where('TEAMPLAN_ID', $teamPlanID);
+        $this->oracle->where('INSPECTION_OPTION_ID', $inspectionOptionID);
+        $this->oracle->where('STATUS', 'y');
+        $query = $this->oracle->get('PIMIS_INSPECTION_NOTES');
+        return $query->num_rows() == 0 ? false : true;
+    }
+    
+    public function check_team_plan_in_inspection_summary($teamPlanID, $inspectionOptionID)
+    {
+        $this->oracle->where('TEAMPLAN_ID', $teamPlanID);
+        $this->oracle->where('INSPECTION_OPTION_ID', $inspectionOptionID);
+        $this->oracle->where('STATUS', 'y');
+        $query = $this->oracle->get('PIMIS_INSPECTION_SUMMARY');
+        return $query->num_rows() == 0 ? false : true;
     }
 }

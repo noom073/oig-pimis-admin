@@ -403,7 +403,7 @@ $config['sess_regenerate_destroy'] = FALSE;
 $config['cookie_prefix']    = '';
 $config['cookie_domain']    = 'localhost';
 $config['cookie_path']      = '/oig_pimis_admin';
-$config['cookie_secure']    = TRUE;
+$config['cookie_secure']    = FALSE;
 $config['cookie_httponly']  = TRUE;
 
 /*
