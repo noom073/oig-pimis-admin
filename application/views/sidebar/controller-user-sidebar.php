@@ -69,7 +69,7 @@
         </li>
     </ul>
 </li>
-<li class="nav-item has-treeview" id="controller-user-headnav-summarize">
+<!-- <li class="nav-item has-treeview" id="controller-user-headnav-summarize">
     <a href="#" class="nav-link">
         <i class="nav-icon fas fa-chart-line"></i>
         <p>
@@ -91,4 +91,4 @@
             </a>
         </li>
     </ul>
-</li>
+</li> -->

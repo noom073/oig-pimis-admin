@@ -4,7 +4,6 @@ class User_data
 {
     private $CI;
     private $token;
-    private $teamInspection;
     public function __construct($param)
     {
         $this->CI = &get_instance();
@@ -35,5 +34,16 @@ class User_data
         $email = $this->get_email();
         $data = $this->CI->auth_model->get_own_team($email);
         return $data;
+    }
+
+    public function get_user_types()
+    {
+        $userID = $this->get_user_id();
+        $data = $this->CI->auth_model->get_user_type($userID)->result_array();
+        $result = array_map(function($r){
+            return $r['TYPE_NAME'];
+        }, $data);
+        $types = array_merge($result);
+        return $types;
     }
 }

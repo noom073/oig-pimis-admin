@@ -51,7 +51,7 @@
         </li>
     </ul>
 </li>
-<li class="nav-item has-treeview" id="auditor-report-section">
+<!-- <li class="nav-item has-treeview" id="auditor-report-section">
     <a href="#" class="nav-link" id="auditor-report-subject">
         <i class="nav-icon fas fa-users"></i>
         <p>
@@ -84,4 +84,4 @@
             </a>
         </li>
     </ul>
-</li>
+</li> -->

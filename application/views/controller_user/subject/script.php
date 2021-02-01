@@ -2,7 +2,7 @@
     $(document).ready(function() {
         $("li#controller-user-headnav-manage-data").addClass('menu-open');
         $("li#controller-user-headnav-manage-data").children("a.nav-link").addClass('active');
-        $("a#controller-user-inspection-option").addClass('active');
+        $("a#controller-user-question-manage").addClass('active');
 
 
         let inspectionOption = <?= json_encode($insOpt) ?>;

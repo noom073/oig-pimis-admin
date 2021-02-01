@@ -3,12 +3,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Auditor_manage_inspection extends CI_Controller
 {
-
+	private $userTypes;
 	public function __construct()
 	{
 		parent::__construct();
 		$this->load->helper('url');
-		$this->load->helper('url');
+		$this->load->helper('cookie');
 		$this->load->library('session');
 		$this->load->library('session_services');
 
@@ -18,11 +18,19 @@ class Auditor_manage_inspection extends CI_Controller
 		$this->load->model('auditor_model');
 		$this->load->model('plan_model');
 		$this->load->model('team_inspection_model');
+
+		$data['token'] = get_cookie('pimis-token');
+		$this->load->library('user_data', $data);
+
+		$this->userTypes = $this->user_data->get_user_types();
+		$hasPermition = in_array('admin', $this->userTypes);
+		if (!$hasPermition) redirect('welcome/forbidden');
 	}
 
 	public function index()
 	{
 		$sideBar['name'] 	= $this->session->nameth;
+		$sideBar['userTypes'] 	= $this->userTypes;
 		$script['custom'] = $this->load->view('auditor_manage_inspection/index_content/script', '', true);
 		$header['custom'] = '';
 
@@ -40,6 +48,7 @@ class Auditor_manage_inspection extends CI_Controller
 	public function set_plan()
 	{
 		$sideBar['name'] 	= $this->session->nameth;
+		$sideBar['userTypes'] 	= $this->userTypes;
 		$script['custom'] 	= $this->load->view('auditor_manage_inspection/set_plan/script', '', true);
 		$header['custom'] 	= $this->load->view('auditor_manage_inspection/set_plan/custom_header', '', true);
 
@@ -57,6 +66,7 @@ class Auditor_manage_inspection extends CI_Controller
 	public function auditor_topic()
 	{
 		$sideBar['name'] 	= $this->session->nameth;
+		$sideBar['userTypes'] 	= $this->userTypes;
 		$script['custom'] = $this->load->view('auditor_manage_inspection/auditor_topic/script', '', true);
 
 		$component['header'] 			= $this->load->view('auditor_manage_inspection/component/header', '', true);
@@ -134,6 +144,7 @@ class Auditor_manage_inspection extends CI_Controller
 			$data['team'] 		= $team->row_array();
 			$data['auditorTypes'] = $this->auditor_model->get_auditor_types()->result_array();
 			$sideBar['name'] 	= $this->session->nameth;
+			$sideBar['userTypes'] 	= $this->userTypes;
 			$script['custom'] 	= $this->load->view('auditor_manage_inspection/auditor_team_member/script', $data, true);
 
 			$component['header'] 			= $this->load->view('auditor_manage_inspection/component/header', '', true);
@@ -309,15 +320,15 @@ class Auditor_manage_inspection extends CI_Controller
 			$result['removePlan'] = false;
 		}
 
-		echo json_encode($result);
-		// $this->output
-		// 	->set_content_type('apllication/json')
-		// 	->set_output(json_encode($result));
+		$this->output
+			->set_content_type('apllication/json')
+			->set_output(json_encode($result));
 	}
 
 	public function set_inspection()
 	{
 		$sideBar['name'] 	= $this->session->nameth;
+		$sideBar['userTypes'] 	= $this->userTypes;
 		$script['custom'] = $this->load->view('auditor_manage_inspection/set_inspection/script', '', true);
 		$header['custom'] = $this->load->view('auditor_manage_inspection/set_inspection/custom_header', '', true);
 

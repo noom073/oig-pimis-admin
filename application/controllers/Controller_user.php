@@ -3,11 +3,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Controller_user extends CI_Controller
 {
-
+    private $userTypes;
     public function __construct()
     {
         parent::__construct();
         $this->load->helper('url');
+        $this->load->helper('cookie');
         $this->load->library('session');
         $this->load->library('session_services');
         $this->load->library('center_services');
@@ -18,6 +19,13 @@ class Controller_user extends CI_Controller
         $this->load->model('inspection_model');
         $this->load->model('inspection_option_model');
         $this->load->model('auditor_model');
+
+        $data['token'] = get_cookie('pimis-token');
+        $this->load->library('user_data', $data);
+
+        $this->userTypes = $this->user_data->get_user_types();
+        $hasPermition = in_array('admin', $this->userTypes);
+        if (!$hasPermition) redirect('welcome/forbidden');
     }
 
     public function index()
@@ -25,7 +33,7 @@ class Controller_user extends CI_Controller
         $data['name']       = $this->session->nameth;
         $data['userType']   = $this->session_services->get_user_type_name($this->session->usertype);
         $sideBar['name']     = $this->session->nameth;
-        $sideBar['userType']     = array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
+        $sideBar['userTypes']     = $this->userTypes;
 
         $script['customScript'] = $this->load->view('controller_user/index_content/script', '', true);
 
@@ -45,7 +53,7 @@ class Controller_user extends CI_Controller
         $data['name']       = $this->session->nameth;
         $data['userType']   = $this->session_services->get_user_type_name($this->session->usertype);
         $sideBar['name']     = $this->session->nameth;
-        $sideBar['userType']     = array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
+        $sideBar['userTypes']     = $this->userTypes;
         $script['customScript'] = $this->load->view('controller_user/inspection_list/script', '', true);
 
         $component['header']            = $this->load->view('controller_user/component/header', '', true);
@@ -86,7 +94,7 @@ class Controller_user extends CI_Controller
 
             $data['insOpt']         = $insOpt->row_array();
             $sideBar['name']        = $this->session->nameth;
-            $sideBar['userType']    = array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
+            $sideBar['userTypes']     = $this->userTypes;
             $scriptData['insOpt']   = $insOpt->row_array();
             $script['customScript'] = $this->load->view('controller_user/subject/script', $scriptData, true);
 
@@ -201,7 +209,7 @@ class Controller_user extends CI_Controller
             $data['subject']    = $this->subject_model->get_a_subject($subjectID)->row_array();
             // $data['questions']  = $this->question_model->get_all_question($subjectID)->result_array();
             $sideBar['name']     = $this->session->nameth;
-            $sideBar['userType']     = array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
+            $sideBar['userTypes']     = $this->userTypes;
             $script['customScript'] = $this->load->view('controller_user/questions/script', $data, true);
 
             $component['header']            = $this->load->view('controller_user/component/header', '', true);
@@ -302,7 +310,7 @@ class Controller_user extends CI_Controller
         $data['name']       = $this->session->nameth;
         $data['userType']   = $this->session_services->get_user_type_name($this->session->usertype);
         $sideBar['name']     = $this->session->nameth;
-        $sideBar['userType']     = array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
+        $sideBar['userTypes']     = $this->userTypes;
         $script['customScript'] = $this->load->view('controller_user/index_content/script', '', true);
 
         $component['header']            = $this->load->view('controller_user/component/header', '', true);
@@ -380,7 +388,7 @@ class Controller_user extends CI_Controller
         $data['name']       = $this->session->nameth;
         $data['userType']   = $this->session_services->get_user_type_name($this->session->usertype);
         $sideBar['name']     = $this->session->nameth;
-        $sideBar['userType']     = array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
+        $sideBar['userTypes']     = $this->userTypes;
         $script['customScript'] = $this->load->view('controller_user/question_manage/script', '', true);
 
         $component['header']            = $this->load->view('controller_user/component/header', '', true);
@@ -452,7 +460,7 @@ class Controller_user extends CI_Controller
         $data['name']       = $this->session->nameth;
         $data['userType']   = $this->session_services->get_user_type_name($this->session->usertype);
         $sideBar['name']     = $this->session->nameth;
-        $sideBar['userType']     = array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
+        $sideBar['userTypes']     = $this->userTypes;
         $script['customScript'] = $this->load->view('controller_user/auditor_type/script', '', true);
 
         $component['header']            = $this->load->view('controller_user/component/header', '', true);

@@ -3,18 +3,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Auditor extends CI_Controller
 {
-
+	private $userTypes;
 	public function __construct()
 	{
 		parent::__construct();
 		$this->load->helper('url');
-		$this->load->helper('url');
 		$this->load->helper('cookie');
 		$this->load->library('session');
 		$this->load->library('session_services');
-
-		$user_data['token'] = get_cookie('pimis-token');
-		$this->load->library('user_data', $user_data);
 
 		$this->load->model('questionaire_model');
 		$this->load->model('summary_model');
@@ -22,12 +18,19 @@ class Auditor extends CI_Controller
 		$this->load->model('plan_model');
 		$this->load->model('inspection_option_model');
 		$this->load->model('inspection_notes_model');
+
+		$data['token'] = get_cookie('pimis-token');
+		$this->load->library('user_data', $data);
+
+		$this->userTypes = $this->user_data->get_user_types();
+		$hasPermition = in_array('admin', $this->userTypes);
+		if (!$hasPermition) redirect('welcome/forbidden');
 	}
 
 	public function index()
 	{
 		$sideBar['name'] 	= $this->session->nameth;
-		$sideBar['userType'] 	= array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
+		$sideBar['userTypes'] 	= $this->userTypes;
 		$script['custom'] = $this->load->view('auditor/index_content/script', '', true);
 		$header['custom'] = '';
 
@@ -46,7 +49,7 @@ class Auditor extends CI_Controller
 	{
 		$data['teams'] 		= $this->user_data->get_own_team();
 		$sideBar['name'] 	= $this->session->nameth;
-		$sideBar['userType']= array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
+		$sideBar['userTypes'] 	= $this->userTypes;
 		$script['custom'] = $this->load->view('auditor/calendar/script', $data, true);
 		$header['custom'] = $this->load->view('auditor/calendar/custom_header', '', true);
 
@@ -67,6 +70,7 @@ class Auditor extends CI_Controller
 		$data['teamPlan'] = $this->plan_model->get_a_team_plan($teamPlanID)->row_array();
 		$data['planDetail'] = $this->plan_model->get_a_plan_by_id($data['teamPlan']['PLAN_ID'])->row_array();
 		$sideBar['name'] 	= $this->session->nameth;
+		$sideBar['userTypes'] 	= $this->userTypes;
 		$dataForScript['planID'] = $teamPlanID;
 		$script['custom'] = $this->load->view('auditor/inspection_list/script', $dataForScript, true);
 
@@ -89,7 +93,7 @@ class Auditor extends CI_Controller
 		$data['planDetail'] = $this->plan_model->get_a_plan_by_id($data['teamPlan']['PLAN_ID'])->row_array();
 
 		$sideBar['name'] 	= $this->session->nameth;
-		$sideBar['userType'] 	= array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
+		$sideBar['userTypes'] 	= $this->userTypes;
 		$script['custom'] = $this->load->view('auditor/inspect/script', $data, true);
 		$header['custom'] = $this->load->view('auditor/inspect/custom_header', '', true);
 
@@ -129,6 +133,7 @@ class Auditor extends CI_Controller
 		$data['planDetail'] = $this->plan_model->get_a_plan_by_id($data['teamPlan']['PLAN_ID'])->row_array();
 
 		$sideBar['name'] 	= $this->session->nameth;
+		$sideBar['userTypes'] 	= $this->userTypes;
 		$script['custom'] = $this->load->view('auditor/inspected/script', $data, true);
 		$header['custom'] = $this->load->view('auditor/inspected/custom_header', '', true);
 
@@ -152,6 +157,7 @@ class Auditor extends CI_Controller
 		$data['name'] 	= $this->session->nameth;
 
 		$sideBar['name'] 	= $this->session->nameth;
+		$sideBar['userTypes'] 	= $this->userTypes;
 		$script['custom'] = $this->load->view('auditor/inspection_result/script', $data, true);
 		$component['header'] 			= $this->load->view('auditor/component/header', '', true);
 		$component['navbar'] 			= $this->load->view('auditor/component/navbar', '', true);
@@ -170,13 +176,11 @@ class Auditor extends CI_Controller
 		$data['teamPlan'] = $this->plan_model->get_a_team_plan($teamPlanID)->row_array();
 		$data['teamInspections'] = $this->team_inspection_model->get_team_inspection($teamPlanID)->result_array();
 		$data['planDetail'] = $this->plan_model->get_a_plan_by_id($data['teamPlan']['PLAN_ID'])->row_array();
-		// var_dump($data['teamInspections']);
-		// $inspection = $this->questionaire_model->get_a_inspection($inspectionID)->row_array();
 		$sumScore = $this->questionaire_model->get_sum_form_score_by_planid($teamPlanID)->row_array();
-		// $data['inspection'] = $inspection;
 		$data['sumScore'] = $sumScore;
 
 		$sideBar['name'] 	= $this->session->nameth;
+		$sideBar['userTypes'] 	= $this->userTypes;
 		$script['custom'] = $this->load->view('auditor/inspection_summary/script', $data, true);
 
 
@@ -489,7 +493,8 @@ class Auditor extends CI_Controller
 		} else {
 			$rs = [];
 		}
-
-		echo json_encode($rs);
+		$this->output
+			->set_content_type('application/json')
+			->set_output(json_encode($rs));
 	}
 }

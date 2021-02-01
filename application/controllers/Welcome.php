@@ -63,4 +63,9 @@ class Welcome extends CI_Controller
 		delete_cookie('pimis-token');
 		redirect('welcome/index');
 	}
+
+	public function forbidden()
+	{	
+		$this->load->view('welcome/fobidden_content/content');
+	}
 }

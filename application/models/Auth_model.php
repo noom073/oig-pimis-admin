@@ -17,6 +17,7 @@ class Auth_model extends CI_Model
             INNER JOIN PIMIS_USER_TYPE B 
                 ON A.TYPE_ID = B.TYPE_ID 
             WHERE A.USER_ID = ?
+            AND A.STATUS = 'y' 
             ORDER BY B.ORDER_NUMBER";
         $query = $this->oracle->query($sql, array($userID));
         return $query;

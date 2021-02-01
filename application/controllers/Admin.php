@@ -3,7 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Admin extends CI_Controller
 {
-
+	private $userTypes;
 	public function __construct()
 	{
 		parent::__construct();
@@ -14,16 +14,20 @@ class Admin extends CI_Controller
 		$this->load->model('user_model');
 		$this->load->model('privilege_model');
 
-		// $data['token'] = get_cookie('pimis-token');
-		// $this->load->library('user_data', $data);
+		$data['token'] = get_cookie('pimis-token');
+		$this->load->library('user_data', $data);
+
+		$this->userTypes = $this->user_data->get_user_types();
+		$hasPermition = in_array('admin', $this->userTypes);
+		if (!$hasPermition) redirect('welcome/forbidden');
 	}
 
 	public function index()
 	{
-		// $teams = $this->user_data->get_own_team();
 		$data['name'] 		= $this->session->nameth;
 		$data['userType'] 	= $this->session_services->get_user_type_name($this->session->usertype);
 		$sideBar['name'] 	= $this->session->nameth;
+		$sideBar['userTypes'] 	= $this->userTypes;
 		$script['customScript'] = $this->load->view('admin/index_content/script', '', true);
 
 		$component['header'] 			= $this->load->view('admin/component/header', '', true);
@@ -42,6 +46,7 @@ class Admin extends CI_Controller
 		$data['name'] 		= $this->session->nameth;
 		$data['userType'] 	= $this->session_services->get_user_type_name($this->session->usertype);
 		$sideBar['name'] 		= $this->session->nameth;
+		$sideBar['userTypes'] 	= $this->userTypes;
 		$script['customScript'] = $this->load->view('admin/list_user/script', '', true);
 
 		$component['header'] 			= $this->load->view('admin/component/header', '', true);
@@ -65,6 +70,7 @@ class Admin extends CI_Controller
 			return $r;
 		}, $allUserTypes);
 		$sideBar['name'] 		= $this->session->nameth;
+		$sideBar['userTypes'] 	= $this->userTypes;
 		$script['customScript'] = $this->load->view('admin/list_authorize/script', '', true);
 		$header['custom'] 		= $this->load->view('admin/list_authorize/header', '', true);
 
@@ -84,6 +90,7 @@ class Admin extends CI_Controller
 		$userID = $this->input->get('userID', true);
 		$data['userDetail'] 	= $this->user_model->get_user_detail($userID)->row_array();
 		$sideBar['name'] 		= $this->session->nameth;
+		$sideBar['userTypes'] 	= $this->userTypes;
 		$scriptData['userPrivileges'] = $this->user_model->get_privileges_per_user($userID)->result_array();
 		$script['customScript'] = $this->load->view('admin/user_authorize/script', $scriptData, true);
 		$header['custom'] 		= $this->load->view('admin/user_authorize/header', '', true);
