@@ -5,7 +5,7 @@
         <p>หน้าหลัก</p>
     </a>
 </li>
-<li class="nav-item has-treeview" id="auditor-manage-inspection-section">
+<!-- <li class="nav-item has-treeview" id="auditor-manage-inspection-section">
     <a href="#" class="nav-link" id="auditor-manage-inspection-subject">
         <i class="nav-icon fas fa-file-signature"></i>
         <p>
@@ -33,7 +33,7 @@
             </a>
         </li>
     </ul>
-</li>
+</li> -->
 <li class="nav-item has-treeview" id="auditor-inspection-section">
     <a href="#" class="nav-link" id="auditor-inspection-subject">
         <i class="nav-icon fas fa-file-signature"></i>

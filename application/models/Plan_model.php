@@ -214,8 +214,13 @@ class Plan_model extends CI_Model
 
     public function get_a_team_plan($id)
     {
-        $this->oracle->where('ROW_ID', $id);
-        $query = $this->oracle->get('PIMIS_AUDITOR_TEAM_IN_PLAN');
+        $sql = "SELECT a.ROW_ID, a.PLAN_ID, a.TEAM_ID, a.POLICY_SCORE, a.PREPARE_SCORE, a.STATUS,
+            b.TEAM_NAME, b.TEAM_YEAR 
+            FROM PIMIS_AUDITOR_TEAM_IN_PLAN a
+            INNER JOIN PIMIS_AUDITOR_TEAM b 
+                ON a.TEAM_ID = b.ROW_ID
+            WHERE a.ROW_ID = ?";
+        $query = $this->oracle->query($sql, array($id));
         return $query;
     }
 

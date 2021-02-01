@@ -73,8 +73,22 @@ class Auth_model extends CI_Model
     {
         $this->oracle->select('EMAIL');
         $this->oracle->where('USER_ID', $userID);
-        $this->oracle->where('ACTIVE', 'y');
+        $this->oracle->where('STATUS', 'y');
         $query = $this->oracle->get('PIMIS_USER');
         return $query;
+    }
+
+    public function get_own_team($email)
+    {
+        $sql = "SELECT ADT_TEAM
+            FROM PIMIS_AUDITOR
+            WHERE ADT_EMAIL = 'pichet.v@rtarf.mi.th'
+            AND ADT_STATUS = 'y'";
+        $query = $this->oracle->query($sql, array($email))->result_array();
+        $data = array_map(function ($r) {
+            return $r['ADT_TEAM'];
+        }, $query);
+        $teams = array_merge(array(), $data);        
+        return $teams;
     }
 }

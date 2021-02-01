@@ -9,8 +9,12 @@ class Auditor extends CI_Controller
 		parent::__construct();
 		$this->load->helper('url');
 		$this->load->helper('url');
+		$this->load->helper('cookie');
 		$this->load->library('session');
 		$this->load->library('session_services');
+
+		$user_data['token'] = get_cookie('pimis-token');
+		$this->load->library('user_data', $user_data);
 
 		$this->load->model('questionaire_model');
 		$this->load->model('summary_model');
@@ -40,9 +44,10 @@ class Auditor extends CI_Controller
 
 	public function calendar()
 	{
+		$data['teams'] 		= $this->user_data->get_own_team();
 		$sideBar['name'] 	= $this->session->nameth;
-		$sideBar['userType'] 	= array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
-		$script['custom'] = $this->load->view('auditor/calendar/script', '', true);
+		$sideBar['userType']= array('Administrator', 'Controller', 'Auditor', 'Viewer', 'User');
+		$script['custom'] = $this->load->view('auditor/calendar/script', $data, true);
 		$header['custom'] = $this->load->view('auditor/calendar/custom_header', '', true);
 
 		$component['header'] 			= $this->load->view('auditor/component/header', $header, true);

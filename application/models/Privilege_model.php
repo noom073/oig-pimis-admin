@@ -10,11 +10,15 @@ class Privilege_model extends CI_Model
         $this->oracle = $this->load->database('oracle', true);
     }
 
-    public function remove_privilege($userID, $typeID)
+    public function remove_privilege($userID, $typeID, $updater)
     {
+        $date = date("Y-m-d H:i:s");
+        $this->oracle->set('STATUS', 'n');
+        $this->oracle->set('USER_UPDATE', $updater);
+        $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
         $this->oracle->where('USER_ID', $userID);
         $this->oracle->where('TYPE_ID', $typeID);
-        $query = $this->oracle->delete('PIMIS_USER_PRIVILEGES');
+        $query = $this->oracle->update('PIMIS_USER_PRIVILEGES');
         return $query;
     }
 
@@ -23,6 +27,7 @@ class Privilege_model extends CI_Model
         $date = date("Y-m-d H:i:s");
         $this->oracle->set('USER_ID', $userID);
         $this->oracle->set('TYPE_ID', $typeID);
+        $this->oracle->set('STATUS', 'y');
         $this->oracle->set('USER_UPDATE', $updater);
         $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
         $query = $this->oracle->insert('PIMIS_USER_PRIVILEGES');

@@ -14,13 +14,13 @@ class Admin extends CI_Controller
 		$this->load->model('user_model');
 		$this->load->model('privilege_model');
 
-		$data['token'] = get_cookie('pimis-token');
-		$this->load->library('user_data', $data);
+		// $data['token'] = get_cookie('pimis-token');
+		// $this->load->library('user_data', $data);
 	}
 
 	public function index()
 	{
-		$token = $this->user_data->get_user_id();
+		// $teams = $this->user_data->get_own_team();
 		$data['name'] 		= $this->session->nameth;
 		$data['userType'] 	= $this->session_services->get_user_type_name($this->session->usertype);
 		$sideBar['name'] 	= $this->session->nameth;
@@ -161,6 +161,7 @@ class Admin extends CI_Controller
 	public function ajax_delete_user()
 	{
 		$data['userID'] = $this->input->post('userID');
+		$data['updater'] = $this->session->email;
 		$deletePrivileges = $this->user_model->delete_privileges($data);
 		$deleteUser = $this->user_model->delete_user($data);
 
@@ -238,7 +239,7 @@ class Admin extends CI_Controller
 		foreach ($toClearPrivileges as $r) { // REMOVE OTHER PRIVRILEGE
 			$data['privilege'] = $r;
 			$data['userID'] = $userID;
-			$data['result'] = $this->privilege_model->remove_privilege($userID, $r);
+			$data['result'] = $this->privilege_model->remove_privilege($userID, $r, $updater);
 			$result['remove'][] = $data;
 		}
 		foreach ($toAddPrivileges as $r) { // ADD NEW PRIVRILEGE

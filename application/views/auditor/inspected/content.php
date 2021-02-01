@@ -19,7 +19,7 @@
         <div class="container-fluid">
             <div class="card">
                 <div class="card-header">
-                    <div class="h3">การตรวจราชการ</div>
+                    <div class="h3">การตรวจราชการ (<?= "{$teamPlan['TEAM_NAME']}  ปี {$teamPlan['TEAM_YEAR']}" ?>)</div>
                     <u class="h4 d-block"><?= $planDetail['NPRT_ACM'] ?></u>
                     <small class="text-muted d-block"><?= $planDetail['NPRT_NAME'] ?></small>
                     <small class="text-danger d-block">ห้วงวันที่: <?= "{$planDetail['INS_DATE']} ถึง {$planDetail['FINISH_DATE']}" ?></small>

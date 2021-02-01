@@ -40,8 +40,8 @@ class Auditor_manage_inspection extends CI_Controller
 	public function set_plan()
 	{
 		$sideBar['name'] 	= $this->session->nameth;
-		$script['custom'] = $this->load->view('auditor_manage_inspection/set_plan/script', '', true);
-		$header['custom'] = $this->load->view('auditor_manage_inspection/set_plan/custom_header', '', true);
+		$script['custom'] 	= $this->load->view('auditor_manage_inspection/set_plan/script', '', true);
+		$header['custom'] 	= $this->load->view('auditor_manage_inspection/set_plan/custom_header', '', true);
 
 		$component['header'] 			= $this->load->view('auditor_manage_inspection/component/header', $header, true);
 		$component['navbar'] 			= $this->load->view('auditor_manage_inspection/component/navbar', '', true);

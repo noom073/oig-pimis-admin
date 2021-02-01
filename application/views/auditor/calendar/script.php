@@ -20,6 +20,26 @@
         };
 
 
+        const createEventData = dataEvent => {
+            let userTeamsID = <?= json_encode($teams) ?>;
+            let site = '<?= site_url('auditor/inspection_list') ?>';
+            let link = `${site}?team_plan_id=${dataEvent.teamPlanID}`;
+            let url = userTeamsID.includes(dataEvent.teamID) ? link: '';
+            let event = {
+                id: dataEvent.teamPlanID,
+                groupId: dataEvent.planID,
+                title: `${dataEvent.unitAcm} (${dataEvent.teamName})`,
+                start: dataEvent.dateStart,
+                end: dataEvent.dateEnd,
+                allDay: true,
+                url: url,
+                backgroundColor: dataEvent.color,
+                borderColor: 'white'
+            };
+            return event;
+        };
+
+
         const calendarEl = document.getElementById('calendar');
         const drawCalendar = async () => {
             let calendar = new FullCalendar.Calendar(calendarEl, {
@@ -38,21 +58,7 @@
                         url: '<?= site_url('data_service/ajax_inspection_data_calendar') ?>',
                         dataType: 'json'
                     }).done(function(res) {
-                        let link = '<?= site_url('auditor/inspection_list') ?>';
-                        let events = res.map(r => {
-                            return {
-                                id: r.teamPlanID,
-                                groupId: r.planID,
-                                title: `${r.unitAcm} (${r.teamName})`,
-                                start: r.dateStart,
-                                end: r.dateEnd,
-                                allDay: true,
-                                // url: '<?= site_url('auditor/inspection_list?team_plan_id=') ?>' + r.teamPlanID,
-                                url: `${link}?team_plan_id=${r.teamPlanID}`,
-                                backgroundColor: r.color,
-                                borderColor: 'white'
-                            };
-                        });
+                        let events = res.map(createEventData);
                         success(events);
                     }).fail((jhr, status, error) => {
                         fail(error);
@@ -60,7 +66,7 @@
                     });
                 },
                 eventClick: function(info) {
-                    console.log(info);
+                    // console.log(info);
                 },
                 loading: isLoading => {
                     if (isLoading) {

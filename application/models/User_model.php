@@ -16,6 +16,7 @@ class User_model extends CI_Model
             TO_CHAR(a.TIME_UPDATE, 'YYYY/MM/DD HH:MI:SS') as TIME_UPDATE
             FROM PIMIS_USER a 
             WHERE a.SYSTEM LIKE 'pimis'
+            AND a.STATUS = 'y'
             ORDER BY a.TIME_UPDATE DESC";
         $result = $this->oracle->query($sql);
         return $result;
@@ -33,6 +34,7 @@ class User_model extends CI_Model
     {
         $this->oracle->where('EMAIL', $email);
         $this->oracle->where('SYSTEM', 'pimis');
+        $this->oracle->where('STATUS', 'y');
         $query = $this->oracle->get('PIMIS_USER');
         return $query;
     }
@@ -47,6 +49,7 @@ class User_model extends CI_Model
         $this->oracle->set('EMAIL', $array['email']);
         $this->oracle->set('USER_ACTIVE', $array['activation']);
         $this->oracle->set('SYSTEM', 'pimis');
+        $this->oracle->set('STATUS', 'y');
         $this->oracle->set('USER_UPDATE', $array['updater']);
         $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
         $insert = $this->oracle->insert('PIMIS_USER');
@@ -54,6 +57,7 @@ class User_model extends CI_Model
             $this->oracle->select('USER_ID');
             $this->oracle->where('EMAIL', $array['email']);
             $this->oracle->where('SYSTEM', 'pimis');
+            $this->oracle->where('STATUS', 'y');
             $getUserID = $this->oracle->get('PIMIS_USER')->row_array();
             $result['status']   = $insert;
             $result['insertID'] = $getUserID['USER_ID'];
@@ -70,6 +74,7 @@ class User_model extends CI_Model
             $date = date("Y-m-d H:i:s");
             $this->oracle->set('USER_ID', $userID);
             $this->oracle->set('TYPE_ID', $r);
+            $this->oracle->set('STATUS', 'y');
             $this->oracle->set('USER_UPDATE', $updater);
             $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
             $insert = $this->oracle->insert('PIMIS_USER_PRIVILEGES');
@@ -83,15 +88,23 @@ class User_model extends CI_Model
 
     public function delete_user($array)
     {
+        $date = date("Y-m-d H:i:s");
+        $this->oracle->set('STATUS', 'n');
+        $this->oracle->set('USER_UPDATE', $array['updater']);
+        $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
         $this->oracle->where('USER_ID', $array['userID']);
-        $query = $this->oracle->delete('PIMIS_USER');
+        $query = $this->oracle->update('PIMIS_USER');
         return $query;
     }
 
     public function delete_privileges($array)
     {
+        $date = date("Y-m-d H:i:s");
+        $this->oracle->set('STATUS', 'n');
+        $this->oracle->set('USER_UPDATE', $array['updater']);
+        $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
         $this->oracle->where('USER_ID', $array['userID']);
-        $query = $this->oracle->delete('PIMIS_USER_PRIVILEGES');
+        $query = $this->oracle->update('PIMIS_USER_PRIVILEGES');
         return $query;
     }
 
@@ -122,6 +135,7 @@ class User_model extends CI_Model
     {
         $this->oracle->where('EMAIL', $array['email']);
         $this->oracle->where('USER_ID', $array['userID']);
+        $this->oracle->where('STATUS', 'y');
         $query = $this->oracle->get('PIMIS_USER');
         return $query;
     }
@@ -129,8 +143,9 @@ class User_model extends CI_Model
     public function get_privileges_per_user($userID)
     {
         $this->oracle->select('a.USER_ID, b.TYPE_ID, b.TYPE_NAME');
-        $this->oracle->join('PIMIS_USER_TYPE b', 'a.TYPE_ID = b.TYPE_ID');
+        $this->oracle->join('PIMIS_USER_TYPE b', "a.TYPE_ID = b.TYPE_ID");
         $this->oracle->where('a.USER_ID', $userID);
+        $this->oracle->where('a.STATUS', 'y');
         $query = $this->oracle->get('PIMIS_USER_PRIVILEGES a');
         return $query;
     }
