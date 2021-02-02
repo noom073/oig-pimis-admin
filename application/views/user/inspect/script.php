@@ -1,19 +1,23 @@
 <script>
     $(document).ready(function() {
-        $("li#auditor-inspection-section").addClass('menu-open');
-        $("a#auditor-inspection-subject").addClass('active');
-        $("a#auditor-calendar").addClass('active');
+        $("li#user-section").addClass('menu-open');
+        $("a#user-inspection-subject").addClass('active');
+        $("a#user-calendar").addClass('active');
 
+
+        let teamPlanID = <?= $teamPlan['ROW_ID'] ?>;
 
         const getQuestionsAndSubject = (inspectionOptionID) => {
             return $.post({
-                url: '<?= site_url('data_service/ajax_get_questions_by_inspection') ?>',
+                url: '<?= site_url('data_service/ajax_get_questions_and_score_user') ?>',
                 data: {
-                    inspectionOptionID: inspectionOptionID
+                    inspectionOptionID: inspectionOptionID,
+                    teamPlanID: teamPlanID
                 },
                 dataType: 'json'
             }).done().fail((jhr, status, error) => console.error(jhr, status, error));
         };
+
 
         let questionsAmount = 0;
         const generateTreeView = (data, rowNum = '') => {
@@ -23,24 +27,23 @@
                 if (r.child) {
                     let questions = '';
                     r.questions.forEach((question, index) => {
+                        let status = '';
+                        if (question.SCORE == '1') status = 'ดำเนินการ';
+                        else if (question.SCORE == '.5') status = 'อยู่ระหว่างดำเนินการ';
+                        else if (question.SCORE == '0') status = 'ไม่ได้ดำเนินการ';
+                        else status = 'N/A';
+
                         questionsAmount++;
                         questions += `<div class="pl-3 border-left my-2 question">
-                                    <div>- ${question.Q_NAME} ?</div>
+                                    <div class="question-name">- ${question.Q_NAME} ?</div>
                                     <div class="pl-5">
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="1.00" checked>   
-                                        <label class="text-success choice">1</label>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;                                    
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.75">                                        
-                                        <label class="text-info choice">0.75</label>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;  
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.50">                                        
-                                        <label class="text-danger choice">0.50</label>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;  
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.25">                                        
-                                        <label class="text-danger choice">0.25</label>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;  
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0">                                        
-                                        <label class="text-danger choice">0</label>
+                                        <button type="button"
+                                            class="btn btn-sm btn-primary user-evaluate" 
+                                            data-question-id="${question.Q_ID}" 
+                                            data-team-plan-id="${teamPlanID}">
+                                            รายละเอียด
+                                        </button>
+                                        <span>${status}</span>
                                     </div>
                                 </div>`;
                     });
@@ -52,24 +55,23 @@
                 } else {
                     html += `<li class="pl-2 border-left">${number} ${r.SUBJECT_NAME}`;
                     r.questions.forEach((question, index) => {
+                        let status = '';
+                        if (question.SCORE == '1') status = 'ดำเนินการ';
+                        else if (question.SCORE == '.5') status = 'อยู่ระหว่างดำเนินการ';
+                        else if (question.SCORE == '0') status = 'ไม่ได้ดำเนินการ';
+                        else status = 'N/A';
+
                         questionsAmount++;
                         html += `<div class="pl-3 border-left my-2 question">
-                                    <div>- ${question.Q_NAME} ?</div>
+                                    <div class="question-name">- ${question.Q_NAME} ?</div>
                                     <div class="pl-5">
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="1.00" checked>   
-                                        <label class="text-success choice">1</label>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;                                    
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.75">                                        
-                                        <label class="text-info choice">0.75</label>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;  
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.50">                                        
-                                        <label class="text-danger choice">0.50</label>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;  
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.25">                                        
-                                        <label class="text-danger choice">0.25</label>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;  
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0">                                        
-                                        <label class="text-danger choice">0</label>
+                                        <button type="button"
+                                            class="btn btn-sm btn-primary user-evaluate" 
+                                            data-question-id="${question.Q_ID}" 
+                                            data-team-plan-id="${teamPlanID}">
+                                            รายละเอียด
+                                        </button>
+                                        <span>${status}</span>
                                     </div>
                                 </div>`;
                     });
@@ -115,8 +117,9 @@
             $(".inspect-list").removeClass('active');
             $("#form-loading").addClass('d-none');
             $(this).addClass('active');
-            $("#auditor-inspect-form").data('inspection-option-id', inspectionOptionID);
-            $("#auditor-inspect-form").removeClass('d-none');
+            $("#user-evaluate-form").data('inspection-option-id', inspectionOptionID);
+            $("#evaluate-form").data('inspection-option-id', inspectionOptionID);
+            $("#user-evaluate-form").removeClass('d-none');
         });
 
 
@@ -125,33 +128,104 @@
         });
 
 
-        $(document).on('click', ".choice", function() {
-            $(this).prev('input[type="radio"]').prop('checked', true);
-            showScore();
+        // $(document).on('click', ".choice", function() {
+        //     $(this).prev('input[type="radio"]').prop('checked', true);
+        //     showScore();
+        // });
+
+
+        // $("#user-evaluate-form").submit(function(event) {
+        //     $("#user-evaluate-form-submit").prop('disabled', true);
+        //     event.preventDefault();
+        //     let thisForm = $(this);
+        //     let teamPlanID = thisForm.data('team-plan-id');
+        //     let inspectionOptionID = thisForm.data('inspection-option-id');
+        //     let planID = '<?= '' ?>';
+        //     let formData = thisForm.serialize() + `&teamPlanID=${teamPlanID}&inspectionOptionID=${inspectionOptionID}`;
+
+        //     $.post({
+        //         url: '<?= site_url('auditor/ajax_auditor_add_inpect_score') ?>',
+        //         data: formData,
+        //         dataType: 'json'
+        //     }).done(res => {
+        //         console.log(res);
+        //         if (res.status) {
+        //             alert('บันทึกข้อมูลสำเร็จ');
+        //             window.location.replace('<?= site_url('user/calendar') ?>');
+        //         } else {
+        //             alert('! บันทึกข้อมูลไม่สำเร็จ');
+        //         }
+        //     }).fail((jhr, status, error) => console.error(jhr, status, error));
+        // });
+
+
+        const getEvaluateData = (questionID, teamPlanID) => {
+            return $.post({
+                url: '<?= site_url('user/ajax_get_evaluate') ?>',
+                data: {
+                    questionID: questionID,
+                    teamPlanID: teamPlanID
+                },
+                dataType: 'json'
+            }).done().fail((jhr, status, error) => console.error(jhr, status, error));
+        };
+
+
+        const getFilesAttath = (questionID, teamPlanID) => {
+            return $.post({
+                url: '<?= site_url('user/ajax_get_files_attath') ?>',
+                data: {
+                    questionID: questionID,
+                    teamPlanID: teamPlanID
+                },
+                dataType: 'json'
+            }).done().fail((jhr, status, error) => console.error(jhr, status, error));
+        };
+
+
+        $(document).on('click', ".user-evaluate", async function() {
+            let title = $(this).parent().siblings('.question-name').text();
+            let questionID = $(this).data('question-id');
+            let teamPlanID = $(this).data('team-plan-id');
+            let evaluateData = await getEvaluateData(questionID, teamPlanID);
+            let filesAttath = await getFilesAttath(questionID, teamPlanID);
+            if ($.isEmptyObject(evaluateData) == false) {
+                $(`input:radio[name='evalValue'][value='${evaluateData.VALUE}']`).prop('checked', true);
+            }
+
+            let list = '';
+            filesAttath.forEach( (r,index) => {
+                console.log(r);
+                list += `<a target="blank" href="<?= base_url('assets/filesUpload/')?>${r.FILES_PATH}" title="${r.FILE_NAME}">File. ${index+1}</a> <br>`;
+            });
+            $("#list-files").html(list);
+            $("#evaluate-modal-label").text(title);
+            $("#evaluate-form").data({
+                questionID: questionID,
+                teamPlanID: teamPlanID
+            });
+            $("#evaluate-modal").modal();
         });
 
 
-        $("#auditor-inspect-form").submit(function(event) {
-            $("#auditor-inspect-form-submit").prop('disabled', true);
+        $("#evaluate-form").submit(function(event) {
             event.preventDefault();
             let thisForm = $(this);
-            let teamPlanID = thisForm.data('team-plan-id');
-            let inspectionOptionID = thisForm.data('inspection-option-id');
-            let planID = '<?= '' ?>';
-            let formData = thisForm.serialize() + `&teamPlanID=${teamPlanID}&inspectionOptionID=${inspectionOptionID}`;
-
+            // let questionID = thisForm.data('questionID');
+            // let teamPlanID = thisForm.data('teamPlanID');
+            let formData = new FormData(this);
+            formData.append('questionID', thisForm.data('questionID'));
+            formData.append('teamPlanID', thisForm.data('teamPlanID'));
+            formData.append('inspectionOptionID', thisForm.data('inspection-option-id'));
             $.post({
-                url: '<?= site_url('auditor/ajax_auditor_add_inpect_score') ?>',
+                url: '<?= site_url('user/ajax_set_evaluate') ?>',
                 data: formData,
-                dataType: 'json'
+                dataType: 'json',
+                contentType: false,
+                processData: false,
             }).done(res => {
                 console.log(res);
-                if (res.status) {
-                    alert('บันทึกข้อมูลสำเร็จ');
-                    window.location.replace('<?= site_url('auditor/calendar') ?>');
-                } else {
-                    alert('! บันทึกข้อมูลไม่สำเร็จ');
-                }
+                alert(res.update.text);
             }).fail((jhr, status, error) => console.error(jhr, status, error));
         });
 

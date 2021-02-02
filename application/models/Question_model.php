@@ -70,7 +70,8 @@ class Question_model extends CI_Model
         INNER JOIN PIMIS_INSPECTION_SCORE_AUDITOR b 
             ON a.Q_ID = b.QUESTION_ID 
             AND  b.TEAMPLAN_ID = ?
-        WHERE a.SUBJECT_ID = ?";
+        WHERE a.SUBJECT_ID = ?
+        AND a.STATUS = 'y'";
 
         $query = $this->oracle->query($sql, array($teamPlanID, $subjectID));
         return $query;
@@ -80,6 +81,20 @@ class Question_model extends CI_Model
     {
         $this->oracle->where('QUESTION_ID', $questionID);
         $query = $this->oracle->get('PIMIS_INSPECTION_SCORE_AUDITOR');
+        return $query;
+    }
+
+    public function get_question_and_score_user($teamPlanID, $subjectID)
+    {
+        $sql = "SELECT a.Q_ID, a.Q_NAME, TO_CHAR(b.VALUE) AS SCORE
+        FROM PIMIS_QUESTION a
+        LEFT JOIN PIMIS_USER_EVALUATE b 
+            ON a.Q_ID = b.QUESTION_ID 
+            AND  b.TEAMPLAN_ID = ?
+        WHERE a.SUBJECT_ID = ?
+        AND a.STATUS = 'y'";
+
+        $query = $this->oracle->query($sql, array($teamPlanID, $subjectID));
         return $query;
     }
 }

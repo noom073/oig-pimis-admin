@@ -35,16 +35,9 @@
                                 <div class="col-6">
                                     <div class="card">
                                         <div class="card-body">
-                                            <?php if ($inspection['INSPECTED'] == null) { ?>
-                                                <button type="button" class="list-group-item list-group-item-action inspect-list" data-inspection-option-id="<?= $inspection['INSPECTION_OPTION_ID'] ?>">
-                                                    <?= $inspection['INSPECTION_NAME'] ?>
-                                                </button>
-                                            <?php } else { ?>
-                                                <a href="<?= site_url("auditor/inspected?teamPlanID={$teamPlan['ROW_ID']}&inspectionOptionID={$inspection['INSPECTION_OPTION_ID']}") ?>" class="list-group-item list-group-item-action" data-inspection-option-id="<?= $inspection['INSPECTION_OPTION_ID'] ?>">
-                                                    <?= $inspection['INSPECTION_NAME'] ?>
-                                                </a>
-                                                <small class="mt-2 d-block text-success text-right">บันทึกข้อมูลแล้ว</small>
-                                            <?php } ?>
+                                            <button type="button" class="list-group-item list-group-item-action inspect-list" data-inspection-option-id="<?= $inspection['INSPECTION_OPTION_ID'] ?>">
+                                                <?= $inspection['INSPECTION_NAME'] ?>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -54,11 +47,11 @@
                         <div>
                             <div class="mb-3">
                                 <div id="form-loading" class="d-none">Loading data...</div>
-                                <form id="auditor-inspect-form" class="d-none" data-team-plan-id="<?= $teamPlan['ROW_ID'] ?>">
+                                <form id="user-evaluate-form" class="d-none" data-team-plan-id="<?= $teamPlan['ROW_ID'] ?>">
                                     <h5>ฟอร์ม</h5>
                                     <div id="form-questionaire"></div>
                                     <div>
-                                        <button class="btn btn-sm btn-primary" id="auditor-inspect-form-submit">บันทึก</button>
+                                        <button class="btn btn-sm btn-primary" id="user-evaluate-form-submit">บันทึก</button>
                                         <button class="btn btn-sm btn-light" type="button">ปิด</button>
                                     </div>
                                     <div id="result-auditor-score" class="invisible">
@@ -73,4 +66,54 @@
             </div>
         </div>
     </section>
+
+    <div>
+        <!-- USER PUT ITEM TO EVALUATE Modal -->
+        <div class="modal fade" id="evaluate-modal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="evaluate-modal-label"></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="evaluate-form" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label>การปฏิบัติ</label>
+                                <div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="evalValue" value="1" checked>
+                                        <label class="form-check-label text-success">ดำเนินการ</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="evalValue" value=".5">
+                                        <label class="form-check-label text-info">อยู่ระหว่างดำเนินการ</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="evalValue" value="0">
+                                        <label class="form-check-label text-danger">ไม่ได้ดำเนินการ</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>ไฟล์แนบใหม่</label>
+                                <input type="file" class="form-control" name="evalFile">
+                                <div class="mt-2">
+                                    <label>รายการไฟล์แนบ:</label>
+                                    <div id="list-files"></div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">บันทึก</button>
+                            <button type="reset" class="btn btn-secondary">Reset</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
+                        </form>
+                    </div>
+                    <div class="modal-footer"></div>
+                </div>
+            </div>
+        </div>
+        <!-- END USER PUT ITEM TO EVALUATE Modal -->
+    </div>
 </div>
