@@ -50,6 +50,7 @@ class User_model extends CI_Model
         $this->oracle->set('USER_ACTIVE', $array['activation']);
         $this->oracle->set('SYSTEM', 'pimis');
         $this->oracle->set('STATUS', 'y');
+        $this->oracle->set('UNIT_ID', $array['unitID']);
         $this->oracle->set('USER_UPDATE', $array['updater']);
         $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
         $insert = $this->oracle->insert('PIMIS_USER');
@@ -124,6 +125,7 @@ class User_model extends CI_Model
         $this->oracle->set('IDP', $array['idp']);
         $this->oracle->set('EMAIL', $array['email']);
         $this->oracle->set('USER_ACTIVE', $array['activation']);
+        $this->oracle->set('UNIT_ID', $array['unitID']);
         $this->oracle->set('USER_UPDATE', $array['updater']);
         $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
         $this->oracle->where('USER_ID', $array['userID']);

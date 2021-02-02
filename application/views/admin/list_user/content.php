@@ -91,6 +91,14 @@
 
                             <div class="form-row">
                                 <div class="form-group col-md-6">
+                                    <div class="loading-unit"></div>
+                                    <input type="text" class="form-control" id="create-user-form-search-unit" placeholder="ค้นหาหน่วย">
+                                    <select name="unitID" class="form-control" id="create-user-form-unit" required></select>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
                                     <label>เปิด/ปิด การใช้งาน</label>
                                     <select class="form-control" name="activation" id="act-create-user-form">
                                         <option value="y">เปิด</option>
@@ -153,6 +161,14 @@
 
                                 <div class="form-group col-md-6">
                                     <input type="text" class="form-control" id="idp-update-user-form" placeholder="เลขประชาชน" name="idp" maxlength="13">
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <div class="loading-unit"></div>
+                                    <input type="text" class="form-control" id="unit-search-update-user-form" placeholder="ค้นหาหน่วย">
+                                    <select name="unitID" id="unit-update-user-form" class="form-control" required></select>
                                 </div>
                             </div>
 

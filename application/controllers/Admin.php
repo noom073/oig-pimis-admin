@@ -142,6 +142,7 @@ class Admin extends CI_Controller
 		$data['email'] 		= $email[0] . '@rtarf.mi.th';
 		$data['userType']	= array('2');
 		$data['activation'] = $this->input->post('activation');
+		$data['unitID'] = $this->input->post('unitID');
 		$data['updater'] 	= $this->session->email;
 
 		$userDuplicate = $this->user_model->chk_user_duplicate($data['email'])->num_rows();
@@ -210,6 +211,7 @@ class Admin extends CI_Controller
 		$data['email'] 		= $email[0] . '@rtarf.mi.th';
 		$data['activation'] = $this->input->post('activation');
 		$data['userID'] 	= $this->input->post('userID');
+		$data['unitID'] 	= $this->input->post('unitID');
 		$data['updater'] 	= $this->session->email;
 
 		$userDuplicate = $this->user_model->chk_user_for_update($data)->num_rows();

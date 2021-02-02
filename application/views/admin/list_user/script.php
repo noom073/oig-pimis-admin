@@ -163,9 +163,26 @@
         }
 
 
+        $("#unit-search-update-user-form").blur(function() {
+            let text = $(this).val();
+            let unitList = units.filter(r => r.NPRT_ACM.includes(text) || r.NPRT_NAME.includes(text));
+            console.log(unitList);
+            let option = '<option value="">หน่วย</option>';
+            unitList.forEach(r => {
+                option += `<option value="${r.NPRT_UNIT}">${r.NPRT_ACM}</option>`;
+            });
+            $("#unit-update-user-form").html(option);
+        });
+
+
         $(document).on('click', ".update-user", async function() {
             let userID = $(this).data('user-id');
             let userDetail = await getUserDetail(userID);
+            let unitOption = '<option value="">หน่วย</option>';
+            units.forEach(r => {
+                unitOption += `<option value="${r.NPRT_UNIT}" ${r.NPRT_UNIT == userDetail.UNIT_ID ? 'selected':''}>${r.NPRT_ACM}</option>\n`;
+            });
+            $("#unit-update-user-form").html(unitOption);
             $("#title-update-user-form").val(userDetail.TITLE);
             $("#fname-update-user-form").val(userDetail.FIRSTNAME);
             $("#lname-update-user-form").val(userDetail.LASTNAME);
@@ -216,6 +233,35 @@
                     }, 5000);
                 }
             }).fail((jhr, status, error) => console.error(jhr, status, error));
+        });
+
+
+        const getAllUnits = () => {
+            return $.get({
+                url: '<?= site_url('data_service/ajax_get_nprt_units') ?>',
+                dataType: 'json'
+            }).done().fail((jhr, status, error) => console.error(jhr, status, error));
+        };
+
+
+        let units = [];
+        const storeUnitToVar = async () => {
+            $(".loading-unit").text('Loading...');
+            units = await getAllUnits();
+            $(".loading-unit").text('');
+        };
+        storeUnitToVar();
+
+
+        $("#create-user-form-search-unit").blur(function() {
+            let text = $(this).val();
+            let unitList = units.filter(r => r.NPRT_ACM.includes(text) || r.NPRT_NAME.includes(text));
+            console.log(unitList);
+            let option = '<option value="">หน่วย</option>';
+            unitList.forEach(r => {
+                option += `<option value="${r.NPRT_UNIT}">${r.NPRT_ACM}</option>`;
+            });
+            $("#create-user-form-unit").html(option);
         });
     });
 </script>
