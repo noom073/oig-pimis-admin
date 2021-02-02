@@ -92,4 +92,13 @@ class Auth_model extends CI_Model
         $teams = array_merge(array(), $data);        
         return $teams;
     }
+
+    public function get_unit_user($userID)
+    {
+        $sql = "SELECT UNIT_ID 
+        FROM PIMIS_USER 
+        WHERE USER_ID = ?";
+        $query = $this->oracle->query($sql, array($userID))->row_array();
+        return $query['UNIT_ID'];
+    }
 }

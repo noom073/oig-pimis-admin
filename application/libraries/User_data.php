@@ -46,4 +46,11 @@ class User_data
         $types = array_merge($result);
         return $types;
     }
+
+    public function get_unit_id_user()
+    {
+        $userID = $this->get_user_id();
+        $data = $this->CI->auth_model->get_unit_user($userID);
+        return $data;
+    }
 }

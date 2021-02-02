@@ -28,13 +28,30 @@
 
 
         $("#search-units").blur(function() {
-            let unit = units.filter(r => r.NPRT_ACM.includes($(this).val()))
-                .sort((a, b) => a.NPRT_UNIT - b.NPRT_UNIT);
+            console.log('press');
+            let text = $(this).val();
+            let unit = units.filter(r => r.NPRT_ACM.includes(text) || r.NPRT_NAME.includes(text))
+            .sort((a, b) => a.NPRT_UNIT - b.NPRT_UNIT);
+            console.log(unit);
             let option = '';
             unit.forEach(r => {
                 option += `<option value="${r.NPRT_UNIT}" title="${r.NPRT_NAME}">${r.NPRT_ACM}</option>`;
             });
             $("#nprt-units").html(option);
+        });
+
+
+        $("#edit-plan-modal-search-units").blur(function() {
+            console.log('press');
+            let text = $(this).val();
+            let unit = units.filter(r => r.NPRT_ACM.includes(text) || r.NPRT_NAME.includes(text))
+            .sort((a, b) => a.NPRT_UNIT - b.NPRT_UNIT);
+            console.log(unit);
+            let option = '';
+            unit.forEach(r => {
+                option += `<option value="${r.NPRT_UNIT}" title="${r.NPRT_NAME}">${r.NPRT_ACM}</option>`;
+            });
+            $("#edit-plan-modal-nprt-units").html(option);
         });
 
 
