@@ -256,4 +256,31 @@ class Plan_model extends CI_Model
         $query = $this->oracle->get('PIMIS_INSPECTION_SUMMARY');
         return $query->num_rows() == 0 ? false : true;
     }
+
+    public function check_team_plan($teamPlanID, $unitID)
+    {
+        $sql = "SELECT *
+            FROM PIMIS_AUDITOR_TEAM_IN_PLAN a
+            INNER JOIN PITS_PLAN b 
+                ON a.PLAN_ID = b.ID 
+                AND b.INS_UNIT = ?
+            WHERE a.ROW_ID = ?";
+        $query = $this->oracle->query($sql, array($unitID, $teamPlanID));
+        return $query->num_rows() ? true : false;
+    }
+
+    public function check_team_plan_by_auditor($email, $teamPlanID)
+    {
+        $sql = "SELECT *
+            FROM PIMIS_AUDITOR_TEAM_IN_PLAN a
+            INNER JOIN PIMIS_AUDITOR_TEAM b 
+                ON a.TEAM_ID = b.ROW_ID 
+            INNER JOIN PIMIS_AUDITOR c 
+                ON c.ADT_TEAM = b.ROW_ID 
+                AND c.ADT_EMAIL = ?
+                AND c.ADT_STATUS = 'y'
+            WHERE a.ROW_ID = ?";
+        $query = $this->oracle->query($sql, array($email, $teamPlanID));
+        return $query->num_rows() ? true : false;
+    }
 }

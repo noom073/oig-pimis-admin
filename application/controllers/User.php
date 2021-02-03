@@ -65,24 +65,32 @@ class User extends CI_Controller
     public function inspect()
     {
         $teamPlanID = $this->input->get('team_plan_id', true);
-        $data['inspections'] = $this->team_inspection_model->get_team_inspection_and_check_inspected_user($teamPlanID)->result_array();
-        $data['teamPlan'] = $this->plan_model->get_a_team_plan($teamPlanID)->row_array();
-        $data['planDetail'] = $this->plan_model->get_a_plan_by_id($data['teamPlan']['PLAN_ID'])->row_array();
-
-        $sideBar['name']     = $this->session->nameth;
-        $sideBar['userTypes']     = $this->userTypes;
-        $script['custom'] = $this->load->view('user/inspect/script', $data, true);
-        $header['custom'] = $this->load->view('user/inspect/custom_header', '', true);
-
-        $component['header']             = $this->load->view('user/component/header', $header, true);
-        $component['navbar']             = $this->load->view('user/component/navbar', '', true);
-        $component['mainSideBar']         = $this->load->view('sidebar/main-sidebar', $sideBar, true);
-        $component['mainFooter']         = $this->load->view('user/component/footer_text', '', true);
-        $component['controllerSidebar'] = $this->load->view('user/component/controller_sidebar', '', true);
-        $component['contentWrapper']     = $this->load->view('user/inspect/content', $data, true);
-        $component['jsScript']             = $this->load->view('user/component/main_script', $script, true);
-
-        $this->load->view('user/template', $component);
+        $unitID = $this->user_data->get_unit_id_user();
+        $checkTeamPlan = $this->plan_model->check_team_plan($teamPlanID, $unitID);
+        var_dump($checkTeamPlan);
+        if ($checkTeamPlan) {
+            $data['inspections'] = $this->team_inspection_model->get_team_inspection_and_check_inspected_user($teamPlanID)->result_array();
+            $data['teamPlan'] = $this->plan_model->get_a_team_plan($teamPlanID)->row_array();
+            $data['planDetail'] = $this->plan_model->get_a_plan_by_id($data['teamPlan']['PLAN_ID'])->row_array();
+    
+            $sideBar['name']     = $this->session->nameth;
+            $sideBar['userTypes']     = $this->userTypes;
+            $script['custom'] = $this->load->view('user/inspect/script', $data, true);
+            $header['custom'] = $this->load->view('user/inspect/custom_header', '', true);
+    
+            $component['header']             = $this->load->view('user/component/header', $header, true);
+            $component['navbar']             = $this->load->view('user/component/navbar', '', true);
+            $component['mainSideBar']         = $this->load->view('sidebar/main-sidebar', $sideBar, true);
+            $component['mainFooter']         = $this->load->view('user/component/footer_text', '', true);
+            $component['controllerSidebar'] = $this->load->view('user/component/controller_sidebar', '', true);
+            $component['contentWrapper']     = $this->load->view('user/inspect/content', $data, true);
+            $component['jsScript']             = $this->load->view('user/component/main_script', $script, true);
+    
+            $this->load->view('user/template', $component);
+        } else {
+            redirect('user/calendar');
+        }
+        
     }
 
     // public function inspected()
