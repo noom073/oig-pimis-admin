@@ -28,10 +28,10 @@
                     let questions = '';
                     r.questions.forEach((question, index) => {
                         let status = '';
-                        if (question.SCORE == '1') status = 'ดำเนินการ';
-                        else if (question.SCORE == '.5') status = 'อยู่ระหว่างดำเนินการ';
-                        else if (question.SCORE == '0') status = 'ไม่ได้ดำเนินการ';
-                        else status = 'N/A';
+                        if (question.SCORE == '1') status = '<span class="text-success">ดำเนินการ</span>';
+                        else if (question.SCORE == '.5') status = '<span class="text-info">อยู่ระหว่างดำเนินการ</span>';
+                        else if (question.SCORE == '0') status = '<span class="text-danger">ไม่ได้ดำเนินการ</span>';
+                        else status = '<span>N/A</span>';
 
                         questionsAmount++;
                         questions += `<div class="pl-3 border-left my-2 question">
@@ -43,7 +43,7 @@
                                             data-team-plan-id="${teamPlanID}">
                                             รายละเอียด
                                         </button>
-                                        <span>${status}</span>
+                                        ${status}
                                     </div>
                                 </div>`;
                     });
@@ -56,10 +56,10 @@
                     html += `<li class="pl-2 border-left">${number} ${r.SUBJECT_NAME}`;
                     r.questions.forEach((question, index) => {
                         let status = '';
-                        if (question.SCORE == '1') status = 'ดำเนินการ';
-                        else if (question.SCORE == '.5') status = 'อยู่ระหว่างดำเนินการ';
-                        else if (question.SCORE == '0') status = 'ไม่ได้ดำเนินการ';
-                        else status = 'N/A';
+                        if (question.SCORE == '1') status = '<span class="text-success">ดำเนินการ</span>';
+                        else if (question.SCORE == '.5') status = '<span class="text-info">อยู่ระหว่างดำเนินการ</span>';
+                        else if (question.SCORE == '0') status = '<span class="text-danger">ไม่ได้ดำเนินการ</span>';
+                        else status = '<span>N/A</span>';
 
                         questionsAmount++;
                         html += `<div class="pl-3 border-left my-2 question">
@@ -71,7 +71,7 @@
                                             data-team-plan-id="${teamPlanID}">
                                             รายละเอียด
                                         </button>
-                                        <span>${status}</span>
+                                        ${status}
                                     </div>
                                 </div>`;
                     });
@@ -92,28 +92,28 @@
         };
 
 
-        const summaryScore = () => {
-            let countScore = 0;
-            $(".auditor-score:checked").each(function(el) {
-                let score = (+$(this).val());
-                countScore += score;
-            });
-            return countScore;
-        };
+        // const summaryScore = () => {
+        //     let countScore = 0;
+        //     $(".auditor-score:checked").each(function(el) {
+        //         let score = (+$(this).val());
+        //         countScore += score;
+        //     });
+        //     return countScore;
+        // };
 
 
-        const showScore = () => {
-            const score = summaryScore();
-            $("#result-auditor-score").removeClass('invisible');
-            $("#total-auditor-score").text(`${score} คะแนน ; ทั้งหมด ${questionsAmount} คะแนน`);
-        };
+        // const showScore = () => {
+        //     const score = summaryScore();
+        //     $("#result-auditor-score").removeClass('invisible');
+        //     $("#total-auditor-score").text(`${score} คะแนน ; ทั้งหมด ${questionsAmount} คะแนน`);
+        // };
 
 
         $(".inspect-list").click(async function() {
             $("#form-loading").removeClass('d-none');
             let inspectionOptionID = $(this).data('inspection-option-id');
             await drawQuestionForm(inspectionOptionID);
-            showScore();
+            // showScore();
             $(".inspect-list").removeClass('active');
             $("#form-loading").addClass('d-none');
             $(this).addClass('active');
@@ -123,9 +123,9 @@
         });
 
 
-        $(document).on('change', ".auditor-score", () => {
-            showScore();
-        });
+        // $(document).on('change', ".auditor-score", () => {
+        //     showScore();
+        // });
 
 
         // $(document).on('click', ".choice", function() {
@@ -194,9 +194,9 @@
             }
 
             let list = '';
-            filesAttath.forEach( (r,index) => {
+            filesAttath.forEach((r, index) => {
                 console.log(r);
-                list += `<a target="blank" href="<?= base_url('assets/filesUpload/')?>${r.FILES_PATH}" title="${r.FILE_NAME}">File. ${index+1}</a> <br>`;
+                list += `<a target="blank" href="<?= base_url('assets/filesUpload/') ?>${r.FILES_PATH}" title="${r.FILE_NAME}">File. ${index+1}</a> <br>`;
             });
             $("#list-files").html(list);
             $("#evaluate-modal-label").text(title);
@@ -226,6 +226,8 @@
             }).done(res => {
                 console.log(res);
                 alert(res.update.text);
+                let inspectionOptionID = thisForm.data('inspection-option-id');
+                drawQuestionForm(inspectionOptionID);
             }).fail((jhr, status, error) => console.error(jhr, status, error));
         });
 
