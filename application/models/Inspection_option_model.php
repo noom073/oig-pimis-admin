@@ -60,11 +60,11 @@ class Inspection_option_model extends CI_Model
         return $query;
     }
 
-    public function delete_inspection_option($inspectionOptionID)
+    public function delete_inspection_option($inspectionOptionID, $updater)
     {
         $date = date("Y-m-d H:i:s");
         $this->oracle->set('STATUS', 'n');
-        $this->oracle->set('USER_UPDATE', $this->session->email);
+        $this->oracle->set('USER_UPDATE', $updater);
         $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
         $this->oracle->where('ROW_ID', $inspectionOptionID);
         $query = $this->oracle->update('PIMIS_INSPECTION_OPTION');

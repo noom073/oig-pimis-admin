@@ -34,7 +34,7 @@ class Question_model extends CI_Model
         $this->oracle->set('SUBJECT_ID', $array['subjectID']);
         $this->oracle->set('Q_ORDER', $array['questionOrder']);
         $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
-        $this->oracle->set('USER_UPDATE', $this->session->email);
+        $this->oracle->set('USER_UPDATE', $array['updater']);
         $this->oracle->set('STATUS', 'y');
         $query = $this->oracle->insert('PIMIS_QUESTION');
         return $query;
@@ -46,18 +46,18 @@ class Question_model extends CI_Model
         $this->oracle->set('Q_NAME', $array['questionName']);
         $this->oracle->set('Q_ORDER', $array['questionOrder']);
         $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
-        $this->oracle->set('USER_UPDATE', $this->session->email);
+        $this->oracle->set('USER_UPDATE', $array['updater']);
         $this->oracle->where('Q_ID', $array['questionID']);
         $query = $this->oracle->update('PIMIS_QUESTION');
         return $query;
     }
 
-    public function delete_question($questionID)
+    public function delete_question($questionID, $updater)
     {
         $date = date("Y-m-d H:i:s");
         $this->oracle->set('STATUS', 'n');
         $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
-        $this->oracle->set('USER_UPDATE', $this->session->email);
+        $this->oracle->set('USER_UPDATE', $updater);
         $this->oracle->where('Q_ID', $questionID);
         $query = $this->oracle->update('PIMIS_QUESTION');
         return $query;

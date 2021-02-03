@@ -27,7 +27,7 @@ class User extends CI_Controller
 
     public function index()
     {
-        $sideBar['name']        = $this->session->nameth;
+        $sideBar['name']        = $this->user_data->get_name();
         $sideBar['userTypes']   = $this->userTypes;
         $script['custom']       = $this->load->view('user/index_content/script', '', true);
         $header['custom']       = '';
@@ -46,7 +46,7 @@ class User extends CI_Controller
     public function calendar()
     {
         $data['unitID']          = $this->user_data->get_unit_id_user();
-        $sideBar['name']        = $this->session->nameth;
+        $sideBar['name']        = $this->user_data->get_name();
         $sideBar['userTypes']   = $this->userTypes;
         $script['custom']       = $this->load->view('user/calendar/script', $data, true);
         $header['custom']       = $this->load->view('user/calendar/custom_header', '', true);
@@ -73,7 +73,7 @@ class User extends CI_Controller
             $data['teamPlan'] = $this->plan_model->get_a_team_plan($teamPlanID)->row_array();
             $data['planDetail'] = $this->plan_model->get_a_plan_by_id($data['teamPlan']['PLAN_ID'])->row_array();
     
-            $sideBar['name']     = $this->session->nameth;
+            $sideBar['name']     = $this->user_data->get_name();
             $sideBar['userTypes']     = $this->userTypes;
             $script['custom'] = $this->load->view('user/inspect/script', $data, true);
             $header['custom'] = $this->load->view('user/inspect/custom_header', '', true);
@@ -126,7 +126,7 @@ class User extends CI_Controller
         $updater = $this->session->email;
 
         $config['upload_path']          = './assets/filesUpload/';
-        $config['allowed_types']        = 'gif|jpg|jpeg|png|rar|zip|tar|tar.gz|doc|docx|ppt|pptx|xls|xlsx';
+        $config['allowed_types']        = 'gif|jpg|jpeg|png|rar|zip|tar|tar.gz|doc|docx|ppt|pptx|xls|xlsx|pdf';
         $config['max_size']             = 2048;
         $config['file_name']            = random_string('alnum', 64);
 

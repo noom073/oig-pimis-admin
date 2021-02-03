@@ -30,9 +30,9 @@ class Controller_user extends CI_Controller
 
     public function index()
     {
-        $data['name']       = $this->session->nameth;
+        $data['name']       = $this->user_data->get_name();
         $data['userType']   = $this->session_services->get_user_type_name($this->session->usertype);
-        $sideBar['name']     = $this->session->nameth;
+        $sideBar['name']     = $this->user_data->get_name();
         $sideBar['userTypes']     = $this->userTypes;
 
         $script['customScript'] = $this->load->view('controller_user/index_content/script', '', true);
@@ -50,9 +50,9 @@ class Controller_user extends CI_Controller
 
     public function inspection_list()
     {
-        $data['name']       = $this->session->nameth;
+        $data['name']       = $this->user_data->get_name();
         $data['userType']   = $this->session_services->get_user_type_name($this->session->usertype);
-        $sideBar['name']     = $this->session->nameth;
+        $sideBar['name']     = $this->user_data->get_name();
         $sideBar['userTypes']     = $this->userTypes;
         $script['customScript'] = $this->load->view('controller_user/inspection_list/script', '', true);
 
@@ -93,7 +93,7 @@ class Controller_user extends CI_Controller
         if ($insOpt->num_rows()) {
 
             $data['insOpt']         = $insOpt->row_array();
-            $sideBar['name']        = $this->session->nameth;
+            $sideBar['name']        = $this->user_data->get_name();
             $sideBar['userTypes']     = $this->userTypes;
             $scriptData['insOpt']   = $insOpt->row_array();
             $script['customScript'] = $this->load->view('controller_user/subject/script', $scriptData, true);
@@ -118,6 +118,7 @@ class Controller_user extends CI_Controller
         $data['subjectName']    = $subjectName;
         $data['subjectOrder']   = $this->input->post('subject_order');
         $data['inspectionID']   = $this->input->post('inspectionID');
+        $data['updater']        = $this->user_data->get_email();
 
         $insert = $this->subject_model->add_subject($data);
         if ($insert) {
@@ -140,6 +141,7 @@ class Controller_user extends CI_Controller
         $data['subjectParent']  = $this->input->post('subject_parent');
         $data['subjectOrder']   = $this->input->post('subject_order');
         $data['inspectionID']   = $this->input->post('inspectionID');
+        $data['updater']   = $this->user_data->get_email();
         $update = $this->subject_model->update_subject($data);
         if ($update) {
             $result['status']   = true;
@@ -161,6 +163,7 @@ class Controller_user extends CI_Controller
         $data['inspectionID']   = $this->input->post('inspectionID');
         $data['subjectOrder']   = $this->input->post('subjectOrder');
         $data['subjectLevel']   = $this->input->post('subjectLevel');
+        $data['updater']        = $this->user_data->get_email();
 
         $insert = $this->subject_model->add_sub_subject($data);
 
@@ -181,6 +184,7 @@ class Controller_user extends CI_Controller
         $data['questionName']   = $this->center_services->convert_th_num_to_arabic($this->input->post('questionName'));
         $data['questionOrder']  = $this->input->post('questionOrder');
         $data['subjectID']      = $this->input->post('subjectID');
+        $data['updater']        = $this->user_data->get_email();
 
         $insert = $this->question_model->add_question($data);
         if ($insert) {
@@ -204,11 +208,11 @@ class Controller_user extends CI_Controller
         if (!$hasSubjectExist) {
             redirect('controller_user/subject');
         } else {
-            $data['name']       = $this->session->nameth;
+            $data['name']       = $this->user_data->get_name();
             $data['userType']   = $this->session_services->get_user_type_name($this->session->usertype);
             $data['subject']    = $this->subject_model->get_a_subject($subjectID)->row_array();
             // $data['questions']  = $this->question_model->get_all_question($subjectID)->result_array();
-            $sideBar['name']     = $this->session->nameth;
+            $sideBar['name']     = $this->user_data->get_name();
             $sideBar['userTypes']     = $this->userTypes;
             $script['customScript'] = $this->load->view('controller_user/questions/script', $data, true);
 
@@ -229,6 +233,7 @@ class Controller_user extends CI_Controller
         $data['questionName']   = $this->center_services->convert_th_num_to_arabic($this->input->post('questionName'));
         $data['questionOrder']  = $this->input->post('questionOrder');
         $data['questionID']     = $this->input->post('questionID');
+        $data['updater']        = $this->user_data->get_email();
         $update = $this->question_model->update_question($data);
         if ($update) {
             $result['status']   = true;
@@ -247,7 +252,8 @@ class Controller_user extends CI_Controller
         $questionID = $this->input->post('questionID');
         $checkInAuditorScore = $this->question_model->check_question_id_auditor_score($questionID);
         if ($checkInAuditorScore->num_rows() == 0) {
-            $delete = $this->question_model->delete_question($questionID);
+            $updater = $this->user_data->get_email();
+            $delete = $this->question_model->delete_question($questionID, $updater);
             if ($delete) {
                 $result['status']   = true;
                 $result['text']     = 'ลบข้อมูลสำเร็จ';
@@ -286,7 +292,8 @@ class Controller_user extends CI_Controller
         }
 
         if ($inSubjectTable['status'] == false && $InQuestiontTable['status'] == false) {
-            $delete = $this->subject_model->delete_subject($subjectID);
+            $updater = $this->user_data->get_email();
+            $delete = $this->subject_model->delete_subject($subjectID, $updater);
             if ($delete) {
                 $result['status']   = true;
                 $result['text']     = 'ลบข้อมูลสำเร็จ';
@@ -307,9 +314,9 @@ class Controller_user extends CI_Controller
 
     public function inspection()
     {
-        $data['name']       = $this->session->nameth;
+        $data['name']       = $this->user_data->get_name();
         $data['userType']   = $this->session_services->get_user_type_name($this->session->usertype);
-        $sideBar['name']     = $this->session->nameth;
+        $sideBar['name']     = $this->user_data->get_name();
         $sideBar['userTypes']     = $this->userTypes;
         $script['customScript'] = $this->load->view('controller_user/index_content/script', '', true);
 
@@ -328,7 +335,7 @@ class Controller_user extends CI_Controller
     {
         $data['inspectionName'] = $this->input->post('inspectionName', true);
         $data['inspectionOrder'] = $this->input->post('inspectionOrder', true);
-        $data['updater']        = $this->session->email;
+        $data['updater']        = $this->user_data->get_email();
         $insert = $this->inspection_model->add_inspection($data);
         if ($insert) {
             $result['status']   = true;
@@ -347,7 +354,7 @@ class Controller_user extends CI_Controller
         $input['inspectionName']    = $this->input->post('inspectionName', true);
         $input['inspectionOrder']   = $this->input->post('inspectionOrder', true);
         $input['inspectionID']      = $this->input->post('inspectionID', true);
-        $input['updater']           = $this->session->email;
+        $input['updater']           = $this->user_data->get_email();
         $update = $this->inspection_model->update_inspection($input);
         if ($update) {
             $result['status']   = true;
@@ -385,9 +392,9 @@ class Controller_user extends CI_Controller
 
     public function question_manage()
     {
-        $data['name']       = $this->session->nameth;
+        $data['name']       = $this->user_data->get_name();
         $data['userType']   = $this->session_services->get_user_type_name($this->session->usertype);
-        $sideBar['name']     = $this->session->nameth;
+        $sideBar['name']     = $this->user_data->get_name();
         $sideBar['userTypes']     = $this->userTypes;
         $script['customScript'] = $this->load->view('controller_user/question_manage/script', '', true);
 
@@ -407,7 +414,7 @@ class Controller_user extends CI_Controller
         $input['name']          = $this->input->post('inspectionOptionName', true);
         $input['year']          = $this->input->post('optionYear', true);
         $input['inspectionID']  = $this->input->post('inspectionID', true);
-        $input['updater']       = $this->session->email;
+        $input['updater']       = $this->user_data->get_email();
         $insert = $this->inspection_option_model->add_inspection_option($input);
         if ($insert) {
             $result['status'] = true;
@@ -442,7 +449,8 @@ class Controller_user extends CI_Controller
         }
 
         if ($inSubject['status'] && $inAudScore['status']) { // CHECK TRUE IN BOTH
-            $result['status'] = $this->inspection_option_model->delete_inspection_option($inspectionOptionID);
+            $updater = $this->user_data->get_email();
+            $result['status'] = $this->inspection_option_model->delete_inspection_option($inspectionOptionID, $updater);
             $result['checkInSubject'] = $inSubject;
             $result['checkInAuditorScore'] = $inAudScore;
         } else {
@@ -457,9 +465,9 @@ class Controller_user extends CI_Controller
 
     public function auditor_type()
     {
-        $data['name']       = $this->session->nameth;
+        $data['name']       = $this->user_data->get_name();
         $data['userType']   = $this->session_services->get_user_type_name($this->session->usertype);
-        $sideBar['name']     = $this->session->nameth;
+        $sideBar['name']     = $this->user_data->get_name();
         $sideBar['userTypes']     = $this->userTypes;
         $script['customScript'] = $this->load->view('controller_user/auditor_type/script', '', true);
 
@@ -488,7 +496,7 @@ class Controller_user extends CI_Controller
         $input['inspectionName'] = $this->input->post('inspectionName', true);
         $input['insoectionType'] = $this->input->post('insoectionType', true);
         $input['auditorTypeID'] = $this->input->post('auditorTypeID', true);
-        $input['updater'] = $this->session->email;
+        $input['updater'] = $this->user_data->get_email();
         $update = $this->auditor_model->update_auditor_type($input);
         if ($update) {
             $result['status'] = true;
@@ -506,7 +514,7 @@ class Controller_user extends CI_Controller
     {
         $input['inspectionName'] = $this->input->post('inspectionName', true);
         $input['insoectionType'] = $this->input->post('insoectionType', true);
-        $input['updater'] = $this->session->email;
+        $input['updater'] = $this->user_data->get_email();
         $update = $this->auditor_model->add_auditor_type($input);
         if ($update) {
             $result['status'] = true;

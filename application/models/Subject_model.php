@@ -17,7 +17,7 @@ class Subject_model extends CI_Model
         $this->oracle->set('SUBJECT_PARENT_ID', '0');
         $this->oracle->set('INSPECTION_OPTION_ID', $array['inspectionID']);
         $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
-        $this->oracle->set('USER_UPDATE', $this->session->email);
+        $this->oracle->set('USER_UPDATE', $array['updater']);
         $this->oracle->set('SUBJECT_ORDER', $array['subjectOrder']);
         $this->oracle->set('SUBJECT_LEVEL', '1');
         $this->oracle->set('SUBJECT_STATUS', 'y');
@@ -32,7 +32,7 @@ class Subject_model extends CI_Model
         $this->oracle->set('SUBJECT_PARENT_ID', $array['subjectParent']);
         $this->oracle->set('INSPECTION_OPTION_ID', $array['inspectionID']);
         $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
-        $this->oracle->set('USER_UPDATE', $this->session->email);
+        $this->oracle->set('USER_UPDATE', $array['updater']);
         $this->oracle->set('SUBJECT_ORDER', $array['subjectOrder']);
         $this->oracle->where('SUBJECT_ID', $array['subjectID']);
         $query = $this->oracle->update('PIMIS_SUBJECT');
@@ -46,7 +46,7 @@ class Subject_model extends CI_Model
         $this->oracle->set('SUBJECT_PARENT_ID', $array['subjectParent']);
         $this->oracle->set('INSPECTION_OPTION_ID', $array['inspectionID']);
         $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
-        $this->oracle->set('USER_UPDATE', $this->session->email);
+        $this->oracle->set('USER_UPDATE', $array['updater']);
         $this->oracle->set('SUBJECT_ORDER', $array['subjectOrder']);
         $this->oracle->set('SUBJECT_LEVEL', $array['subjectLevel']);
         $this->oracle->set('SUBJECT_STATUS', 'y');
@@ -88,12 +88,12 @@ class Subject_model extends CI_Model
         return $result;
     }
 
-    public function delete_subject($subjectID)
+    public function delete_subject($subjectID, $updater)
     {
         $date = date("Y-m-d H:i:s");
         $this->oracle->set('SUBJECT_STATUS', 'n');
         $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
-        $this->oracle->set('USER_UPDATE', $this->session->email);
+        $this->oracle->set('USER_UPDATE', $updater);
         $this->oracle->where('SUBJECT_ID', $subjectID);
         $query = $this->oracle->update('PIMIS_SUBJECT');
         return $query;

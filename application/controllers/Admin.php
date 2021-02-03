@@ -24,15 +24,15 @@ class Admin extends CI_Controller
 
 	public function index()
 	{
-		$data['name'] 		= $this->session->nameth;
-		$data['userType'] 	= $this->session_services->get_user_type_name($this->session->usertype);
-		$sideBar['name'] 	= $this->session->nameth;
-		$sideBar['userTypes'] 	= $this->userTypes;
+		// $data['name'] 		= $this->session->nameth;
+		// $data['userType'] 	= $this->session_services->get_user_type_name($this->session->usertype);
+		$data['name'] 		= $this->user_data->get_name();
+		$data['userTypes'] 	= $this->userTypes;
 		$script['customScript'] = $this->load->view('admin/index_content/script', '', true);
 
 		$component['header'] 			= $this->load->view('admin/component/header', '', true);
 		$component['navbar'] 			= $this->load->view('admin/component/navbar', '', true);
-		$component['mainSideBar'] 		= $this->load->view('sidebar/main-sidebar', $sideBar, true);
+		$component['mainSideBar'] 		= $this->load->view('sidebar/main-sidebar', $data, true);
 		$component['mainFooter'] 		= $this->load->view('admin/component/footer_text', '', true);
 		$component['controllerSidebar'] = $this->load->view('admin/component/controller_sidebar', '', true);
 		$component['contentWrapper'] 	= $this->load->view('admin/index_content/content', $data, true);
@@ -43,15 +43,15 @@ class Admin extends CI_Controller
 
 	public function list_user()
 	{
-		$data['name'] 		= $this->session->nameth;
-		$data['userType'] 	= $this->session_services->get_user_type_name($this->session->usertype);
-		$sideBar['name'] 		= $this->session->nameth;
-		$sideBar['userTypes'] 	= $this->userTypes;
+		// $data['name'] 		= $this->session->nameth;
+		// $data['userType'] 	= $this->session_services->get_user_type_name($this->session->usertype);
+		$data['name'] 		= $this->user_data->get_name();
+		$data['userTypes'] 	= $this->userTypes;
 		$script['customScript'] = $this->load->view('admin/list_user/script', '', true);
 
 		$component['header'] 			= $this->load->view('admin/component/header', '', true);
 		$component['navbar'] 			= $this->load->view('admin/component/navbar', '', true);
-		$component['mainSideBar'] 		= $this->load->view('sidebar/main-sidebar', $sideBar, true);
+		$component['mainSideBar'] 		= $this->load->view('sidebar/main-sidebar', $data, true);
 		$component['mainFooter'] 		= $this->load->view('admin/component/footer_text', '', true);
 		$component['controllerSidebar'] = $this->load->view('admin/component/controller_sidebar', '', true);
 		$component['contentWrapper'] 	= $this->load->view('admin/list_user/content', $data, true);
@@ -62,21 +62,21 @@ class Admin extends CI_Controller
 
 	public function list_authorize()
 	{
+		// $data['name'] 		= $this->session->nameth;
+		// $data['userType'] 	= $this->session_services->get_user_type_name($this->session->usertype);
+		$data['name'] 		= $this->user_data->get_name();
 		$allUserTypes 		= $this->user_model->list_user_type()->result_array();
-		$data['name'] 		= $this->session->nameth;
-		$data['userType'] 	= $this->session_services->get_user_type_name($this->session->usertype);
 		$data['allUserTypes'] = array_map(function ($r) {
 			$r['TYPE_NAME'] = $this->session_services->get_user_type_name($r['TYPE_NAME']);
 			return $r;
 		}, $allUserTypes);
-		$sideBar['name'] 		= $this->session->nameth;
-		$sideBar['userTypes'] 	= $this->userTypes;
+		$data['userTypes'] 	= $this->userTypes;
 		$script['customScript'] = $this->load->view('admin/list_authorize/script', '', true);
 		$header['custom'] 		= $this->load->view('admin/list_authorize/header', '', true);
 
 		$component['header'] 			= $this->load->view('admin/component/header', $header, true);
 		$component['navbar'] 			= $this->load->view('admin/component/navbar', '', true);
-		$component['mainSideBar'] 		= $this->load->view('sidebar/main-sidebar', $sideBar, true);
+		$component['mainSideBar'] 		= $this->load->view('sidebar/main-sidebar', $data, true);
 		$component['mainFooter'] 		= $this->load->view('admin/component/footer_text', '', true);
 		$component['controllerSidebar'] = $this->load->view('admin/component/controller_sidebar', '', true);
 		$component['contentWrapper'] 	= $this->load->view('admin/list_authorize/content', $data, true);
@@ -89,15 +89,16 @@ class Admin extends CI_Controller
 	{
 		$userID = $this->input->get('userID', true);
 		$data['userDetail'] 	= $this->user_model->get_user_detail($userID)->row_array();
-		$sideBar['name'] 		= $this->session->nameth;
-		$sideBar['userTypes'] 	= $this->userTypes;
+		// $data['name'] 		= $this->session->nameth;
+		$data['name'] 		= $this->user_data->get_name();
+		$data['userTypes'] 	= $this->userTypes;
 		$scriptData['userPrivileges'] = $this->user_model->get_privileges_per_user($userID)->result_array();
 		$script['customScript'] = $this->load->view('admin/user_authorize/script', $scriptData, true);
 		$header['custom'] 		= $this->load->view('admin/user_authorize/header', '', true);
 
 		$component['header'] 			= $this->load->view('admin/component/header', $header, true);
 		$component['navbar'] 			= $this->load->view('admin/component/navbar', '', true);
-		$component['mainSideBar'] 		= $this->load->view('sidebar/main-sidebar', $sideBar, true);
+		$component['mainSideBar'] 		= $this->load->view('sidebar/main-sidebar', $data, true);
 		$component['mainFooter'] 		= $this->load->view('admin/component/footer_text', '', true);
 		$component['controllerSidebar'] = $this->load->view('admin/component/controller_sidebar', '', true);
 		$component['contentWrapper'] 	= $this->load->view('admin/user_authorize/content', $data, true);
@@ -142,8 +143,8 @@ class Admin extends CI_Controller
 		$data['email'] 		= $email[0] . '@rtarf.mi.th';
 		$data['userType']	= array('2');
 		$data['activation'] = $this->input->post('activation');
-		$data['unitID'] = $this->input->post('unitID');
-		$data['updater'] 	= $this->session->email;
+		$data['unitID'] 	= $this->input->post('unitID');
+		$data['updater'] 	= $this->user_data->get_email();
 
 		$userDuplicate = $this->user_model->chk_user_duplicate($data['email'])->num_rows();
 		if ($userDuplicate == 0) {
@@ -169,7 +170,7 @@ class Admin extends CI_Controller
 	public function ajax_delete_user()
 	{
 		$data['userID'] = $this->input->post('userID');
-		$data['updater'] = $this->session->email;
+		$data['updater'] = $this->user_data->get_email();
 		$deletePrivileges = $this->user_model->delete_privileges($data);
 		$deleteUser = $this->user_model->delete_user($data);
 
@@ -212,7 +213,7 @@ class Admin extends CI_Controller
 		$data['activation'] = $this->input->post('activation');
 		$data['userID'] 	= $this->input->post('userID');
 		$data['unitID'] 	= $this->input->post('unitID');
-		$data['updater'] 	= $this->session->email;
+		$data['updater'] 	= $this->user_data->get_email();
 
 		$userDuplicate = $this->user_model->chk_user_for_update($data)->num_rows();
 		if ($userDuplicate <= 1) {
@@ -236,7 +237,7 @@ class Admin extends CI_Controller
 	public function ajax_edit_privilage()
 	{
 		$userID 	= $this->input->post('userID', true);
-		$updater	= $this->session->email;
+		$updater	= $this->user_data->get_email();
 		$newPrivileges 	= is_array($this->input->post('privileges', true)) ? $this->input->post('privileges', true) : array();
 		$privileges 	= $this->user_model->get_privileges_per_user($userID)->result_array();
 		$oldPrivileges 	= array_map(function ($r) {

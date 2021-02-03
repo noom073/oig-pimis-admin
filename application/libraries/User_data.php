@@ -53,4 +53,11 @@ class User_data
         $data = $this->CI->auth_model->get_unit_user($userID);
         return $data;
     }
+
+    public function get_name()
+    {
+        $userID = $this->get_user_id();
+        $data = $this->CI->auth_model->get_user_by_id($userID);
+        return $data;
+    }
 }

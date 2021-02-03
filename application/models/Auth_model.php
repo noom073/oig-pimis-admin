@@ -89,16 +89,25 @@ class Auth_model extends CI_Model
         $data = array_map(function ($r) {
             return $r['ADT_TEAM'];
         }, $query);
-        $teams = array_merge(array(), $data);        
+        $teams = array_merge(array(), $data);
         return $teams;
     }
 
     public function get_unit_user($userID)
     {
         $sql = "SELECT UNIT_ID 
-        FROM PIMIS_USER 
-        WHERE USER_ID = ?";
+            FROM PIMIS_USER 
+            WHERE USER_ID = ?";
         $query = $this->oracle->query($sql, array($userID))->row_array();
         return $query['UNIT_ID'];
+    }
+
+    public function get_user_by_id($userID)
+    {
+        $sql = "SELECT *
+            FROM PIMIS_USER 
+            WHERE USER_ID = ?";
+        $query = $this->oracle->query($sql, array($userID))->row_array();
+        return "{$query['TITLE']} {$query['FIRSTNAME']}  {$query['LASTNAME']}";
     }
 }

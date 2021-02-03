@@ -29,7 +29,7 @@ class Auditor extends CI_Controller
 
 	public function index()
 	{
-		$sideBar['name'] 	= $this->session->nameth;
+		$sideBar['name'] 	= $this->user_data->get_name();
 		$sideBar['userTypes'] 	= $this->userTypes;
 		$script['custom'] = $this->load->view('auditor/index_content/script', '', true);
 		$header['custom'] = '';
@@ -48,7 +48,7 @@ class Auditor extends CI_Controller
 	public function calendar()
 	{
 		$data['teams'] 		= $this->user_data->get_own_team();
-		$sideBar['name'] 	= $this->session->nameth;
+		$sideBar['name'] 	= $this->user_data->get_name();
 		$sideBar['userTypes'] 	= $this->userTypes;
 		$script['custom'] = $this->load->view('auditor/calendar/script', $data, true);
 		$header['custom'] = $this->load->view('auditor/calendar/custom_header', '', true);
@@ -72,7 +72,7 @@ class Auditor extends CI_Controller
 		if ($check) {
 			$data['teamPlan'] = $this->plan_model->get_a_team_plan($teamPlanID)->row_array();
 			$data['planDetail'] = $this->plan_model->get_a_plan_by_id($data['teamPlan']['PLAN_ID'])->row_array();
-			$sideBar['name'] 	= $this->session->nameth;
+			$sideBar['name'] 	= $this->user_data->get_name();
 			$sideBar['userTypes'] 	= $this->userTypes;
 			$dataForScript['planID'] = $teamPlanID;
 			$script['custom'] = $this->load->view('auditor/inspection_list/script', $dataForScript, true);
@@ -101,7 +101,7 @@ class Auditor extends CI_Controller
 			$data['teamPlan'] = $this->plan_model->get_a_team_plan($teamPlanID)->row_array();
 			$data['planDetail'] = $this->plan_model->get_a_plan_by_id($data['teamPlan']['PLAN_ID'])->row_array();
 
-			$sideBar['name'] 	= $this->session->nameth;
+			$sideBar['name'] 	= $this->user_data->get_name();
 			$sideBar['userTypes'] 	= $this->userTypes;
 			$script['custom'] = $this->load->view('auditor/inspect/script', $data, true);
 			$header['custom'] = $this->load->view('auditor/inspect/custom_header', '', true);
@@ -128,7 +128,7 @@ class Auditor extends CI_Controller
 		unset($input['inspectionOptionID']); //clear inspectionID ในชุดข้อมูล ก่อนจะ loop array score
 		unset($input['teamPlanID']); //clear planID ในชุดข้อมูล ก่อนจะ loop array score
 		$data['scores'] = $input;
-		$data['updator'] = $this->session->email;
+		$data['updator'] = $this->user_data->get_email();
 		$result = $this->questionaire_model->insert_inspection_score($data);
 
 		$this->output
@@ -147,7 +147,7 @@ class Auditor extends CI_Controller
 			$data['inspectionOption'] = $this->inspection_option_model->get_inspection_option($inspectionOptionID)->row_array();
 			$data['planDetail'] = $this->plan_model->get_a_plan_by_id($data['teamPlan']['PLAN_ID'])->row_array();
 
-			$sideBar['name'] 	= $this->session->nameth;
+			$sideBar['name'] 	= $this->user_data->get_name();
 			$sideBar['userTypes'] 	= $this->userTypes;
 			$script['custom'] = $this->load->view('auditor/inspected/script', $data, true);
 			$header['custom'] = $this->load->view('auditor/inspected/custom_header', '', true);
@@ -175,9 +175,9 @@ class Auditor extends CI_Controller
 			$data['teamPlan'] = $this->plan_model->get_a_team_plan($teamPlanID)->row_array();
 			$data['teamInspections'] = $this->team_inspection_model->get_team_inspection($teamPlanID)->result_array();
 			$data['planDetail'] = $this->plan_model->get_a_plan_by_id($data['teamPlan']['PLAN_ID'])->row_array();
-			$data['name'] 	= $this->session->nameth;
+			$data['name'] 	= $this->user_data->get_name();
 
-			$sideBar['name'] 	= $this->session->nameth;
+			$sideBar['name'] 	= $this->user_data->get_name();
 			$sideBar['userTypes'] 	= $this->userTypes;
 			$script['custom'] = $this->load->view('auditor/inspection_result/script', $data, true);
 			$component['header'] 			= $this->load->view('auditor/component/header', '', true);
@@ -206,7 +206,7 @@ class Auditor extends CI_Controller
 			$sumScore = $this->questionaire_model->get_sum_form_score_by_planid($teamPlanID)->row_array();
 			$data['sumScore'] = $sumScore;
 
-			$sideBar['name'] 	= $this->session->nameth;
+			$sideBar['name'] 	= $this->user_data->get_name();
 			$sideBar['userTypes'] 	= $this->userTypes;
 			$script['custom'] = $this->load->view('auditor/inspection_summary/script', $data, true);
 
@@ -262,7 +262,7 @@ class Auditor extends CI_Controller
 		$data['teamPlanID'] = $this->input->post('teamPlanID');
 		$data['inspectionOptionID'] = $this->input->post('inspectionOptionID');
 		$data['comment'] = $this->input->post('comment');
-		$data['updator'] = $this->session->email;
+		$data['updator'] = $this->user_data->get_email();
 		$insert = $this->summary_model->add_summary($data);
 		if ($insert) {
 			$result['status'] = true;
@@ -290,7 +290,7 @@ class Auditor extends CI_Controller
 		$data['teamPlanID'] = $this->input->post('teamPlanID');
 		$data['policyScore'] = $this->input->post('policyScore');
 		$data['prepareScore'] = $this->input->post('prepareScore');
-		$data['updator'] = $this->session->email;
+		$data['updator'] = $this->user_data->get_email();
 		$update = $this->questionaire_model->update_team_plan_score($data);
 		if ($update) {
 			$result['status'] = true;
@@ -328,7 +328,7 @@ class Auditor extends CI_Controller
 		$data['summaryID'] = $this->input->post('summaryID', true);
 		$data['inspectionID'] = $this->input->post('inspectionID', true);
 		$data['comment'] = $this->input->post('comment', true);
-		$data['updator'] = $this->session->email;
+		$data['updator'] = $this->user_data->get_email();
 		$insert = $this->summary_model->update_summary($data);
 		if ($insert) {
 			$result['status'] = true;
@@ -345,7 +345,7 @@ class Auditor extends CI_Controller
 	public function ajax_delete_summary()
 	{
 		$summaryID = $this->input->post('summaryID');
-		$updator = $this->session->email;
+		$updator = $this->user_data->get_email();
 		$delete = $this->summary_model->delete_summary($summaryID, $updator);
 		if ($delete) {
 			$result['status'] = true;
@@ -363,7 +363,7 @@ class Auditor extends CI_Controller
 	{
 		$teamPlanID = $this->input->post('teamPlanID', true);
 		$scores = $this->input->post();
-		$updator = $this->session->email;
+		$updator = $this->user_data->get_email();
 		unset($scores['teamPlanID']);
 		$result = array();
 		foreach ($scores as $key => $val) {
@@ -401,7 +401,7 @@ class Auditor extends CI_Controller
 		$input['commention'] 		= $this->input->post('commention', true);
 		$input['inspectioScore'] 	= $this->input->post('inspectioScore', true);
 		$input['workingScore'] 		= $this->input->post('workingScore', true);
-		$input['updater'] 			= $this->session->email;
+		$input['updater'] 			= $this->user_data->get_email();
 		$insert = $this->inspection_notes_model->insert_inspection_note_result($input);
 		if ($insert) {
 			$result['status'] = true;
@@ -466,7 +466,7 @@ class Auditor extends CI_Controller
 		$input['commention'] 		= $this->input->post('commention', true);
 		$input['inspectioScore'] 	= $this->input->post('inspectioScore', true);
 		$input['workingScore'] 		= $this->input->post('workingScore', true);
-		$input['updater'] 			= $this->session->email;
+		$input['updater'] 			= $this->user_data->get_email();
 		$update = $this->inspection_notes_model->update_inspection_note($input);
 		if ($update) {
 			$result['status'] = true;
@@ -483,7 +483,7 @@ class Auditor extends CI_Controller
 	public function ajax_delete_inspection_note()
 	{
 		$input['rowID'] 	= $this->input->post('rowID', true);
-		$input['updater']	= $this->session->email;
+		$input['updater']	= $this->user_data->get_email();
 		$delete = $this->inspection_notes_model->delete_inspection_note($input);
 		if ($delete) {
 			$result['status'] = true;

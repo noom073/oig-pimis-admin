@@ -29,7 +29,7 @@ class Auditor_manage_inspection extends CI_Controller
 
 	public function index()
 	{
-		$sideBar['name'] 	= $this->session->nameth;
+		$sideBar['name'] 	= $this->user_data->get_name();
 		$sideBar['userTypes'] 	= $this->userTypes;
 		$script['custom'] = $this->load->view('auditor_manage_inspection/index_content/script', '', true);
 		$header['custom'] = '';
@@ -47,7 +47,7 @@ class Auditor_manage_inspection extends CI_Controller
 
 	public function set_plan()
 	{
-		$sideBar['name'] 	= $this->session->nameth;
+		$sideBar['name'] 	= $this->user_data->get_name();
 		$sideBar['userTypes'] 	= $this->userTypes;
 		$script['custom'] 	= $this->load->view('auditor_manage_inspection/set_plan/script', '', true);
 		$header['custom'] 	= $this->load->view('auditor_manage_inspection/set_plan/custom_header', '', true);
@@ -65,7 +65,7 @@ class Auditor_manage_inspection extends CI_Controller
 
 	public function auditor_topic()
 	{
-		$sideBar['name'] 	= $this->session->nameth;
+		$sideBar['name'] 	= $this->user_data->get_name();
 		$sideBar['userTypes'] 	= $this->userTypes;
 		$script['custom'] = $this->load->view('auditor_manage_inspection/auditor_topic/script', '', true);
 
@@ -92,8 +92,8 @@ class Auditor_manage_inspection extends CI_Controller
 	{
 		$input['teamName'] 	= $this->input->post('teamName', true);
 		$input['teamYear'] 	= $this->input->post('teamYear', true);
-		$input['color'] 		= $this->input->post('color', true);
-		$input['updater'] 	= $this->session->email;
+		$input['color'] 	= $this->input->post('color', true);
+		$input['updater'] 	= $this->user_data->get_email();
 		$insert = $this->auditor_team_model->insert_auditor_team($input);
 		if ($insert) {
 			$result['status'] = true;
@@ -122,7 +122,7 @@ class Auditor_manage_inspection extends CI_Controller
 		$input['teamYear'] 	= $this->input->post('teamYear', true);
 		$input['color'] 	= $this->input->post('color', true);
 		$input['rowID'] 	= $this->input->post('rowID', true);
-		$input['updater'] 	= $this->session->email;
+		$input['updater'] 	= $this->user_data->get_email();
 		$update = $this->auditor_team_model->update_team_name($input);
 		if ($update) {
 			$result['status'] = true;
@@ -143,7 +143,7 @@ class Auditor_manage_inspection extends CI_Controller
 		if ($team->num_rows() !== 0) {
 			$data['team'] 		= $team->row_array();
 			$data['auditorTypes'] = $this->auditor_model->get_auditor_types()->result_array();
-			$sideBar['name'] 	= $this->session->nameth;
+			$sideBar['name'] 	= $this->user_data->get_name();
 			$sideBar['userTypes'] 	= $this->userTypes;
 			$script['custom'] 	= $this->load->view('auditor_manage_inspection/auditor_team_member/script', $data, true);
 
@@ -180,7 +180,7 @@ class Auditor_manage_inspection extends CI_Controller
 		$input['email'] 		= $email[0];
 		$input['auditorTeam']	= $this->input->post('auditorTeam', true);
 		$input['auditorType'] 	= $this->input->post('auditorType', true);
-		$input['updater'] 		= $this->session->email;
+		$input['updater'] 		= $this->user_data->get_email();
 		$insert = $this->auditor_model->insert_auditor_member($input);
 		if ($insert) {
 			$result['status'] = true;
@@ -215,7 +215,7 @@ class Auditor_manage_inspection extends CI_Controller
 		$input['auditorTeam']	= $this->input->post('auditorTeam', true);
 		$input['auditorType'] 	= $this->input->post('auditorType', true);
 		$input['auditorID'] 	= $this->input->post('auditorID', true);
-		$input['updater'] 		= $this->session->email;
+		$input['updater'] 		= $this->user_data->get_email();
 		$update = $this->auditor_model->update_auditor_detail($input);
 		if ($update) {
 			$result['status'] = true;
@@ -232,7 +232,7 @@ class Auditor_manage_inspection extends CI_Controller
 	public function ajax_delete_auditor()
 	{
 		$input['auditorID'] = $this->input->post('auditorID', true);
-		$input['updater'] 	= $this->session->email;
+		$input['updater'] 	= $this->user_data->get_email();
 		$delete = $this->auditor_model->delete_auditor($input);
 		if ($delete) {
 			$result['status'] = true;
@@ -252,7 +252,7 @@ class Auditor_manage_inspection extends CI_Controller
 		$input['startDate'] 	= $this->input->post('startDate', true);
 		$input['endDate'] 		= $this->input->post('endDate', true);
 		$input['auditorTeam']	= $this->input->post('auditorTeam', true);
-		$input['updater'] 		= $this->session->email;
+		$input['updater'] 		= $this->user_data->get_email();
 		$insert = $this->plan_model->add_new_plan($input);
 		if ($insert['status']) {
 			$result['status'] = true;
@@ -272,7 +272,7 @@ class Auditor_manage_inspection extends CI_Controller
 		$input['rowID'] = $this->input->post('auditorTeamID', true);
 		$isteamInUsed = $this->auditor_team_model->is_auditor_team_in_plan($input);
 		if (!$isteamInUsed) {
-			$data['updater'] = $this->session->email;
+			$data['updater'] = $this->user_data->get_email();
 			$data['rowID'] = $input['rowID'];
 			$delete = $this->auditor_team_model->delete_auditor_team($data);
 			if ($delete) {
@@ -307,14 +307,14 @@ class Auditor_manage_inspection extends CI_Controller
 		$input['endDate'] 		= $this->input->post('endDate', true);
 		$input['auditorTeam'] 	= is_array($this->input->post('auditorTeam', true)) ? $this->input->post('auditorTeam', true) : array();
 		$input['planID'] 		= $this->input->post('planID', true);
-		$input['updater'] 		= $this->session->email;
+		$input['updater'] 		= $this->user_data->get_email();
 		$result['updatePlan'] = $this->plan_model->update_plan($input);
 		$result['updateTeamToPlan'] = $this->plan_model->update_team_to_plan($input['planID'], $input['auditorTeam'], $input['updater']);
 
 		$planToRemove = $this->plan_model->get_team_plan_detail_by_plan_id($input['planID'])->num_rows();
 		if ($planToRemove == 0) {
 			$deleteData['id'] 		= $input['planID'];
-			$deleteData['updater'] 	= $this->session->email;
+			$deleteData['updater'] 	= $this->user_data->get_email();
 			$result['removePlan'] 	= $this->plan_model->delete_plan($deleteData);
 		} else {
 			$result['removePlan'] = false;
@@ -327,7 +327,7 @@ class Auditor_manage_inspection extends CI_Controller
 
 	public function set_inspection()
 	{
-		$sideBar['name'] 	= $this->session->nameth;
+		$sideBar['name'] 	= $this->user_data->get_name();
 		$sideBar['userTypes'] 	= $this->userTypes;
 		$script['custom'] = $this->load->view('auditor_manage_inspection/set_inspection/script', '', true);
 		$header['custom'] = $this->load->view('auditor_manage_inspection/set_inspection/custom_header', '', true);
@@ -347,7 +347,7 @@ class Auditor_manage_inspection extends CI_Controller
 	{
 		$input['teamInspection'] = is_array($this->input->post('teamInspection', true)) ? $this->input->post('teamInspection', true) : [];
 		$input['teamPlanID'] 	= $this->input->post('teamPlanID', true);
-		$input['updater'] 		= $this->session->email;
+		$input['updater'] 		= $this->user_data->get_email();
 
 		$update = $this->team_inspection_model->update_team_inspection($input);
 		$this->output
