@@ -51,8 +51,8 @@
                                     <h5>ฟอร์ม</h5>
                                     <div id="form-questionaire"></div>
                                     <div>
-                                        <button class="btn btn-sm btn-primary" id="user-evaluate-form-submit">บันทึก</button>
-                                        <button class="btn btn-sm btn-light" type="button">ปิด</button>
+                                        <!-- <button class="btn btn-sm btn-primary" id="user-evaluate-form-submit">บันทึก</button>
+                                        <button class="btn btn-sm btn-light" type="button">ปิด</button> -->
                                     </div>
                                     <div id="result-auditor-score" class="invisible">
                                         รวม <span id="total-auditor-score"></span>

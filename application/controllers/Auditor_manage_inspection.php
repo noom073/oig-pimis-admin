@@ -23,7 +23,7 @@ class Auditor_manage_inspection extends CI_Controller
 		$this->load->library('user_data', $data);
 
 		$this->userTypes = $this->user_data->get_user_types();
-		$hasPermition = in_array('admin', $this->userTypes);
+		$hasPermition = in_array('control', $this->userTypes);
 		if (!$hasPermition) redirect('welcome/forbidden');
 	}
 
@@ -319,10 +319,10 @@ class Auditor_manage_inspection extends CI_Controller
 		} else {
 			$result['removePlan'] = false;
 		}
-
-		$this->output
-			->set_content_type('apllication/json')
-			->set_output(json_encode($result));
+		echo json_encode($result);
+		// $this->output
+		// 	->set_content_type('apllication/json')
+		// 	->set_output(json_encode($result));
 	}
 
 	public function set_inspection()

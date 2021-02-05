@@ -30,12 +30,17 @@
         $("#search-units").blur(function() {
             console.log('press');
             let text = $(this).val();
-            let unit = units.filter(r => r.NPRT_ACM.includes(text) || r.NPRT_NAME.includes(text))
-            .sort((a, b) => a.NPRT_UNIT - b.NPRT_UNIT);
+            let unit = units.filter(r => {
+                if (r.NPRT_ACM == null) {
+                    return r.NPRT_NAME.includes(text);
+                } else {
+                    return r.NPRT_ACM.includes(text) || r.NPRT_NAME.includes(text);
+                }
+            }).sort((a, b) => a.NPRT_UNIT - b.NPRT_UNIT);
             console.log(unit);
             let option = '';
             unit.forEach(r => {
-                option += `<option value="${r.NPRT_UNIT}" title="${r.NPRT_NAME}">${r.NPRT_ACM}</option>`;
+                option += `<option value="${r.NPRT_UNIT}" title="${r.NPRT_NAME}">${r.NPRT_ACM == null ? r.NPRT_NAME: r.NPRT_ACM}</option>`;
             });
             $("#nprt-units").html(option);
         });
@@ -45,7 +50,7 @@
             console.log('press');
             let text = $(this).val();
             let unit = units.filter(r => r.NPRT_ACM.includes(text) || r.NPRT_NAME.includes(text))
-            .sort((a, b) => a.NPRT_UNIT - b.NPRT_UNIT);
+                .sort((a, b) => a.NPRT_UNIT - b.NPRT_UNIT);
             console.log(unit);
             let option = '';
             unit.forEach(r => {

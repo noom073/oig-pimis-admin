@@ -17,7 +17,8 @@ class Auditor_model extends CI_Model
             INNER JOIN PIMIS_AUDITOR_TYPE b 
                 ON a.ADT_TYPE = b.ADT_T_ID 
             WHERE a.ADT_TEAM = ?
-                AND a.ADT_STATUS = 'y'";
+                AND a.ADT_STATUS = 'y'
+            ORDER BY b.ADT_T_ID";
         $query = $this->oracle->query($sql, array($rowID));
         return $query;
     }

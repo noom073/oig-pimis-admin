@@ -23,7 +23,7 @@ class Auditor extends CI_Controller
 		$this->load->library('user_data', $data);
 
 		$this->userTypes = $this->user_data->get_user_types();
-		$hasPermition = in_array('admin', $this->userTypes);
+		$hasPermition = in_array('auditor', $this->userTypes);
 		if (!$hasPermition) redirect('welcome/forbidden');
 	}
 

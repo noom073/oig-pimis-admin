@@ -205,7 +205,7 @@ class Plan_model extends CI_Model
     public function delete_plan($array)
     {
         $this->oracle->set('STATUS', 'n');
-        $this->oracle->set('USER_UPDATE', $array['updator']);
+        $this->oracle->set('USER_UPDATE', $array['updater']);
         $this->oracle->set('TIME_UPDATE', 'SYSDATE', false);
         $this->oracle->where('ID', $array['id']);
         $query = $this->oracle->update('PITS_PLAN');
