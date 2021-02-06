@@ -39,6 +39,7 @@ class Plan_model extends CI_Model
     {
         $this->oracle->set('INS_UNIT', $array['unitID']);
         $this->oracle->set('INS_DATE', "TO_DATE('{$array['startDate']}','YYYY/MM/DD HH24:MI:SS')", false);
+        $this->oracle->set('USER_UPDATE', $array['updater']);
         $this->oracle->set('FINISH_DATE', "TO_DATE('{$array['endDate']}','YYYY/MM/DD HH24:MI:SS')", false);
         $query = $this->oracle->insert('PITS_PLAN');
         return $query;
