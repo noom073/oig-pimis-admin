@@ -1,8 +1,8 @@
 <script>
     $(document).ready(function() {
-        $("li#user-section").addClass('menu-open');
-        $("a#user-inspection-subject").addClass('active');
-        $("a#user-calendar").addClass('active');
+        $("li#auditor-inspection-section").addClass('menu-open');
+        $("a#auditor-inspection-subject").addClass('active');
+        $("a#auditor-calendar").addClass('active');
 
 
         let teamPlanID = <?= $teamPlan['ROW_ID'] ?>;
@@ -31,7 +31,7 @@
                         if (question.SCORE == '1') status = '<span class="text-success">ดำเนินการ</span>';
                         else if (question.SCORE == '.5') status = '<span class="text-info">อยู่ระหว่างดำเนินการ</span>';
                         else if (question.SCORE == '0') status = '<span class="text-danger">ไม่ได้ดำเนินการ</span>';
-                        else status = '<span>N/A</span>';
+                        else status = '<span>หน่วยยังไม่ระบุ</span>';
 
                         questionsAmount++;
                         questions += `<div class="pl-3 border-left my-2 question">
@@ -59,7 +59,7 @@
                         if (question.SCORE == '1') status = '<span class="text-success">ดำเนินการ</span>';
                         else if (question.SCORE == '.5') status = '<span class="text-info">อยู่ระหว่างดำเนินการ</span>';
                         else if (question.SCORE == '0') status = '<span class="text-danger">ไม่ได้ดำเนินการ</span>';
-                        else status = '<span>N/A</span>';
+                        else status = '<span>หน่วยยังไม่ระบุ</span>';
 
                         questionsAmount++;
                         html += `<div class="pl-3 border-left my-2 question">
@@ -184,22 +184,29 @@
 
 
         $(document).on('click', ".user-evaluate", async function() {
+            $("#unit-inspect-status").html('');
             let title = $(this).parent().siblings('.question-name').text();
             let questionID = $(this).data('question-id');
             let teamPlanID = $(this).data('team-plan-id');
             let evaluateData = await getEvaluateData(questionID, teamPlanID);
             let filesAttath = await getFilesAttath(questionID, teamPlanID);
-            if ($.isEmptyObject(evaluateData) == false) {
-                $(`input:radio[name='evalValue'][value='${evaluateData.VALUE}']`).prop('checked', true);
-            }
+            let status = '';
+            if (evaluateData != null) {
+                console.log(evaluateData);               
+                if (evaluateData.VALUE == '1') status = '<label id="unit-inspect-status" class="text-succes">ดำเนินการ</label>';
+                else if (evaluateData.VALUE == '.5') status = '<label id="unit-inspect-status" class="text-info">อยู่ระหว่างดำเนินการ</label>';
+                else if (evaluateData.VALUE == '0') status = '<label id="unit-inspect-status" class="text-danger">ไม่ได้ดำเนินการ</label>';
+                else status = '<label id="unit-inspect-status">หน่วยยังไม่ระบุ</label>';
+                // $(`input:radio[name='evalValue'][value='${evaluateData.VALUE}']`).prop('checked', true);
+            } else {
+                console.log(evaluateData);
+                status = '<label id="unit-inspect-status">หน่วยยังไม่ระบุ</label>'
+            };
+            $("#unit-inspect-status").html(status);
 
             let list = '';
             filesAttath.forEach((r, index) => {
-                // console.log(r);
-                list += `<div class="mt-2">
-                    <a target="blank" href="<?= base_url('assets/filesUpload/') ?>${r.FILES_PATH}" title="${r.FILE_NAME}">File. ${index+1} ${r.FILE_NAME}</a>
-                    <button type="button" class="btn btn-sm btn-danger delete-file-attach" data-row-id="${r.ROW_ID}">ลบ</button>
-                 </div>`;
+                list += `<a target="blank" href="<?= base_url('assets/filesUpload/') ?>${r.FILES_PATH}" title="${r.FILE_NAME}">File. ${index+1}</a> <br>`;
             });
             $("#list-files").html(list);
             $("#evaluate-modal-label").text(title);
@@ -211,49 +218,28 @@
         });
 
 
-        $("#evaluate-form").submit(function(event) {
-            event.preventDefault();
-            let thisForm = $(this);
-            // let questionID = thisForm.data('questionID');
-            // let teamPlanID = thisForm.data('teamPlanID');
-            let formData = new FormData(this);
-            formData.append('questionID', thisForm.data('questionID'));
-            formData.append('teamPlanID', thisForm.data('teamPlanID'));
-            formData.append('inspectionOptionID', thisForm.data('inspection-option-id'));
-            $.post({
-                url: '<?= site_url('user/ajax_set_evaluate') ?>',
-                data: formData,
-                dataType: 'json',
-                contentType: false,
-                processData: false,
-            }).done(res => {
-                alert(res.update.text);
-                let inspectionOptionID = thisForm.data('inspection-option-id');
-                drawQuestionForm(inspectionOptionID);
-            }).fail((jhr, status, error) => console.error(jhr, status, error));
-        });
-
-
-        $(document).on('click', ".delete-file-attach", function() {
-            let fileRowID = $(this).data('row-id');
-            let thisElement = $(this);
-            console.log(fileRowID);
-            if (confirm('ยืนยันการลบไฟล์แนบ ?')) {
-                $.post({
-                    url: '<?= site_url('user/ajax_delete_attach_file') ?>',
-                    data: {
-                        rowID: fileRowID
-                    },
-                    dataType: 'json'
-                }).done(res => {
-                    if (res.status) thisElement.parent('div').remove();
-                    alert(res.text);
-                }).fail((jhr, status, error) => console.error(jhr, status, error));
-                return true;
-            } else {
-                return false;
-            }
-        });
+        // $("#evaluate-form").submit(function(event) {
+        //     event.preventDefault();
+        //     let thisForm = $(this);
+        //     // let questionID = thisForm.data('questionID');
+        //     // let teamPlanID = thisForm.data('teamPlanID');
+        //     let formData = new FormData(this);
+        //     formData.append('questionID', thisForm.data('questionID'));
+        //     formData.append('teamPlanID', thisForm.data('teamPlanID'));
+        //     formData.append('inspectionOptionID', thisForm.data('inspection-option-id'));
+        //     $.post({
+        //         url: '<?= site_url('user/ajax_set_evaluate') ?>',
+        //         data: formData,
+        //         dataType: 'json',
+        //         contentType: false,
+        //         processData: false,
+        //     }).done(res => {
+        //         console.log(res);
+        //         alert(res.update.text);
+        //         let inspectionOptionID = thisForm.data('inspection-option-id');
+        //         drawQuestionForm(inspectionOptionID);
+        //     }).fail((jhr, status, error) => console.error(jhr, status, error));
+        // });
 
     });
 </script>

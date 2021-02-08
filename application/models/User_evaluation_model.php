@@ -70,6 +70,7 @@ class User_evaluation_model extends CI_Model
     {
         $this->oracle->where('TEAMPLAN_ID', $array['teamPlanID']);
         $this->oracle->where('QUESTION_ID', $array['questionID']);
+        $this->oracle->where('STATUS', 'y');
         $query = $this->oracle->get('PIMIS_USER_FILES');
         return $query;
     }

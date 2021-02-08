@@ -16,6 +16,7 @@ class User extends CI_Controller
         $this->load->model('user_evaluation_model');
         $this->load->model('team_inspection_model');
         $this->load->model('plan_model');
+        $this->load->model('user_files_model');
 
         $data['token'] = get_cookie('pimis-token');
         $this->load->library('user_data', $data);
@@ -67,17 +68,17 @@ class User extends CI_Controller
         $teamPlanID = $this->input->get('team_plan_id', true);
         $unitID = $this->user_data->get_unit_id_user();
         $checkTeamPlan = $this->plan_model->check_team_plan($teamPlanID, $unitID);
-        var_dump($checkTeamPlan);
+        // var_dump($checkTeamPlan);
         if ($checkTeamPlan) {
             $data['inspections'] = $this->team_inspection_model->get_team_inspection_and_check_inspected_user($teamPlanID)->result_array();
             $data['teamPlan'] = $this->plan_model->get_a_team_plan($teamPlanID)->row_array();
             $data['planDetail'] = $this->plan_model->get_a_plan_by_id($data['teamPlan']['PLAN_ID'])->row_array();
-    
+
             $sideBar['name']     = $this->user_data->get_name();
             $sideBar['userTypes']     = $this->userTypes;
             $script['custom'] = $this->load->view('user/inspect/script', $data, true);
             $header['custom'] = $this->load->view('user/inspect/custom_header', '', true);
-    
+
             $component['header']             = $this->load->view('user/component/header', $header, true);
             $component['navbar']             = $this->load->view('user/component/navbar', '', true);
             $component['mainSideBar']         = $this->load->view('sidebar/main-sidebar', $sideBar, true);
@@ -85,12 +86,11 @@ class User extends CI_Controller
             $component['controllerSidebar'] = $this->load->view('user/component/controller_sidebar', '', true);
             $component['contentWrapper']     = $this->load->view('user/inspect/content', $data, true);
             $component['jsScript']             = $this->load->view('user/component/main_script', $script, true);
-    
+
             $this->load->view('user/template', $component);
         } else {
             redirect('user/calendar');
         }
-        
     }
 
     // public function inspected()
@@ -191,5 +191,22 @@ class User extends CI_Controller
         $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode($data));
+    }
+
+    public function ajax_delete_attach_file()
+    {
+        $rowId = $this->input->post('rowID', true);
+        $updater = $this->session->email;
+        $delete = $this->user_files_model->delete_file_attach($rowId, $updater);
+        if ($delete) {
+            $result['status'] = true;
+            $result['text'] = 'ลบสำเร็จ';
+        } else {
+            $result['status'] = false;
+            $result['text'] = 'ลบไม่สำเร็จ';
+        }
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($result));
     }
 }

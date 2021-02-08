@@ -527,4 +527,34 @@ class Auditor extends CI_Controller
 			->set_content_type('application/json')
 			->set_output(json_encode($rs));
 	}
+
+	public function unit_inspect()
+    {
+        $teamPlanID = $this->input->get('team_plan_id', true);
+        $unitID = $this->user_data->get_unit_id_user();
+        $checkTeamPlan = $this->plan_model->get_a_team_plan($teamPlanID)->num_rows();
+		// var_dump($checkTeamPlan);
+        if ($checkTeamPlan) {
+            $data['inspections']= $this->team_inspection_model->get_team_inspection_and_check_inspected_user($teamPlanID)->result_array();
+            $data['teamPlan'] 	= $this->plan_model->get_a_team_plan($teamPlanID)->row_array();
+            $data['planDetail']	= $this->plan_model->get_a_plan_by_id($data['teamPlan']['PLAN_ID'])->row_array();
+    
+            $sideBar['name']     	= $this->user_data->get_name();
+            $sideBar['userTypes']	= $this->userTypes;
+            $script['custom'] = $this->load->view('auditor/unit_inspect/script', $data, true);
+            $header['custom'] = $this->load->view('auditor/unit_inspect/custom_header', '', true);
+    
+            $component['header']             = $this->load->view('auditor/component/header', $header, true);
+            $component['navbar']             = $this->load->view('auditor/component/navbar', '', true);
+            $component['mainSideBar']         = $this->load->view('sidebar/main-sidebar', $sideBar, true);
+            $component['mainFooter']         = $this->load->view('auditor/component/footer_text', '', true);
+            $component['controllerSidebar'] = $this->load->view('auditor/component/controller_sidebar', '', true);
+            $component['contentWrapper']     = $this->load->view('auditor/unit_inspect/content', $data, true);
+            $component['jsScript']             = $this->load->view('auditor/component/main_script', $script, true);
+    
+            $this->load->view('user/template', $component);
+        } else {
+            redirect('user/calendar');
+        }        
+    }
 }
