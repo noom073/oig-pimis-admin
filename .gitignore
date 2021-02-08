@@ -33,4 +33,3 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 application/config/database.php
 user_guide
 application/vendor
-assets/filesUpload/*
