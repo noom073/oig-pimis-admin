@@ -64,13 +64,28 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
-                                <div class="col">
+                            <div class="row">
+                                <div class="col-md-4">
                                     <div class="card text-center">
                                         <div class="card-body">
                                             <h5 class="card-title"></h5>
                                             <p class="card-text">
                                                 <a href="<?= site_url("auditor/unit_inspect?team_plan_id={$teamPlan['ROW_ID']}") ?>" class="card-link">หน่วยประเมินตนเอง</a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="card text-center">
+                                        <div class="card-body">
+                                            <h5 class="card-title"></h5>
+                                            <p class="card-text">
+                                                <a href="<?= site_url("auditor/gallery?team_plan_id={$teamPlan['ROW_ID']}") ?>" class="card-link">คลังรูปภาพ</a>
                                             </p>
                                         </div>
                                     </div>

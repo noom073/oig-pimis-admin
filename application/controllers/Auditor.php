@@ -9,6 +9,7 @@ class Auditor extends CI_Controller
 		parent::__construct();
 		$this->load->helper('url');
 		$this->load->helper('cookie');
+		$this->load->helper('string');
 		$this->load->library('session');
 		$this->load->library('session_services');
 
@@ -18,6 +19,8 @@ class Auditor extends CI_Controller
 		$this->load->model('plan_model');
 		$this->load->model('inspection_option_model');
 		$this->load->model('inspection_notes_model');
+		$this->load->model('main_photo_model');
+		$this->load->model('gallery_photo_model');
 
 		$data['token'] = get_cookie('pimis-token');
 		$this->load->library('user_data', $data);
@@ -529,32 +532,114 @@ class Auditor extends CI_Controller
 	}
 
 	public function unit_inspect()
-    {
-        $teamPlanID = $this->input->get('team_plan_id', true);
-        $unitID = $this->user_data->get_unit_id_user();
-        $checkTeamPlan = $this->plan_model->get_a_team_plan($teamPlanID)->num_rows();
+	{
+		$teamPlanID = $this->input->get('team_plan_id', true);
+		$unitID = $this->user_data->get_unit_id_user();
+		$checkTeamPlan = $this->plan_model->get_a_team_plan($teamPlanID)->num_rows();
 		// var_dump($checkTeamPlan);
-        if ($checkTeamPlan) {
-            $data['inspections']= $this->team_inspection_model->get_team_inspection_and_check_inspected_user($teamPlanID)->result_array();
-            $data['teamPlan'] 	= $this->plan_model->get_a_team_plan($teamPlanID)->row_array();
-            $data['planDetail']	= $this->plan_model->get_a_plan_by_id($data['teamPlan']['PLAN_ID'])->row_array();
-    
-            $sideBar['name']     	= $this->user_data->get_name();
-            $sideBar['userTypes']	= $this->userTypes;
-            $script['custom'] = $this->load->view('auditor/unit_inspect/script', $data, true);
-            $header['custom'] = $this->load->view('auditor/unit_inspect/custom_header', '', true);
-    
-            $component['header']             = $this->load->view('auditor/component/header', $header, true);
-            $component['navbar']             = $this->load->view('auditor/component/navbar', '', true);
-            $component['mainSideBar']         = $this->load->view('sidebar/main-sidebar', $sideBar, true);
-            $component['mainFooter']         = $this->load->view('auditor/component/footer_text', '', true);
-            $component['controllerSidebar'] = $this->load->view('auditor/component/controller_sidebar', '', true);
-            $component['contentWrapper']     = $this->load->view('auditor/unit_inspect/content', $data, true);
-            $component['jsScript']             = $this->load->view('auditor/component/main_script', $script, true);
-    
-            $this->load->view('user/template', $component);
-        } else {
-            redirect('user/calendar');
-        }        
-    }
+		if ($checkTeamPlan) {
+			$data['inspections'] = $this->team_inspection_model->get_team_inspection_and_check_inspected_user($teamPlanID)->result_array();
+			$data['teamPlan'] 	= $this->plan_model->get_a_team_plan($teamPlanID)->row_array();
+			$data['planDetail']	= $this->plan_model->get_a_plan_by_id($data['teamPlan']['PLAN_ID'])->row_array();
+
+			$sideBar['name']     	= $this->user_data->get_name();
+			$sideBar['userTypes']	= $this->userTypes;
+			$script['custom'] = $this->load->view('auditor/unit_inspect/script', $data, true);
+			$header['custom'] = $this->load->view('auditor/unit_inspect/custom_header', '', true);
+
+			$component['header']             = $this->load->view('auditor/component/header', $header, true);
+			$component['navbar']             = $this->load->view('auditor/component/navbar', '', true);
+			$component['mainSideBar']         = $this->load->view('sidebar/main-sidebar', $sideBar, true);
+			$component['mainFooter']         = $this->load->view('auditor/component/footer_text', '', true);
+			$component['controllerSidebar'] = $this->load->view('auditor/component/controller_sidebar', '', true);
+			$component['contentWrapper']     = $this->load->view('auditor/unit_inspect/content', $data, true);
+			$component['jsScript']             = $this->load->view('auditor/component/main_script', $script, true);
+
+			$this->load->view('user/template', $component);
+		} else {
+			redirect('user/calendar');
+		}
+	}
+
+	public function gallery()
+	{
+		$teamPlanID = $this->input->get('team_plan_id', true);
+		$email = $this->user_data->get_email();
+		$check = $this->plan_model->check_team_plan_by_auditor($email, $teamPlanID);
+		if ($check) {
+			$inspections = $this->team_inspection_model->get_team_inspection($teamPlanID)->result_array();
+			$data['teamPlan'] = $this->plan_model->get_a_team_plan($teamPlanID)->row_array();
+			$data['planDetail'] = $this->plan_model->get_a_plan_by_id($data['teamPlan']['PLAN_ID'])->row_array();
+			$data['mainPhoto'] = $this->main_photo_model->get_main_photo_for_team_paln($teamPlanID)->result_array();
+			$sideBar['name'] 	= $this->user_data->get_name();
+			$sideBar['userTypes'] 	= $this->userTypes;
+			$dataForScript['planID'] = $teamPlanID;
+			foreach ($inspections as $inspection) {
+				$pictures = $inspection;
+				$pictures['photos'] = $this->gallery_photo_model
+					->get_photo_for_team_inspection($teamPlanID, $inspection['INSPECTION_OPTION_ID'])
+					->result_array();
+				$data['pictures'][] = $pictures;
+			}
+			// var_dump($data['pictures']);
+			$script['custom'] = $this->load->view('auditor/gallery/script', $dataForScript, true);
+
+			$component['header'] 			= $this->load->view('auditor/component/header', '', true);
+			$component['navbar'] 			= $this->load->view('auditor/component/navbar', '', true);
+			$component['mainSideBar'] 		= $this->load->view('sidebar/main-sidebar', $sideBar, true);
+			$component['mainFooter'] 		= $this->load->view('auditor/component/footer_text', '', true);
+			$component['controllerSidebar'] = $this->load->view('auditor/component/controller_sidebar', '', true);
+			$component['contentWrapper'] 	= $this->load->view('auditor/gallery/content', $data, true);
+			$component['jsScript'] 			= $this->load->view('auditor/component/main_script', $script, true);
+
+			$this->load->view('auditor/template', $component);
+		} else {
+			redirect('auditor/calendar');
+		}
+	}
+
+	public function ajax_upload_main_photo()
+	{
+		$teamPlanID = $this->input->post('teamplanID', true);
+
+		$config['upload_path']          = './assets/filesUpload/';
+		$config['allowed_types']        = 'gif|jpg|jpeg|png';
+		$config['max_size']             = 2048;
+		$config['file_name']            = random_string('alnum', 64);
+
+		$this->load->library('upload', $config);
+
+		if (!$this->upload->do_upload('mainPhoto')) {
+			$result['fileUpload']['status'] = false;
+			$result['fileUpload']['error'] = $this->upload->display_errors();
+		} else {
+			$data = $this->upload->data();
+			$fileInput['fileName'] = $data['client_name'];
+			$fileInput['filePath'] = $data['file_name'];
+			$fileInput['teamPlanID'] = $teamPlanID;
+			$fileInput['updater'] = $this->session->email;
+			$result['fileUpload']['status'] = $this->main_photo_model->insert_photo($fileInput);
+			$result['fileUpload']['data'] = $data;
+		}
+		$this->output
+			->set_content_type('application/json')
+			->set_output(json_encode($result));
+	}
+
+	public function ajax_delete_main_photo()
+	{
+		$photoID = $this->input->post('rowID', true);
+		$updater = $this->session->email;
+		$delete = $this->main_photo_model->delete_photo($photoID, $updater);
+		if ($delete) {
+			$result['status'] = true;
+			$result['text'] = 'ลบข้อมูลสำเร็จ';
+		} else {
+			$result['status'] = false;
+			$result['text'] = 'ลบข้อมูลไม่สำเร็จ';
+		}
+		$this->output
+			->set_content_type('application/json')
+			->set_output(json_encode($result));
+	}
 }

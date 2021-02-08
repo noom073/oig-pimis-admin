@@ -192,7 +192,7 @@
             let filesAttath = await getFilesAttath(questionID, teamPlanID);
             let status = '';
             if (evaluateData != null) {
-                console.log(evaluateData);               
+                console.log(evaluateData);
                 if (evaluateData.VALUE == '1') status = '<label id="unit-inspect-status" class="text-succes">ดำเนินการ</label>';
                 else if (evaluateData.VALUE == '.5') status = '<label id="unit-inspect-status" class="text-info">อยู่ระหว่างดำเนินการ</label>';
                 else if (evaluateData.VALUE == '0') status = '<label id="unit-inspect-status" class="text-danger">ไม่ได้ดำเนินการ</label>';
