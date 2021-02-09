@@ -570,7 +570,7 @@ class Auditor extends CI_Controller
 			$inspections = $this->team_inspection_model->get_team_inspection($teamPlanID)->result_array();
 			$data['teamPlan'] = $this->plan_model->get_a_team_plan($teamPlanID)->row_array();
 			$data['planDetail'] = $this->plan_model->get_a_plan_by_id($data['teamPlan']['PLAN_ID'])->row_array();
-			$data['mainPhoto'] = $this->main_photo_model->get_main_photo_for_team_paln($teamPlanID)->result_array();
+			$data['mainPhoto'] = $this->main_photo_model->get_main_photo_for_team_paln($teamPlanID)->row_array();
 			$sideBar['name'] 	= $this->user_data->get_name();
 			$sideBar['userTypes'] 	= $this->userTypes;
 			$dataForScript['planID'] = $teamPlanID;
@@ -631,6 +631,44 @@ class Auditor extends CI_Controller
 		$photoID = $this->input->post('rowID', true);
 		$updater = $this->session->email;
 		$delete = $this->main_photo_model->delete_photo($photoID, $updater);
+		if ($delete) {
+			$result['status'] = true;
+			$result['text'] = 'ลบข้อมูลสำเร็จ';
+		} else {
+			$result['status'] = false;
+			$result['text'] = 'ลบข้อมูลไม่สำเร็จ';
+		}
+		$this->output
+			->set_content_type('application/json')
+			->set_output(json_encode($result));
+	}
+
+	public function ajax_upload_gallery_photo()
+	{
+		$data['teamPlanID'] = $this->input->post('teamPlanID', true);
+		$data['inspectionOptionID'] = $this->input->post('inspectionOptionID', true);
+		$data['updater'] = $this->session->email;
+		$upload = $this->gallery_photo_model->upload_gallery_multiple($_FILES, $data);
+		$this->output
+			->set_content_type('application/json')
+			->set_output(json_encode($upload));
+	}
+
+	public function ajax_get_gallery_photo()
+	{
+		$teamPlanID = $this->input->post('teamPlanID', true);
+		$inspectionOptionID = $this->input->post('inspectionOptionID', true);
+		$photos = $this->gallery_photo_model->get_photo_for_team_inspection($teamPlanID, $inspectionOptionID)->result_array();
+		$this->output
+			->set_content_type('application/json')
+			->set_output(json_encode($photos));
+	}
+
+	public function ajax_delete_gallery_photo()
+	{
+		$photoID = $this->input->post('rowID', true);
+		$updater = $this->session->email;
+		$delete = $this->gallery_photo_model->delete_photo($photoID, $updater);
 		if ($delete) {
 			$result['status'] = true;
 			$result['text'] = 'ลบข้อมูลสำเร็จ';
