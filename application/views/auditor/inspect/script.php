@@ -27,7 +27,7 @@
                         questions += `<div class="pl-3 border-left my-2 question">
                                     <div>- ${question.Q_NAME} ?</div>
                                     <div class="pl-5">
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="1.00" checked>   
+                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="1" checked>   
                                         <label class="text-success choice">1</label>
                                         &nbsp;&nbsp;&nbsp;&nbsp;                                    
                                         <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.75">                                        
@@ -41,6 +41,9 @@
                                         &nbsp;&nbsp;&nbsp;&nbsp;  
                                         <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0">                                        
                                         <label class="text-danger choice">0</label>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;  
+                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="n">                                        
+                                        <label class="choice">ไม่มีการตรวจ</label>
                                     </div>
                                 </div>`;
                     });
@@ -56,7 +59,7 @@
                         html += `<div class="pl-3 border-left my-2 question">
                                     <div>- ${question.Q_NAME} ?</div>
                                     <div class="pl-5">
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="1.00" checked>   
+                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="1" checked>   
                                         <label class="text-success choice">1</label>
                                         &nbsp;&nbsp;&nbsp;&nbsp;                                    
                                         <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.75">                                        
@@ -70,6 +73,9 @@
                                         &nbsp;&nbsp;&nbsp;&nbsp;  
                                         <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0">                                        
                                         <label class="text-danger choice">0</label>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;  
+                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="n">                                        
+                                        <label class="choice">ไม่มีการตรวจ</label>
                                     </div>
                                 </div>`;
                     });

@@ -31,17 +31,20 @@
                                         <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="1" ${question.SCORE == '1' ? 'checked':''}>   
                                         <label class="text-success choice">1</label>
                                         &nbsp;&nbsp;                                   
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.75" ${question.SCORE == '.75' ? 'checked':''}>                                        
+                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.75" ${question.SCORE == '0.75' ? 'checked':''}>                                        
                                         <label class="text-info choice">0.75</label>
                                         &nbsp;&nbsp; 
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.5" ${question.SCORE == '.5' ? 'checked':''}>                                        
+                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.5" ${question.SCORE == '0.5' ? 'checked':''}>                                        
                                         <label class="text-danger choice">0.50</label>
                                         &nbsp;&nbsp; 
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.25" ${question.SCORE == '.25' ? 'checked':''}>                                        
+                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.25" ${question.SCORE == '0.25' ? 'checked':''}>                                        
                                         <label class="text-danger choice">0.25</label>
                                         &nbsp;&nbsp; 
                                         <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0" ${question.SCORE == '0' ? 'checked':''}>                                        
                                         <label class="text-danger choice">0</label>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;  
+                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="n" ${question.SCORE == 'n' ? 'checked':''}>                                        
+                                        <label class="choice">ไม่มีการตรวจ</label>
                                     </div>
                                 </div>`;
                     });
@@ -60,17 +63,20 @@
                                         <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="1" ${question.SCORE == '1' ? 'checked':''}>   
                                         <label class="text-success choice">1</label>
                                         &nbsp;&nbsp;                                   
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.75" ${question.SCORE == '.75' ? 'checked':''}>                                        
+                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.75" ${question.SCORE == '0.75' ? 'checked':''}>                                        
                                         <label class="text-info choice">0.75</label>
                                         &nbsp;&nbsp; 
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.5" ${question.SCORE == '.5' ? 'checked':''}>                                        
+                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.5" ${question.SCORE == '0.5' ? 'checked':''}>                                        
                                         <label class="text-danger choice">0.50</label>
                                         &nbsp;&nbsp; 
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.25" ${question.SCORE == '.25' ? 'checked':''}>                                        
+                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.25" ${question.SCORE == '0.25' ? 'checked':''}>                                        
                                         <label class="text-danger choice">0.25</label>
                                         &nbsp;&nbsp; 
                                         <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0" ${question.SCORE == '0' ? 'checked':''}>                                        
                                         <label class="text-danger choice">0</label>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;  
+                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="n" ${question.SCORE == 'n' ? 'checked':''}>                                        
+                                        <label class="choice">ไม่มีการตรวจ</label>
                                     </div>
                                 </div>`;
                     });
