@@ -65,12 +65,25 @@ class Inspection_notes_model extends CI_Model
     {
         $this->oracle->where('TEAMPLAN_ID', $teamPlanID);
         $this->oracle->where('INSPECTION_OPTION_ID', $inspectionOptionID);
+        $this->oracle->where('STATUS', 'y');
         $query = $this->oracle->get('PIMIS_INSPECTION_NOTES');
         return $query;
     }
 
     public function update_inspection_note($array)
-    {
+    { 
+        if ($array['canImprove'] == '') $this->oracle->set('CAN_IMPROVE', 'EMPTY_CLOB()', false);
+        else $this->oracle->set('CAN_IMPROVE', $array['canImprove']);
+
+        if ($array['failing'] == '') $this->oracle->set('FAILING', 'EMPTY_CLOB()', false);
+        else $this->oracle->set('FAILING', $array['failing']);
+
+        if ($array['importantFailing'] == '') $this->oracle->set('IMPORTANT_FAILING', 'EMPTY_CLOB()', false);
+        else $this->oracle->set('IMPORTANT_FAILING', $array['importantFailing']);
+
+        if ($array['commention'] == '') $this->oracle->set('COMMENTIONS', 'EMPTY_CLOB()', false);
+        else $this->oracle->set('COMMENTIONS', $array['commention']);
+
         $date = date("Y-m-d H:i:s");
         $this->oracle->set('INSPECTION_OPTION_ID', $array['inspectionOptionID']);
         $this->oracle->set('UNIT_COMMANDER', $array['commander']);
@@ -78,10 +91,6 @@ class Inspection_notes_model extends CI_Model
         $this->oracle->set('AUDITEE_POS', $array['auditeePosition']);
         $this->oracle->set('INSPECTION_SCORE', $array['inspectioScore']);
         $this->oracle->set('WORKING_SCORE', $array['workingScore']);
-        $this->oracle->set('CAN_IMPROVE', $array['canImprove']);
-        $this->oracle->set('FAILING', $array['failing']);
-        $this->oracle->set('IMPORTANT_FAILING', $array['importantFailing']);
-        $this->oracle->set('COMMENTIONS', $array['commention']);
         $this->oracle->set('DATE_INSPECT', "TO_DATE('{$array['dateTime']}','YYYY/MM/DD HH24:MI:SS')", false);
         $this->oracle->set('USER_UPDATE', $array['updater']);
         $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);

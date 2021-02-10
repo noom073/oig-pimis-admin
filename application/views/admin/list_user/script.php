@@ -165,8 +165,13 @@
 
         $("#unit-search-update-user-form").blur(function() {
             let text = $(this).val();
-            let unitList = units.filter(r => r.NPRT_ACM.includes(text) || r.NPRT_NAME.includes(text));
-            console.log(unitList);
+            let unitList = units.filter(r => {
+                if (r.NPRT_ACM == null) {
+                    return r.NPRT_NAME.includes(text);
+                } else {
+                    return r.NPRT_ACM.includes(text) || r.NPRT_NAME.includes(text);
+                }
+            });
             let option = '<option value="">หน่วย</option>';
             unitList.forEach(r => {
                 option += `<option value="${r.NPRT_UNIT}">${r.NPRT_ACM}</option>`;
@@ -255,8 +260,14 @@
 
         $("#create-user-form-search-unit").blur(function() {
             let text = $(this).val();
-            let unitList = units.filter(r => r.NPRT_ACM.includes(text) || r.NPRT_NAME.includes(text));
-            console.log(unitList);
+            console.log(units);
+            let unitList = units.filter(r => {
+                if (r.NPRT_ACM == null) {
+                    return r.NPRT_NAME.includes(text);
+                } else {
+                    return r.NPRT_ACM.includes(text) || r.NPRT_NAME.includes(text);
+                }
+            });
             let option = '<option value="">หน่วย</option>';
             unitList.forEach(r => {
                 option += `<option value="${r.NPRT_UNIT}">${r.NPRT_ACM}</option>`;

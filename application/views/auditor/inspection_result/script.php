@@ -79,10 +79,25 @@
         };
 
 
+        const getInspectionOptions = () => {
+            return $.get({
+                url: '<?= site_url('data_service/ajax_get_inspection_options') ?>',
+                dataType: 'json'
+            }).done().fail((jhr, status, error) => console.error(jhr, status, error));
+        };
+
+
         $(document).on('click', ".detail-btn", async function() {
             let rowID = $(this).data('row-id');
             let detail = await getInspectionNoteDetail(rowID);
-            $("#edit-note-form-inspection-option").val(detail.INSPECTION_OPTION_ID);
+            let inspectionOptions = await getInspectionOptions();
+            let option = '';
+            inspectionOptions.filter(r => {
+                return r.ROW_ID == detail.INSPECTION_OPTION_ID;
+            }).forEach(r => {
+                option += `<option value="${r.ROW_ID}">${r.INSPECTION_NAME}</option>`;
+            });
+            $("#edit-note-form-inspection-option").html(option);
             $("#edit-note-form-commander").val(detail.UNIT_COMMANDER);
             $("#edit-note-form-date").val(detail.DATE_INSPECT);
             $("#edit-note-form-auditee").val(detail.AUDITEE_NAME);
