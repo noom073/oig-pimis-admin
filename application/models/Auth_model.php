@@ -40,13 +40,14 @@ class Auth_model extends CI_Model
         return $query;
     }
 
-    public function insert_token($token, $userID)
+    public function insert_token($token, $userID, $ADToken)
     {
         $date = date("Y-m-d H:i:s");
         $this->oracle->set('TOKEN', $token);
         $this->oracle->set('ACTIVE', 'y');
         $this->oracle->set('USER_ID', $userID);
         $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
+        $this->oracle->set('AD_TOKEN', $ADToken);
         $query = $this->oracle->insert('PIMIS_TOKEN_DATA');
         return $query;
     }

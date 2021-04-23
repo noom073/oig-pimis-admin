@@ -68,4 +68,9 @@ class Welcome extends CI_Controller
 	{	
 		$this->load->view('welcome/fobidden_content/content');
 	}
+
+	public function pdf()
+	{
+		$this->load->view('pdf_generate/first');
+	}
 }

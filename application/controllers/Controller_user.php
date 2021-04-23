@@ -182,6 +182,7 @@ class Controller_user extends CI_Controller
     public function ajax_add_question()
     {
         $data['questionName']   = $this->center_services->convert_th_num_to_arabic($this->input->post('questionName'));
+        $data['questionLimitScore']  = $this->input->post('questionLimitScore');
         $data['questionOrder']  = $this->input->post('questionOrder');
         $data['subjectID']      = $this->input->post('subjectID');
         $data['updater']        = $this->user_data->get_email();
@@ -231,6 +232,7 @@ class Controller_user extends CI_Controller
     public function ajax_edit_question()
     {
         $data['questionName']   = $this->center_services->convert_th_num_to_arabic($this->input->post('questionName'));
+        $data['questionLimitScore']  = $this->input->post('questionLimitScore');
         $data['questionOrder']  = $this->input->post('questionOrder');
         $data['questionID']     = $this->input->post('questionID');
         $data['updater']        = $this->user_data->get_email();

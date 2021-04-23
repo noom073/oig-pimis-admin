@@ -112,7 +112,7 @@ class Authentication
                     $token = random_string('alnum', 32);
                     $checkToken = $this->CI->auth_model->check_token($token);
                     if ($checkToken->num_rows() == 0) { // CHECK TOKEN DUPLICATE
-                        $insertToken = $this->CI->auth_model->insert_token($token, $userID);
+                        $insertToken = $this->CI->auth_model->insert_token($token, $userID, $ADToken->TOKEN);
                         if ($insertToken) { // CHECK INSERT TOKEN
                             set_cookie('pimis-token', $token, 0);
                             $sesData['usertype']    = array_map(function ($r) {

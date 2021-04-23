@@ -86,6 +86,7 @@
             let questionID = $(this).data('question-id');
             let question = await getAQuestion(questionID);
             $("#question-name-edit-question-form").val(question.Q_NAME);
+            $("#question-limit-score-edit-question-form").val(question.LIMIT_SCORE);
             $("#question-order-edit-question-form").val(question.Q_ORDER);
             $("#edit-question-form").data('question-id', questionID);
             $("#edit-question-modal").modal();

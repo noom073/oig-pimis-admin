@@ -55,7 +55,7 @@
                             <div class="mb-3">
                                 <div id="form-loading" class="d-none">Loading data...</div>
                                 <form id="auditor-inspect-form" class="d-none" data-team-plan-id="<?= $teamPlan['ROW_ID'] ?>">
-                                    <h5>ฟอร์ม</h5>
+                                    <h5>ชุดคำถาม</h5>
                                     <div id="form-questionaire"></div>
                                     <div>
                                         <button class="btn btn-sm btn-primary" id="auditor-inspect-form-submit">บันทึก</button>

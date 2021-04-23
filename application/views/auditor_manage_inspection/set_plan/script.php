@@ -49,8 +49,13 @@
         $("#edit-plan-modal-search-units").blur(function() {
             console.log('press');
             let text = $(this).val();
-            let unit = units.filter(r => r.NPRT_ACM.includes(text) || r.NPRT_NAME.includes(text))
-                .sort((a, b) => a.NPRT_UNIT - b.NPRT_UNIT);
+            let unit = units.filter(r => {
+                if (r.NPRT_ACM == null) {
+                    return r.NPRT_NAME.includes(text);
+                } else {
+                    return r.NPRT_ACM.includes(text) || r.NPRT_NAME.includes(text);
+                }
+            }).sort((a, b) => a.NPRT_UNIT - b.NPRT_UNIT);
             console.log(unit);
             let option = '';
             unit.forEach(r => {

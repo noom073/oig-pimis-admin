@@ -18,7 +18,7 @@ class Question_model extends CI_Model
         $query = $this->oracle->get('PIMIS_QUESTION');
         return $query;
     }
-    
+
     public function get_a_question($questionID)
     {
         $this->oracle->where('Q_ID', $questionID);
@@ -32,6 +32,7 @@ class Question_model extends CI_Model
         $date = date("Y-m-d H:i:s");
         $this->oracle->set('Q_NAME', $array['questionName']);
         $this->oracle->set('SUBJECT_ID', $array['subjectID']);
+        $this->oracle->set('LIMIT_SCORE', $array['questionLimitScore']);
         $this->oracle->set('Q_ORDER', $array['questionOrder']);
         $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
         $this->oracle->set('USER_UPDATE', $array['updater']);
@@ -44,6 +45,7 @@ class Question_model extends CI_Model
     {
         $date = date("Y-m-d H:i:s");
         $this->oracle->set('Q_NAME', $array['questionName']);
+        $this->oracle->set('LIMIT_SCORE', $array['questionLimitScore']);
         $this->oracle->set('Q_ORDER', $array['questionOrder']);
         $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
         $this->oracle->set('USER_UPDATE', $array['updater']);
@@ -65,7 +67,8 @@ class Question_model extends CI_Model
 
     public function get_question_and_score($teamPlanID, $subjectID)
     {
-        $sql = "SELECT a.Q_ID, a.Q_NAME, TO_CHAR(b.SCORE) AS SCORE
+        $sql = "SELECT a.Q_ID, a.Q_NAME, a.LIMIT_SCORE,
+        TO_CHAR(b.SCORE) AS SCORE
         FROM PIMIS_QUESTION a
         INNER JOIN PIMIS_INSPECTION_SCORE_AUDITOR b 
             ON a.Q_ID = b.QUESTION_ID 
@@ -86,7 +89,8 @@ class Question_model extends CI_Model
 
     public function get_question_and_score_user($teamPlanID, $subjectID)
     {
-        $sql = "SELECT a.Q_ID, a.Q_NAME, TO_CHAR(b.VALUE) AS SCORE
+        $sql = "SELECT a.Q_ID, a.Q_NAME, a.LIMIT_SCORE,
+        TO_CHAR(b.VALUE) AS SCORE
         FROM PIMIS_QUESTION a
         LEFT JOIN PIMIS_USER_EVALUATE b 
             ON a.Q_ID = b.QUESTION_ID 

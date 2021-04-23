@@ -71,6 +71,11 @@
                             </div>
 
                             <div class="form-group">
+                                <label>คะแนนสูงสุด</label>
+                                <input type="number" class="form-control" name="questionLimitScore" required>
+                            </div>
+
+                            <div class="form-group">
                                 <label>ลำดับ</label>
                                 <input type="number" class="form-control" name="questionOrder" required>
                             </div>
@@ -105,6 +110,11 @@
                             <div class="form-group">
                                 <label>ชื่อคำถาม</label>
                                 <input type="text" class="form-control" name="questionName" id="question-name-edit-question-form" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>คะแนนสูงสุด</label>
+                                <input type="number" class="form-control" name="questionLimitScore" id="question-limit-score-edit-question-form" required>
                             </div>
 
                             <div class="form-group">

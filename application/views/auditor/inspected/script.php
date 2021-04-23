@@ -25,26 +25,36 @@
                     let questions = '';
                     r.questions.forEach((question, index) => {
                         questionsAmount++;
+                        // -------------------- BACKUP INPUT SCORE BY RADIO -------------------
+                        // questions += `<div class="pl-3 border-left my-2 question">
+                        //             <div>- ${question.Q_NAME} ?</div>
+                        //             <div class="pl-5">
+                        //                 <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="1" ${question.SCORE == '1' ? 'checked':''}>   
+                        //                 <label class="text-success choice">1</label>
+                        //                 &nbsp;&nbsp;                                   
+                        //                 <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.75" ${question.SCORE == '0.75' ? 'checked':''}>                                        
+                        //                 <label class="text-info choice">0.75</label>
+                        //                 &nbsp;&nbsp; 
+                        //                 <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.5" ${question.SCORE == '0.5' ? 'checked':''}>                                        
+                        //                 <label class="text-danger choice">0.50</label>
+                        //                 &nbsp;&nbsp; 
+                        //                 <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.25" ${question.SCORE == '0.25' ? 'checked':''}>                                        
+                        //                 <label class="text-danger choice">0.25</label>
+                        //                 &nbsp;&nbsp; 
+                        //                 <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0" ${question.SCORE == '0' ? 'checked':''}>                                        
+                        //                 <label class="text-danger choice">0</label>
+                        //                 &nbsp;&nbsp;&nbsp;&nbsp;  
+                        //                 <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="n" ${question.SCORE == 'n' ? 'checked':''}>                                        
+                        //                 <label class="choice">ไม่มีการตรวจ</label>
+                        //             </div>
+                        //         </div>`;
+                        // END ------------------- BACKUP INPUT SCORE BY RADIO -------------------
+                        let textMaxDesc = (question.LIMIT_SCORE === null) ? 'ไม่ได้ระบุ' : question.LIMIT_SCORE;
                         questions += `<div class="pl-3 border-left my-2 question">
                                     <div>- ${question.Q_NAME} ?</div>
-                                    <div class="pl-5">
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="1" ${question.SCORE == '1' ? 'checked':''}>   
-                                        <label class="text-success choice">1</label>
-                                        &nbsp;&nbsp;                                   
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.75" ${question.SCORE == '0.75' ? 'checked':''}>                                        
-                                        <label class="text-info choice">0.75</label>
-                                        &nbsp;&nbsp; 
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.5" ${question.SCORE == '0.5' ? 'checked':''}>                                        
-                                        <label class="text-danger choice">0.50</label>
-                                        &nbsp;&nbsp; 
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.25" ${question.SCORE == '0.25' ? 'checked':''}>                                        
-                                        <label class="text-danger choice">0.25</label>
-                                        &nbsp;&nbsp; 
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0" ${question.SCORE == '0' ? 'checked':''}>                                        
-                                        <label class="text-danger choice">0</label>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;  
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="n" ${question.SCORE == 'n' ? 'checked':''}>                                        
-                                        <label class="choice">ไม่มีการตรวจ</label>
+                                    <div class="pl-5 col-2">
+                                        <input class="auditor-score form-control" type="number" name="score-${question.Q_ID}" value="${question.SCORE}" max="${question.LIMIT_SCORE}" min="0">   
+                                        <small class="text-danger">คะแนนสูงสุดไม่เกิน ${textMaxDesc}</small>
                                     </div>
                                 </div>`;
                     });
@@ -57,26 +67,36 @@
                     html += `<li class="pl-2 border-left">${number} ${r.SUBJECT_NAME}`;
                     r.questions.forEach((question, index) => {
                         questionsAmount++;
+                        // -------------------- BACKUP INPUT SCORE BY RADIO -------------------
+                        // html += `<div class="pl-3 border-left my-2 question">
+                        //             <div>- ${question.Q_NAME} ?</div>
+                        //             <div class="pl-5">
+                        //                 <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="1" ${question.SCORE == '1' ? 'checked':''}>   
+                        //                 <label class="text-success choice">1</label>
+                        //                 &nbsp;&nbsp;                                   
+                        //                 <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.75" ${question.SCORE == '0.75' ? 'checked':''}>                                        
+                        //                 <label class="text-info choice">0.75</label>
+                        //                 &nbsp;&nbsp; 
+                        //                 <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.5" ${question.SCORE == '0.5' ? 'checked':''}>                                        
+                        //                 <label class="text-danger choice">0.50</label>
+                        //                 &nbsp;&nbsp; 
+                        //                 <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.25" ${question.SCORE == '0.25' ? 'checked':''}>                                        
+                        //                 <label class="text-danger choice">0.25</label>
+                        //                 &nbsp;&nbsp; 
+                        //                 <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0" ${question.SCORE == '0' ? 'checked':''}>                                        
+                        //                 <label class="text-danger choice">0</label>
+                        //                 &nbsp;&nbsp;&nbsp;&nbsp;  
+                        //                 <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="n" ${question.SCORE == 'n' ? 'checked':''}>                                        
+                        //                 <label class="choice">ไม่มีการตรวจ</label>
+                        //             </div>
+                        //         </div>`;
+                        // END ------------------- BACKUP INPUT SCORE BY RADIO -------------------
+                        let textMaxDesc = (question.LIMIT_SCORE === null) ? 'ไม่ได้ระบุ' : question.LIMIT_SCORE;
                         html += `<div class="pl-3 border-left my-2 question">
                                     <div>- ${question.Q_NAME} ?</div>
-                                    <div class="pl-5">
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="1" ${question.SCORE == '1' ? 'checked':''}>   
-                                        <label class="text-success choice">1</label>
-                                        &nbsp;&nbsp;                                   
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.75" ${question.SCORE == '0.75' ? 'checked':''}>                                        
-                                        <label class="text-info choice">0.75</label>
-                                        &nbsp;&nbsp; 
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.5" ${question.SCORE == '0.5' ? 'checked':''}>                                        
-                                        <label class="text-danger choice">0.50</label>
-                                        &nbsp;&nbsp; 
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0.25" ${question.SCORE == '0.25' ? 'checked':''}>                                        
-                                        <label class="text-danger choice">0.25</label>
-                                        &nbsp;&nbsp; 
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="0" ${question.SCORE == '0' ? 'checked':''}>                                        
-                                        <label class="text-danger choice">0</label>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;  
-                                        <input class="auditor-score" type="radio" name="score-${question.Q_ID}" value="n" ${question.SCORE == 'n' ? 'checked':''}>                                        
-                                        <label class="choice">ไม่มีการตรวจ</label>
+                                    <div class="pl-5 col-2">
+                                        <input class="auditor-score form-control" type="number" name="score-${question.Q_ID}" value="${question.SCORE}" max="${question.LIMIT_SCORE}" min="0">   
+                                        <small class="text-danger">คะแนนสูงสุดไม่เกิน ${textMaxDesc}</small>
                                     </div>
                                 </div>`;
                     });
