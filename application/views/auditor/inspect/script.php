@@ -118,7 +118,7 @@
 
         const summaryScore = () => {
             let countScore = 0;
-            $(".auditor-score:checked").each(function(el) {
+            $(".auditor-score").each(function(el) {
                 let score = $(this).val();
                 if (isNaN(score) == false) {
                     countScore += (+score);
