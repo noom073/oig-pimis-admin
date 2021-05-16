@@ -111,4 +111,16 @@ class Auth_model extends CI_Model
         $query = $this->oracle->query($sql, array($userID))->row_array();
         return "{$query['TITLE']} {$query['FIRSTNAME']}  {$query['LASTNAME']}";
     }
+
+    public function get_user_inspection_type_in_teamplan($teamID, $userEmail)
+    {
+        $sql = "SELECT b.INSPECTION_ID 
+            FROM PIMIS_AUDITOR a
+            INNER JOIN PIMIS_AUDITOR_TYPE b
+                ON a.ADT_TYPE = b.ADT_T_ID 
+            WHERE a.ADT_EMAIL = ?
+            AND a.ADT_TEAM = ?";
+        $query = $this->oracle->query($sql, array($userEmail, $teamID));
+        return $query;
+    }
 }

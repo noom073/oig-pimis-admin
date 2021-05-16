@@ -80,12 +80,15 @@ class Data_service extends CI_Controller
 
     public function ajax_get_questions_by_inspection()
     {
-        $inspectionID = $this->input->post('inspectionOptionID');
-        $subjects = $this->subject_model->get_subject_by_inspection_option($inspectionID)->result_array();
+        $inspectionOptionID = $this->input->post('inspectionOptionID');
+        $inspectionID = $this->inspection_option_model->get_inspection_option($inspectionOptionID)->row_array();
+        $subjects = $this->subject_model->get_subject_by_inspection_option($inspectionOptionID)->result_array();
         $array = $this->data_model->make_array_tree($subjects);
+        $result['inspectionID'] = $inspectionID['INSPECTION_ID'];
+        $result['array']        = $array;
         $this->output
             ->set_content_type('application/json')
-            ->set_output(json_encode($array));
+            ->set_output(json_encode($result));
     }
 
     public function ajax_inspection_data_calendar()
@@ -96,7 +99,7 @@ class Data_service extends CI_Controller
             $array['unitID']    = $r['INS_UNIT'];
             $array['dateStart'] = $r['INS_DATE'];
             $array['dateEnd']   = $r['FINISH_DATE'];
-            $array['teamPlanID']= $r['TEAM_PLAN_ID'];
+            $array['teamPlanID'] = $r['TEAM_PLAN_ID'];
             $array['teamID']    = $r['TEAM_ID'];
             $array['teamName']  = $r['TEAM_NAME'];
             $array['teamYear']  = $r['TEAM_YEAR'];
@@ -113,12 +116,15 @@ class Data_service extends CI_Controller
     public function ajax_get_questions_and_score()
     {
         $inspectionOptionID = $this->input->post('inspectionOptionID');
+        $inspectionID = $this->inspection_option_model->get_inspection_option($inspectionOptionID)->row_array();
         $teamPlanID = $this->input->post('teamPlanID');
         $subjects = $this->subject_model->get_subject_by_inspection_option($inspectionOptionID)->result_array();
         $array = $this->data_model->make_tree_with_score($subjects, $teamPlanID);
+        $result['inspectionID'] = $inspectionID['INSPECTION_ID'];
+        $result['array']        = $array;
         $this->output
             ->set_content_type('application/json')
-            ->set_output(json_encode($array));
+            ->set_output(json_encode($result));
     }
 
     public function ajax_get_all_user_types()
@@ -143,13 +149,13 @@ class Data_service extends CI_Controller
     }
 
     public function ajax_get_inspection_options()
-    {   
+    {
         $input['inspectionID'] = $this->input->post('inspectionID', true);
         if ($input['inspectionID']) {
             $data = $this->inspection_option_model->get_inspection_option_by_inspection_id($input)->result_array();
         } else {
             $data = $this->inspection_option_model->get_all_inspection_option()->result_array();
-        }        
+        }
         $this->output
             ->set_content_type('application/json')
             ->set_output(json_encode($data));
@@ -208,5 +214,4 @@ class Data_service extends CI_Controller
             ->set_content_type('application/json')
             ->set_output(json_encode($array));
     }
-
 }

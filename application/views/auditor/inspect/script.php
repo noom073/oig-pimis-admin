@@ -23,7 +23,7 @@
                 if (r.child) {
                     let questions = '';
                     r.questions.forEach((question, index) => {
-                        questionsAmount++;
+                        questionsAmount += (+question.LIMIT_SCORE);
                         // -------------------- BACKUP INPUT SCORE BY RADIO -------------------
                         // questions += `<div class="pl-3 border-left my-2 question">
                         //             <div>- ${question.Q_NAME} ?</div>
@@ -65,7 +65,7 @@
                 } else {
                     html += `<li class="pl-2 border-left">${number} ${r.SUBJECT_NAME}`;
                     r.questions.forEach((question, index) => {
-                        questionsAmount++;
+                        questionsAmount += (+question.LIMIT_SCORE);
                         // -------------------- BACKUP INPUT SCORE BY RADIO -------------------
                         // html += `<div class="pl-3 border-left my-2 question">
                         //             <div>- ${question.Q_NAME} ?</div>
@@ -111,8 +111,9 @@
             questionsAmount = 0; // reset ค่าจำนวนคำถาม
             $("#form-questionaire").html('');
             let questions = await getQuestionsAndSubject(inspectionOptionID);
-            let html = generateTreeView(questions);
+            let html = generateTreeView(questions.array);
             $("#form-questionaire").html(html);
+            return questions.inspectionID;
         };
 
 
@@ -140,15 +141,20 @@
 
 
         $(".inspect-list").click(async function() {
+            $("#auditor-inspect-form-submit").addClass('d-none');
             $("#form-loading").removeClass('d-none');
             let inspectionOptionID = $(this).data('inspection-option-id');
-            await drawQuestionForm(inspectionOptionID);
+            let inspectionID = await drawQuestionForm(inspectionOptionID);
             showScore();
             $(".inspect-list").removeClass('active');
             $("#form-loading").addClass('d-none');
             $(this).addClass('active');
             $("#auditor-inspect-form").data('inspection-option-id', inspectionOptionID);
             $("#auditor-inspect-form").removeClass('d-none');
+            let userInspectionType = JSON.parse('<?= json_encode($userInspectionType) ?>');
+            if (userInspectionType.includes(inspectionID)) {
+                $("#auditor-inspect-form-submit").removeClass('d-none');
+            }
         });
 
 

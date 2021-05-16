@@ -40,7 +40,7 @@ class User_data
     {
         $userID = $this->get_user_id();
         $data = $this->CI->auth_model->get_user_type($userID)->result_array();
-        $result = array_map(function($r){
+        $result = array_map(function ($r) {
             return $r['TYPE_NAME'];
         }, $data);
         $types = array_merge($result);
@@ -58,6 +58,20 @@ class User_data
     {
         $userID = $this->get_user_id();
         $data = $this->CI->auth_model->get_user_by_id($userID);
+        return $data;
+    }
+
+    public function get_user_inspection_type($teamID)
+    {
+        $userEmail = $this->get_email();
+        $inspections = $this->CI->auth_model
+            ->get_user_inspection_type_in_teamplan($teamID, $userEmail)
+            ->result_array();
+
+        $data = array_map(function ($r) {
+            return $r['INSPECTION_ID'];
+        }, $inspections);
+
         return $data;
     }
 }

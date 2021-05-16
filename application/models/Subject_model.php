@@ -80,7 +80,8 @@ class Subject_model extends CI_Model
 
     public function get_subject_by_inspection_option($inspectionOptionID) // old name get_subject_by_inspection
     {
-        $this->oracle->select('SUBJECT_ID, SUBJECT_NAME, SUBJECT_PARENT_ID, INSPECTION_OPTION_ID, SUBJECT_ORDER, SUBJECT_LEVEL');
+        $this->oracle->select('SUBJECT_ID, SUBJECT_NAME, SUBJECT_PARENT_ID, INSPECTION_OPTION_ID, 
+            SUBJECT_ORDER, SUBJECT_LEVEL');
         $this->oracle->where('INSPECTION_OPTION_ID', $inspectionOptionID);
         $this->oracle->where('SUBJECT_STATUS', 'y');
         $this->oracle->order_by('SUBJECT_ORDER');

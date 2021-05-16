@@ -24,7 +24,7 @@
                 if (r.child) {
                     let questions = '';
                     r.questions.forEach((question, index) => {
-                        questionsAmount++;
+                        questionsAmount += (+question.LIMIT_SCORE);
                         // -------------------- BACKUP INPUT SCORE BY RADIO -------------------
                         // questions += `<div class="pl-3 border-left my-2 question">
                         //             <div>- ${question.Q_NAME} ?</div>
@@ -66,7 +66,7 @@
                 } else {
                     html += `<li class="pl-2 border-left">${number} ${r.SUBJECT_NAME}`;
                     r.questions.forEach((question, index) => {
-                        questionsAmount++;
+                        questionsAmount += (+question.LIMIT_SCORE);
                         // -------------------- BACKUP INPUT SCORE BY RADIO -------------------
                         // html += `<div class="pl-3 border-left my-2 question">
                         //             <div>- ${question.Q_NAME} ?</div>
@@ -128,11 +128,16 @@
         const drawQuestionForm = async inspectionOptionID => {
             questionsAmount = 0; // reset ค่าจำนวนคำถาม
             let questions = await getQuestionsAndSubject(inspectionOptionID);
-            let html = generateTreeView(questions);
+            let inspectionID = questions.inspectionID;
+            let html = generateTreeView(questions.array);
             $("#form-loading").addClass('d-none');
             $("#form-questionaire").html(html);
             $("#auditor-inspect-form").removeClass('d-none');
             showScore();
+            let userInspectionType = JSON.parse('<?= json_encode($userInspectionType) ?>');
+            if (userInspectionType.includes(inspectionID)) {
+                $("#form-questionaire-submit").removeClass('d-none');
+            }
         };
 
 

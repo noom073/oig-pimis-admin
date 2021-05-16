@@ -58,8 +58,7 @@
                                     <h5>ชุดคำถาม</h5>
                                     <div id="form-questionaire"></div>
                                     <div>
-                                        <button class="btn btn-sm btn-primary" id="auditor-inspect-form-submit">บันทึก</button>
-                                        <button class="btn btn-sm btn-light" type="button">ปิด</button>
+                                        <button class="btn btn-sm btn-primary d-none" id="auditor-inspect-form-submit" tabindex="-1">บันทึก</button>
                                     </div>
                                     <div id="result-auditor-score" class="invisible">
                                         รวม <span id="total-auditor-score"></span>
