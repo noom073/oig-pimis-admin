@@ -83,7 +83,16 @@ class Question_model extends CI_Model
     public function check_question_id_auditor_score($questionID)
     {
         $this->oracle->where('QUESTION_ID', $questionID);
+        $this->oracle->where('STATUS', 'y');
         $query = $this->oracle->get('PIMIS_INSPECTION_SCORE_AUDITOR');
+        return $query;
+    }
+
+    public function check_question_id_user_evaulate($questionID)
+    {
+        $this->oracle->where('QUESTION_ID', $questionID);
+        $this->oracle->where('STATUS', 'y');
+        $query = $this->oracle->get('PIMIS_USER_EVALUATE');
         return $query;
     }
 

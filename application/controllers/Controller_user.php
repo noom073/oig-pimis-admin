@@ -252,8 +252,9 @@ class Controller_user extends CI_Controller
     public function ajax_delete_question()
     {
         $questionID = $this->input->post('questionID');
-        $checkInAuditorScore = $this->question_model->check_question_id_auditor_score($questionID);
-        if ($checkInAuditorScore->num_rows() == 0) {
+        $checkInAuditorScore = $this->question_model->check_question_id_auditor_score($questionID)->num_rows();
+        $checkInUserEvaluate = $this->question_model->check_question_id_user_evaulate($questionID)->num_rows();
+        if ($checkInAuditorScore == 0 && $checkInUserEvaluate == 0) {
             $updater = $this->user_data->get_email();
             $delete = $this->question_model->delete_question($questionID, $updater);
             if ($delete) {
