@@ -39,13 +39,17 @@
                     className: 'text-center',
                     render: (data, type, row, meta) => {
                         let btn = '';
-                        if (data === null) {
-                            btn = `<button class="btn btn-sm btn-primary create-summary-btn" data-inspection-option-id="${row.INSPECTION_OPTION_ID}">เพิ่ม</button>`;
-                        } else {
-                            let editBtn = `<button class="btn btn-sm btn-primary edit-btn" data-summary-id="${data}">แก้ไข</button>`;
-                            let deleteBtn = `<button class="btn btn-sm btn-danger delete-btn" data-summary-id="${data}">ลบ</button>`;
-                            btn = `${editBtn} ${deleteBtn}`;
+                        let userInspectionType = <?= json_encode($userInspectionType) ?>;
+                        if (userInspectionType.includes(row.INSPECTION_ID)) {
+                            if (data === null) {
+                                btn = `<button class="btn btn-sm btn-primary create-summary-btn" data-inspection-option-id="${row.INSPECTION_OPTION_ID}">เพิ่ม</button>`;
+                            } else {
+                                let editBtn = `<button class="btn btn-sm btn-primary edit-btn" data-summary-id="${data}" data-inspection-option-id="${row.INSPECTION_OPTION_ID}">แก้ไข</button>`;
+                                let deleteBtn = `<button class="btn btn-sm btn-danger delete-btn" data-summary-id="${data}">ลบ</button>`;
+                                btn = `${editBtn} ${deleteBtn}`;
+                            }
                         }
+
                         return btn;
                     }
                 }
@@ -54,17 +58,6 @@
                 $("#loading-table").addClass('invisible');
             }
         });
-
-
-        // const getInspections = () => {
-        //     console.log('Loading inspections...');
-        //     return $.get({
-        //         url: '<?= site_url('data_service/ajax_get_inspection') ?>',
-        //         dataType: 'json'
-        //     }).done(res => {
-        //         console.log('Loading inspections complete');
-        //     }).fail((jhr, status, error) => console.error(jhr, status, error));
-        // };
 
 
         const getNoteByTeamIDAndInspectionOptionID = (teamPlanID, inspectionOptionID) => {
@@ -93,6 +86,10 @@
                     'ข้อสังเกตจากการตรวจและข้อแนะนำ: \n' + noteDetail.COMMENTIONS;
                 $("#create-summary-form-commention").html(summary);
             }
+            let teamInspections = <?= json_encode($teamInspections) ?>;
+            let inspection = teamInspections.filter(r => r.INSPECTION_OPTION_ID == inspectionOptionID)
+                .reduce((acc, cur) => acc = cur);
+            $("#create-summary-form-inspection-label").html(inspection.INSPECTION_NAME);
             $("#create-summary-form").data('inspection-option-id', inspectionOptionID);
             $("#create-summary-modal").modal()
         });
@@ -187,9 +184,13 @@
 
         $(document).on('click', ".edit-btn", async function() {
             let summaryID = $(this).data('summary-id');
-            let summaryData = await getsummaryDetail(summaryID);
+            let summaryData = await getsummaryDetail(summaryID);            
             $("#update-summary-form").data('summary-id', summaryID);
-            $("#update-summary-inspections").val(summaryData.INSPECTION_OPTION_ID);
+            let inspectionOptionID = $(this).data('inspection-option-id');
+            let teamInspections = <?= json_encode($teamInspections) ?>;
+            let inspection = teamInspections.filter(r => r.INSPECTION_OPTION_ID == inspectionOptionID)
+                .reduce((acc, cur) => acc = cur);
+            $("#update-summary-form-inspection-label").html(inspection.INSPECTION_NAME);
             $("#update-summary-comment").val(summaryData.COMMENTION);
             $("#update-summary-modal").modal();
         });

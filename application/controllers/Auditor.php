@@ -103,7 +103,7 @@ class Auditor extends CI_Controller
 			$data['inspections'] 		= $this->team_inspection_model->get_team_inspection_and_check_inspected($teamPlanID)->result_array();
 			$data['teamPlan'] 			= $this->plan_model->get_a_team_plan($teamPlanID)->row_array();
 			$data['planDetail'] 		= $this->plan_model->get_a_plan_by_id($data['teamPlan']['PLAN_ID'])->row_array();
-			$data['userInspectionType']	= $this->user_data->get_user_inspection_type($data['teamPlan']['TEAM_ID']); 
+			$data['userInspectionType']	= $this->user_data->get_user_inspection_type($data['teamPlan']['TEAM_ID']);
 
 			$sideBar['name'] 	= $this->user_data->get_name();
 			$sideBar['userTypes'] 	= $this->userTypes;
@@ -150,7 +150,7 @@ class Auditor extends CI_Controller
 			$data['teamPlan'] = $this->plan_model->get_a_team_plan($teamPlanID)->row_array();
 			$data['inspectionOption'] = $this->inspection_option_model->get_inspection_option($inspectionOptionID)->row_array();
 			$data['planDetail'] = $this->plan_model->get_a_plan_by_id($data['teamPlan']['PLAN_ID'])->row_array();
-			$data['userInspectionType']	= $this->user_data->get_user_inspection_type($data['teamPlan']['TEAM_ID']); 
+			$data['userInspectionType']	= $this->user_data->get_user_inspection_type($data['teamPlan']['TEAM_ID']);
 
 			$sideBar['name'] 	= $this->user_data->get_name();
 			$sideBar['userTypes'] 	= $this->userTypes;
@@ -177,14 +177,19 @@ class Auditor extends CI_Controller
 		$email = $this->user_data->get_email();
 		$check = $this->plan_model->check_team_plan_by_auditor($email, $teamPlanID);
 		if ($check) {
-			$data['teamPlan'] = $this->plan_model->get_a_team_plan($teamPlanID)->row_array();
-			$data['teamInspections'] = $this->team_inspection_model->get_team_inspection($teamPlanID)->result_array();
-			$data['planDetail'] = $this->plan_model->get_a_plan_by_id($data['teamPlan']['PLAN_ID'])->row_array();
-			$data['name'] 	= $this->user_data->get_name();
+			$data['teamPlan'] 		= $this->plan_model->get_a_team_plan($teamPlanID)->row_array();
+			$data['planDetail'] 	= $this->plan_model->get_a_plan_by_id($data['teamPlan']['PLAN_ID'])->row_array();
+			$data['name'] 			= $this->user_data->get_name();
+			$userInspectionType		= $this->user_data->get_user_inspection_type($data['teamPlan']['TEAM_ID']);
+			$teamInspections 		= $this->team_inspection_model->get_team_inspection($teamPlanID)->result_array();
+			$inspectionSelectList = array_filter($teamInspections, function ($r) use ($userInspectionType) {
+				return in_array($r['INSPECTION_ID'], $userInspectionType);
+			});
+			$data['teamInspections'] = array_merge($inspectionSelectList);
 
-			$sideBar['name'] 	= $this->user_data->get_name();
+			$sideBar['name'] 		= $this->user_data->get_name();
 			$sideBar['userTypes'] 	= $this->userTypes;
-			$script['custom'] = $this->load->view('auditor/inspection_result/script', $data, true);
+			$script['custom'] 		= $this->load->view('auditor/inspection_result/script', $data, true);
 			$component['header'] 			= $this->load->view('auditor/component/header', '', true);
 			$component['navbar'] 			= $this->load->view('auditor/component/navbar', '', true);
 			$component['mainSideBar'] 		= $this->load->view('sidebar/main-sidebar', $sideBar, true);
@@ -205,16 +210,16 @@ class Auditor extends CI_Controller
 		$email = $this->user_data->get_email();
 		$check = $this->plan_model->check_team_plan_by_auditor($email, $teamPlanID);
 		if ($check) {
-			$data['teamPlan'] = $this->plan_model->get_a_team_plan($teamPlanID)->row_array();
-			$data['teamInspections'] = $this->team_inspection_model->get_team_inspection($teamPlanID)->result_array();
-			$data['planDetail'] = $this->plan_model->get_a_plan_by_id($data['teamPlan']['PLAN_ID'])->row_array();
-			$sumScore = $this->questionaire_model->get_sum_form_score_by_planid($teamPlanID)->row_array();
-			$data['sumScore'] = $sumScore;
+			$data['teamPlan'] 			= $this->plan_model->get_a_team_plan($teamPlanID)->row_array();
+			$data['teamInspections'] 	= $this->team_inspection_model->get_team_inspection($teamPlanID)->result_array();
+			$data['planDetail'] 		= $this->plan_model->get_a_plan_by_id($data['teamPlan']['PLAN_ID'])->row_array();
+			$sumScore 					= $this->questionaire_model->get_sum_form_score_by_planid($teamPlanID)->row_array();
+			$data['sumScore'] 			= $sumScore;
+			$data['userInspectionType']	= $this->user_data->get_user_inspection_type($data['teamPlan']['TEAM_ID']);
 
-			$sideBar['name'] 	= $this->user_data->get_name();
+			$sideBar['name'] 		= $this->user_data->get_name();
 			$sideBar['userTypes'] 	= $this->userTypes;
-			$script['custom'] = $this->load->view('auditor/inspection_summary/script', $data, true);
-
+			$script['custom'] 		= $this->load->view('auditor/inspection_summary/script', $data, true);
 
 			$component['header'] 			= $this->load->view('auditor/component/header', '', true);
 			$component['navbar'] 			= $this->load->view('auditor/component/navbar', '', true);
@@ -331,7 +336,6 @@ class Auditor extends CI_Controller
 	public function ajax_update_summary()
 	{
 		$data['summaryID'] = $this->input->post('summaryID', true);
-		$data['inspectionID'] = $this->input->post('inspectionID', true);
 		$data['comment'] = $this->input->post('comment', true);
 		$data['updator'] = $this->user_data->get_email();
 		$insert = $this->summary_model->update_summary($data);

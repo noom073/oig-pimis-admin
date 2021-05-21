@@ -28,7 +28,7 @@ class Summary_model extends CI_Model
         $sql = "SELECT a.TEAMPLAN_ID, a.INSPECTION_OPTION_ID ,
         sum(b.SCORE) AS SCORE, 
         c.ROW_ID, TO_CHAR(c.TIME_UPDATE, 'YYYY/MM/DD HH24:MI:SS') AS TIME_UPDATE,
-        d.INSPECTION_NAME
+        d.INSPECTION_NAME, d.INSPECTION_ID
         FROM PIMIS_TEAM_INSPECTION a
         LEFT JOIN PIMIS_INSPECTION_SCORE_AUDITOR b 
             ON a.INSPECTION_OPTION_ID = b.INSPECTION_OPTION_ID 
@@ -41,7 +41,8 @@ class Summary_model extends CI_Model
             ON a.INSPECTION_OPTION_ID = d.ROW_ID 
         WHERE a.TEAMPLAN_ID = ?
         AND a.STATUS = 'y'
-        GROUP BY a.TEAMPLAN_ID, a.INSPECTION_OPTION_ID, c.ROW_ID, c.TIME_UPDATE, d.INSPECTION_NAME
+        GROUP BY a.TEAMPLAN_ID, a.INSPECTION_OPTION_ID, c.ROW_ID, c.TIME_UPDATE, d.INSPECTION_NAME, 
+            d.INSPECTION_ID
         ORDER BY a.INSPECTION_OPTION_ID";
         $query = $this->oracle->query($sql, array($teamPlanID, $teamPlanID));
         return $query;
@@ -57,7 +58,6 @@ class Summary_model extends CI_Model
     public function update_summary($array)
     {
         $date = date("Y-m-d H:i:s");
-        $this->oracle->set('INSPECTION_OPTION_ID', $array['inspectionID']);
         if ($array['comment'] == '') {
             $this->oracle->set('COMMENTION','EMPTY_CLOB()', false);
         } else {

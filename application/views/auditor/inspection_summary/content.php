@@ -122,12 +122,9 @@
                     <div class="modal-body">
                         <form id="create-summary-form" data-plan-id="<?= $teamPlan['ROW_ID'] ?>">
                             <div class="form-group">
-                                <label>สายการตรวจ</label>
-                                <select class="form-control" name="inspectionID" id="create-summary-inspections">
-                                    <?php foreach ($teamInspections as $teamInspection) { ?>
-                                        <option value="<?= $teamInspection['INSPECTION_OPTION_ID'] ?>"><?= $teamInspection['INSPECTION_NAME'] ?></option>
-                                    <?php } ?>
-                                </select>
+                                <label>สายการตรวจ
+                                    <span id="create-summary-form-inspection-label"></span>
+                                </label>
                             </div>
                             <div class="form-group">
                                 <label>รายละเอียด</label>
@@ -157,12 +154,9 @@
                     <div class="modal-body">
                         <form id="update-summary-form">
                             <div class="form-group">
-                                <label>สายการตรวจ</label>
-                                <select class="form-control" name="inspectionID" id="update-summary-inspections">
-                                    <?php foreach ($teamInspections as $teamInspection) { ?>
-                                        <option value="<?= $teamInspection['INSPECTION_OPTION_ID'] ?>"><?= $teamInspection['INSPECTION_NAME'] ?></option>
-                                    <?php } ?>
-                                </select>
+                                <label>สายการตรวจ
+                                    <span id="update-summary-form-inspection-label"></span>
+                                </label>
                             </div>
                             <div class="form-group">
                                 <label>รายละเอียด</label>
