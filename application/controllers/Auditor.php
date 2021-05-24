@@ -577,9 +577,11 @@ class Auditor extends CI_Controller
 			$data['teamPlan'] = $this->plan_model->get_a_team_plan($teamPlanID)->row_array();
 			$data['planDetail'] = $this->plan_model->get_a_plan_by_id($data['teamPlan']['PLAN_ID'])->row_array();
 			$data['mainPhoto'] = $this->main_photo_model->get_main_photo_for_team_paln($teamPlanID)->row_array();
+			$data['userInspectionType']	= $this->user_data->get_user_inspection_type($data['teamPlan']['TEAM_ID']);
+			$data['planID'] = $teamPlanID;
+
 			$sideBar['name'] 	= $this->user_data->get_name();
 			$sideBar['userTypes'] 	= $this->userTypes;
-			$dataForScript['planID'] = $teamPlanID;
 			foreach ($inspections as $inspection) {
 				$pictures = $inspection;
 				$pictures['photos'] = $this->gallery_photo_model
@@ -588,7 +590,7 @@ class Auditor extends CI_Controller
 				$data['pictures'][] = $pictures;
 			}
 			// var_dump($data['pictures']);
-			$script['custom'] = $this->load->view('auditor/gallery/script', $dataForScript, true);
+			$script['custom'] = $this->load->view('auditor/gallery/script', $data, true);
 
 			$component['header'] 			= $this->load->view('auditor/component/header', '', true);
 			$component['navbar'] 			= $this->load->view('auditor/component/navbar', '', true);
@@ -654,7 +656,19 @@ class Auditor extends CI_Controller
 		$data['teamPlanID'] = $this->input->post('teamPlanID', true);
 		$data['inspectionOptionID'] = $this->input->post('inspectionOptionID', true);
 		$data['updater'] = $this->session->email;
-		$upload = $this->gallery_photo_model->upload_gallery_multiple($_FILES, $data);
+
+		$teamPlan 			= $this->plan_model->get_a_team_plan($data['teamPlanID'])->row_array();
+		$userInspectionType	= $this->user_data->get_user_inspection_type($teamPlan['TEAM_ID']);
+		$inspectionID = $this->inspection_option_model
+			->get_a_inspection_option($data['inspectionOptionID'])
+			->row_array();
+
+		if (in_array($inspectionID['INSPECTION_ID'], $userInspectionType)) {
+			$upload = $this->gallery_photo_model->upload_gallery_multiple($_FILES, $data);
+		} else { // ผู้ใช้ไม่ได้รับผิดชอบในสายงานนี้
+			$upload['status'] = false;
+			$upload['error'] = "ผู้ใช้ไม่ได้รับผิดชอบในสายงานนี้ ({$inspectionID['INSPECTION_NAME']})";
+		}
 		$this->output
 			->set_content_type('application/json')
 			->set_output(json_encode($upload));
@@ -665,9 +679,12 @@ class Auditor extends CI_Controller
 		$teamPlanID = $this->input->post('teamPlanID', true);
 		$inspectionOptionID = $this->input->post('inspectionOptionID', true);
 		$photos = $this->gallery_photo_model->get_photo_for_team_inspection($teamPlanID, $inspectionOptionID)->result_array();
+		$inspectionOption = $this->inspection_option_model->get_a_inspection_option($inspectionOptionID)->row_array();
+		$data['photos'] = $photos;
+		$data['inspectionOption'] = $inspectionOption;
 		$this->output
 			->set_content_type('application/json')
-			->set_output(json_encode($photos));
+			->set_output(json_encode($data));
 	}
 
 	public function ajax_delete_gallery_photo()

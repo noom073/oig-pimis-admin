@@ -44,6 +44,7 @@
                                     <?php } ?>
                                 </div>
                             </div>
+                            <hr>
                         </div>
 
                         <div>
@@ -61,6 +62,7 @@
                                         <?php } ?>
                                     </div>
                                 </div>
+                                <hr>
                             <?php } ?>
                         </div>
                     </div>
@@ -109,13 +111,16 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">ภาพกิจกรรม</h5>
+                        <h5 class="modal-title">
+                            อัพโหลด ภาพกิจกรรม 
+                            <span id="gallery-photo-label"></span>    
+                        </h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <div id="gallery-photos"></div>
+                        <div class="gallery-photos"></div>
                         <form id="edit-gallery-photo-form" enctype="multipart/form-data">
                             <input type="file" name="photo[]" class="form-control" multiple>
                             <button class="btn btn-primary">บันทึก</button>
@@ -128,5 +133,27 @@
             </div>
         </div>
         <!-- END EDIT GALLERY PHOTO Modal -->
+
+        <!-- VIEW GALLERY PHOTO Modal -->
+        <div class="modal fade" id="view-gallery-photo-modal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            ภาพกิจกรรม 
+                            <span class="gallery-photo-label"></span>    
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="gallery-photos"></div>                        
+                    </div>
+                    <div class="modal-footer"></div>
+                </div>
+            </div>
+        </div>
+        <!-- VIEW EDIT GALLERY PHOTO Modal -->
     </div>
 </div>

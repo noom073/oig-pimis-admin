@@ -70,5 +70,12 @@ class Inspection_option_model extends CI_Model
         $query = $this->oracle->update('PIMIS_INSPECTION_OPTION');
         return $query;
     }
+
+    public function get_a_inspection_option($inspectionOptionID)
+    {
+        $this->oracle->where('ROW_ID', $inspectionOptionID);
+        $query = $this->oracle->get('PIMIS_INSPECTION_OPTION');
+        return $query;
+    }
     
 }

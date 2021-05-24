@@ -69,22 +69,37 @@
             let teamPlanID = $(this).data('team-plan-id');
             let inspectionOptionID = $(this).data('inspection-option-id');
             let galleryPhotos = await getGalleryPhoto(teamPlanID, inspectionOptionID);
-            console.log(galleryPhotos);
             let html = '';
-            galleryPhotos.forEach(r => {
-                html += `<div class="mb-3">
-                            <img src="<?= base_url("assets/filesUpload/") ?>${r.PIC_PATH}" class="rounded mx-auto d-block" height="250" alt="${r.PIC_NAME}">
-                            <div class="text-right">
-                                <button class="btn btn-sm btn-danger delete-gallery-photo" data-photo-row-id="${r.ROW_ID}">ลบ</button>
-                            </div>
-                        </div>`;
-            });
-            $("#gallery-photos").html(html);
-            $("#edit-gallery-photo-form").data({
-                'team-plan-id': teamPlanID,
-                'inspection-option-id': inspectionOptionID
-            });
-            $("#edit-gallery-photo-modal").modal();
+            let userInspectionType = JSON.parse('<?= json_encode($userInspectionType) ?>');
+
+            $(".gallery-photo-label").html(galleryPhotos.inspectionOption.INSPECTION_NAME);
+
+            if (userInspectionType.includes(galleryPhotos.inspectionOption.INSPECTION_ID)) {
+                console.log(galleryPhotos);
+                $("#edit-gallery-photo-form").data({
+                    'team-plan-id': teamPlanID,
+                    'inspection-option-id': inspectionOptionID
+                });
+                galleryPhotos.photos.forEach(r => {
+                    html += `<div class="mb-3">
+                                <img src="<?= base_url("assets/filesUpload/") ?>${r.PIC_PATH}" class="rounded mx-auto d-block" height="250" alt="${r.PIC_NAME}">
+                                <div class="text-right">
+                                    <button class="btn btn-sm btn-danger delete-gallery-photo" data-photo-row-id="${r.ROW_ID}">ลบ</button>
+                                </div>
+                            </div>`;
+                });
+                $(".gallery-photos").html(html);
+                $("#edit-gallery-photo-modal").modal();
+            } else {
+                galleryPhotos.photos.forEach(r => {
+                    html += `<div class="mb-3">
+                                <img src="<?= base_url("assets/filesUpload/") ?>${r.PIC_PATH}" class="rounded mx-auto d-block" height="250" alt="${r.PIC_NAME}">
+                            </div>`;
+                });
+                $(".gallery-photos").html(html);
+                $("#view-gallery-photo-modal").modal();
+            }
+            return;
         });
 
 
