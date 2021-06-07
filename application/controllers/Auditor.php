@@ -12,6 +12,7 @@ class Auditor extends CI_Controller
 		$this->load->helper('string');
 		$this->load->library('session');
 		$this->load->library('session_services');
+		$this->load->library('center_services');
 
 		$this->load->model('questionaire_model');
 		$this->load->model('summary_model');
@@ -702,5 +703,21 @@ class Auditor extends CI_Controller
 		$this->output
 			->set_content_type('application/json')
 			->set_output(json_encode($result));
+	}
+
+	public function inspection_result_report()
+	{
+		$noteID = $this->input->get('note', true);
+		$noteData = $this->inspection_notes_model->get_inspection_note_by_id($noteID);
+
+		if (!$noteID || !$noteData->num_rows()) {
+			redirect('auditor/calendar');
+		} else {
+			$this->load->library('pdf');
+			$noteData = $this->inspection_notes_model->get_inspection_note_report($noteID)->row_array();
+			$noteData['DATE_INSPECT'] = $this->center_services->conv_date_to_thai($noteData['DATE_INSPECT']);
+			$data['note'] = $noteData;
+			$this->load->view('pdf_report/inspection_report', $data);
+		}
 	}
 }

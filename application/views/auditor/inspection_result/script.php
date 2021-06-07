@@ -36,6 +36,18 @@
                     data: 'ROW_ID',
                     className: 'text-center',
                     render: (data, type, row, meta) => {
+                        let pdfBtn = `<a class="btn btn-sm btn-danger" 
+                                        href="<?= site_url('auditor/inspection_result_report')?>?note=${data}"
+                                        target="_blank">
+                                            <i class="far fa-file-pdf" style="font-size:25px"></i>
+                                    </a>`;
+                        return pdfBtn;
+                    }
+                },
+                {
+                    data: 'ROW_ID',
+                    className: 'text-center',
+                    render: (data, type, row, meta) => {
                         let detailBtn = `<button class="btn btn-sm btn-primary detail-btn" data-row-id="${data}">รายละเอียด</button>`;
                         let deleteBtn = `<button class="btn btn-sm btn-danger delete-btn" data-row-id="${data}">ลบ</button>`;
                         return `${detailBtn} ${deleteBtn}`;

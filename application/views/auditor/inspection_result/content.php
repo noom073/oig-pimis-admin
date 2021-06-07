@@ -39,6 +39,7 @@
                                         <th class="text-center">ลำดับ</th>
                                         <th class="text-center">สายการตรวจ</th>
                                         <th class="text-center">เวลา</th>
+                                        <th class="text-center">PDF</th>
                                         <th class="text-center">link</th>
                                     </tr>
                                 </thead>
@@ -56,7 +57,7 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">เพิ่มบันทึก</h5>
+                    <h5 class="modal-title">เพิ่มบันทึกการตรวจราชการ</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -159,7 +160,7 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">เพิ่มบันทึก</h5>
+                    <h5 class="modal-title">บันทึกการตรวจราชการ</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>

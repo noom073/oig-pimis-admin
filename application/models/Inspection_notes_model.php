@@ -56,7 +56,7 @@ class Inspection_notes_model extends CI_Model
 
     public function get_inspection_note_by_id($id)
     {
-        $this->oracle->where('ROW_ID', $id);
+        $this->oracle->like('ROW_ID', $id);
         $query = $this->oracle->get('PIMIS_INSPECTION_NOTES');
         return $query;
     }
@@ -71,7 +71,7 @@ class Inspection_notes_model extends CI_Model
     }
 
     public function update_inspection_note($array)
-    { 
+    {
         if ($array['canImprove'] == '') $this->oracle->set('CAN_IMPROVE', 'EMPTY_CLOB()', false);
         else $this->oracle->set('CAN_IMPROVE', $array['canImprove']);
 
@@ -107,6 +107,32 @@ class Inspection_notes_model extends CI_Model
         $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
         $this->oracle->where('ROW_ID', $array['rowID']);
         $query = $this->oracle->update('PIMIS_INSPECTION_NOTES');
+        return $query;
+    }
+
+    public function get_inspection_note_report($id)
+    {
+        $sql = "SELECT a.AUDITEE_NAME, a.AUDITEE_POS, a.CAN_IMPROVE, a.COMMENTIONS, a.FAILING, 
+                a.IMPORTANT_FAILING, a.INSPECTION_SCORE, a.UNIT_COMMANDER, a.WORKING_SCORE,
+                TO_CHAR(a.DATE_INSPECT, 'YYYY-MM-DD') as DATE_INSPECT,
+                b.TITLE ||' '|| b.FIRSTNAME ||'  '|| b.LASTNAME AS INSPECTOR, 
+                d.INSPE_NAME,
+                g.NPRT_NAME
+            FROM PIMIS_INSPECTION_NOTES a
+            INNER JOIN PIMIS_USER b
+                ON a.AUDITOR_EMAIL = b.EMAIL 
+            INNER JOIN PIMIS_INSPECTION_OPTION c
+                ON a.INSPECTION_OPTION_ID = c.ROW_ID 
+            INNER JOIN PIMIS_INSPECTIONS d 
+                ON c.INSPECTION_ID = d.INSPE_ID 
+            INNER JOIN PIMIS_AUDITOR_TEAM_IN_PLAN e 
+                ON a.TEAMPLAN_ID = e.ROW_ID 
+            INNER JOIN PITS_PLAN f 
+                ON e.PLAN_ID = f.ID 
+            INNER JOIN PER_NPRT_TAB g 
+                ON f.INS_UNIT = g.NPRT_UNIT
+            WHERE a.ROW_ID = ?";
+        $query = $this->oracle->query($sql, array($id));        
         return $query;
     }
 }
