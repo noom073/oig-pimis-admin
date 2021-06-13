@@ -61,9 +61,9 @@ $pdf->writeHTMLCell(90, '', 20, '', '<span style="font-size:16px">4. ข้อ�
 $pdf->writeHTMLCell('', '', 20, '', '<span style="font-size:16px">' . $note['COMMENTIONS']->load() . '</span>', $border, 1, 0, 1, 'L');
 $pdf->ln(5);
 $pdf->writeHTMLCell(60, '', 15, '', '<span style="font-size:16px">ผลคะแนนตามสายงาน</span>', $border, 0, 0, 1, 'L');
-$pdf->writeHTMLCell('', '', '', '', '<span style="font-size:16px">' . $note['INSPECTION_SCORE'] . '</span>', $border, 1, 0, 1, 'L');
+$pdf->writeHTMLCell('', '', '', '', '<span style="font-size:16px">' . +$sumScore['SCORE'] . '</span>', $border, 1, 0, 1, 'L');
 $pdf->writeHTMLCell(60, '', 15, '', '<span style="font-size:16px">คะแนนประสิทธิภาพในการปฏิบัติงาน</span>', $border, 0, 0, 1, 'L');
-$pdf->writeHTMLCell('', '', '', '', '<span style="font-size:16px">'  . $note['WORKING_SCORE'] . '</span>', $border, 1, 0, 1, 'L');
+$pdf->writeHTMLCell('', '', '', '', '<span style="font-size:16px">'  . +$note['WORKING_SCORE'] . '</span>', $border, 1, 0, 1, 'L');
 
 // ---------------------------------------------------------
 

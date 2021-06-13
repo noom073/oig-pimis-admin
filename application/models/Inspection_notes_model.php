@@ -135,4 +135,16 @@ class Inspection_notes_model extends CI_Model
         $query = $this->oracle->query($sql, array($id));        
         return $query;
     }
+    
+    public function note_summary_score($noteID)
+    {
+        $sql = "SELECT SUM(b.SCORE) as SCORE
+            FROM PIMIS_INSPECTION_NOTES a
+            LEFT JOIN PIMIS_INSPECTION_SCORE_AUDITOR b
+                ON a.INSPECTION_OPTION_ID = b.INSPECTION_OPTION_ID 
+                AND a.TEAMPLAN_ID = b.TEAMPLAN_ID 
+            WHERE a.ROW_ID = ?";
+        $query = $this->oracle->query($sql, array($noteID))->row_array();
+        return $query;
+    }
 }

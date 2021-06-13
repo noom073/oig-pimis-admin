@@ -217,7 +217,8 @@ class Plan_model extends CI_Model
 
     public function get_a_team_plan($id)
     {
-        $sql = "SELECT a.ROW_ID, a.PLAN_ID, a.TEAM_ID, a.POLICY_SCORE, a.PREPARE_SCORE, a.STATUS,
+        $sql = "SELECT a.ROW_ID, a.PLAN_ID, a.TEAM_ID, a.POLICY_SCORE, a.PREPARE_SCORE,
+             a.STATUS, a.COMMANDER,
             b.TEAM_NAME, b.TEAM_YEAR 
             FROM PIMIS_AUDITOR_TEAM_IN_PLAN a
             INNER JOIN PIMIS_AUDITOR_TEAM b 

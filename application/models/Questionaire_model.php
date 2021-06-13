@@ -128,6 +128,7 @@ class Questionaire_model extends CI_Model
         $date = date("Y-m-d H:i:s");
         $this->oracle->set('POLICY_SCORE', $array['policyScore']);
         $this->oracle->set('PREPARE_SCORE', $array['prepareScore']);
+        $this->oracle->set('COMMANDER', $array['commander']);
         $this->oracle->set("USER_UPDATE", $array['updator']);
         $this->oracle->set("TIME_UPDATE", "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
         $this->oracle->where('ROW_ID', $array['teamPlanID']);

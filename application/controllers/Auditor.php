@@ -299,6 +299,7 @@ class Auditor extends CI_Controller
 	public function ajax_update_plan_score()
 	{
 		$data['teamPlanID'] = $this->input->post('teamPlanID');
+		$data['commander'] = $this->input->post('commander');
 		$data['policyScore'] = $this->input->post('policyScore');
 		$data['prepareScore'] = $this->input->post('prepareScore');
 		$data['updator'] = $this->user_data->get_email();
@@ -717,7 +718,30 @@ class Auditor extends CI_Controller
 			$noteData = $this->inspection_notes_model->get_inspection_note_report($noteID)->row_array();
 			$noteData['DATE_INSPECT'] = $this->center_services->conv_date_to_thai($noteData['DATE_INSPECT']);
 			$data['note'] = $noteData;
+			$data['sumScore'] = $this->inspection_notes_model->note_summary_score($noteID);
+			// var_dump($data);
 			$this->load->view('pdf_report/inspection_report', $data);
 		}
+	}
+
+	public function inspection_summary_report()
+	{
+
+		$teamPlan = $this->input->get('team_plan_id', true);
+		$isExistTeamPlan = $this->team_inspection_model->is_exist_teamplan($teamPlan);
+		if (!$isExistTeamPlan) {
+			redirect('auditor/calendar');
+		} else {
+			$data['commention'] = $this->summary_model
+				->get_all_summary_comment_by_teamplan($teamPlan)->result_array();
+			$data['leader'] = $this->team_inspection_model->get_leader_of_team($teamPlan)->row_array();
+			$data['header'] = $this->summary_model->get_header_summary($teamPlan)->row_array();
+			$data['header']['INS_DATE'] = $this->center_services->conv_date_to_thai($data['header']['INS_DATE'], 's');
+			$data['header']['FINISH_DATE'] = $this->center_services->conv_date_to_thai($data['header']['FINISH_DATE'], 's');
+			$data['sumScore'] = $this->summary_model->summary_score($teamPlan); 
+			// var_dump($data);
+			$this->load->view('pdf_report/summary_inspection_report', $data);
+		}
+		
 	}
 }

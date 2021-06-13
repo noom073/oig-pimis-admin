@@ -74,5 +74,5 @@ class Data_model extends CI_Model
         $result = array_merge(array(), $data);
 
         return $result;
-    }
+    }    
 }

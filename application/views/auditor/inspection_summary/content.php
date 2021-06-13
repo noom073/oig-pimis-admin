@@ -67,6 +67,12 @@
                                     <form id="set-plan-score" data-team-plan-id="<?= $teamPlan['ROW_ID'] ?>">
                                         <div class="form-row">
                                             <div class="form-group col-md-5">
+                                                <label>ผู้บัญชาการหน่วย</label>
+                                                <input type="text" class="form-control" name="commander" value="<?= $teamPlan['COMMANDER'] ?>">
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-5">
                                                 <label>ผลการปฏิบัติงานตามนโยบาย ผบช.</label>
                                                 <input type="text" class="form-control" name="policyScore" value="<?= $teamPlan['POLICY_SCORE'] ?>">
                                             </div>
@@ -79,6 +85,7 @@
                                         </div>
                                         <div id="set-plan-score-result"></div>
                                         <button type="submit" class="btn btn-primary">บันทึก</button>
+                                        <a href="<?= site_url('auditor/inspection_summary_report?team_plan_id=' . $teamPlan['ROW_ID']) ?>" target="_blank" class="btn btn-info" id="print-summary">PDF</a>
                                     </form>
                                 </div>
                             </div>

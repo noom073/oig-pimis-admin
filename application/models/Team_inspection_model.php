@@ -73,12 +73,12 @@ class Team_inspection_model extends CI_Model
                 $data['teamPlanID'] = $array['teamPlanID'];
                 $data['teamInspection'] = $r;
                 $text = '';
-                $text .= $inScoreAuditor ? 'พบการใช้ใน PIMIS_INSPECTION_SCORE_AUDITOR ':'';
-                $text .= $inNotes ? 'พบการใช้ใน PIMIS_INSPECTION_NOTES ':'';
-                $text .= $inSummary ? 'พบการใช้ใน PIMIS_INSPECTION_SUMMARY ':'';
+                $text .= $inScoreAuditor ? 'พบการใช้ใน PIMIS_INSPECTION_SCORE_AUDITOR ' : '';
+                $text .= $inNotes ? 'พบการใช้ใน PIMIS_INSPECTION_NOTES ' : '';
+                $text .= $inSummary ? 'พบการใช้ใน PIMIS_INSPECTION_SUMMARY ' : '';
                 $data['text'] = $text;
             }
-            
+
             $toRemove[] = $data;
         }
 
@@ -138,7 +138,7 @@ class Team_inspection_model extends CI_Model
         $query = $this->oracle->get('PIMIS_INSPECTION_SCORE_AUDITOR');
         return $query->num_rows() == 0 ? false : true;
     }
-    
+
     public function check_team_plan_in_inspection_notes($teamPlanID, $inspectionOptionID)
     {
         $this->oracle->where('TEAMPLAN_ID', $teamPlanID);
@@ -147,7 +147,7 @@ class Team_inspection_model extends CI_Model
         $query = $this->oracle->get('PIMIS_INSPECTION_NOTES');
         return $query->num_rows() == 0 ? false : true;
     }
-    
+
     public function check_team_plan_in_inspection_summary($teamPlanID, $inspectionOptionID)
     {
         $this->oracle->where('TEAMPLAN_ID', $teamPlanID);
@@ -174,5 +174,23 @@ class Team_inspection_model extends CI_Model
             ORDER BY a.INSPECTION_OPTION_ID";
         $query = $this->oracle->query($sql, array($teamPlanID));
         return $query;
+    }
+
+    public function get_leader_of_team($teamPlan)
+    {
+        $sql = "SELECT a.COMMANDER, b.ADT_TITLE||'  '||b.ADT_FIRSTNAME||'  '||b.ADT_LASTNAME AS LEADER , b.POSITION
+            FROM PIMIS_AUDITOR_TEAM_IN_PLAN a 
+            INNER JOIN PIMIS_AUDITOR b
+                ON a.TEAM_ID = b.ADT_TEAM 
+                AND b.ADT_TYPE = 1
+            WHERE a.ROW_ID = ?";
+        $query = $this->oracle->query($sql, array($teamPlan));
+        return $query;
+    }
+
+    public function is_exist_teamplan($teamPlanID)
+    {
+        $query = $this->oracle->get_where('PIMIS_AUDITOR_TEAM_IN_PLAN', array('ROW_ID' => $teamPlanID));
+        return $query->num_rows() == 0 ? false : true;
     }
 }
