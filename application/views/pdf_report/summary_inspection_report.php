@@ -61,14 +61,17 @@ foreach ($commention as $r) {
     $num++;
 }
 $pdf->ln(5);
+$policyScore = $header['POLICY_SCORE'] * 0.1;
+$prepareScore = $header['PREPARE_SCORE'] * 0.1;
+$inspectionScore = $sumScore['SCORE'] * 0.8;
 $pdf->writeHTMLCell(60, '', 15, '', '<span style="font-size:16px">ผลการปฏิบัติงานตามนโยบาย ผบช.</span>', $border, 0, 0, 1, 'L');
-$pdf->writeHTMLCell('', '', '', '', '<span style="font-size:16px">= ' . $header['POLICY_SCORE'] * 0.2 . ' (ร้อยละ 20 ของ ' . +$header['POLICY_SCORE'] . ')</span>', $border, 1, 0, 1, 'L');
+$pdf->writeHTMLCell('', '', '', '', '<span style="font-size:16px">= ' . $policyScore . ' (ร้อยละ 20 ของ ' . +$header['POLICY_SCORE'] . ')</span>', $border, 1, 0, 1, 'L');
 $pdf->writeHTMLCell(60, '', 15, '', '<span style="font-size:16px">ความพร้อมในการเตรียมการรับตรวจ</span>', $border, 0, 0, 1, 'L');
-$pdf->writeHTMLCell('', '', '', '', '<span style="font-size:16px">= ' . $header['PREPARE_SCORE'] * 0.2 . ' (ร้อยละ 20 ของ ' . +$header['PREPARE_SCORE'] . ')</span>', $border, 1, 0, 1, 'L');
+$pdf->writeHTMLCell('', '', '', '', '<span style="font-size:16px">= ' . $prepareScore . ' (ร้อยละ 20 ของ ' . +$header['PREPARE_SCORE'] . ')</span>', $border, 1, 0, 1, 'L');
 $pdf->writeHTMLCell(60, '', 15, '', '<span style="font-size:16px">คะแนนรวมทุกสายการตรวจ</span>', $border, 0, 0, 1, 'L');
-$pdf->writeHTMLCell('', '', '', '', '<span style="font-size:16px">= ' . $sumScore['SCORE'] * 0.8 . ' (ร้อยละ 80 ของ ' . +$sumScore['SCORE'] . ')</span>', $border, 1, 0, 1, 'L');
+$pdf->writeHTMLCell('', '', '', '', '<span style="font-size:16px">= ' . $inspectionScore . ' (ร้อยละ 80 ของ ' . +$sumScore['SCORE'] . ')</span>', $border, 1, 0, 1, 'L');
 $pdf->ln(3);
-$summary = ($header['POLICY_SCORE'] * 0.2)+($header['PREPARE_SCORE'] * 0.2)+($sumScore['SCORE'] * 0.8);
+$summary = ($policyScore+$prepareScore+$inspectionScore);
 $pdf->writeHTMLCell(60, '', 15, '', '<span style="font-size:16px">ผลคะแนนการตรวจการปฏิบัติราชการ</span>', $border, 0, 0, 1, 'L');
 $pdf->writeHTMLCell('', '', '', '', '<span style="font-size:16px">= ' . $summary . '</span>', $border, 1, 0, 1, 'L');
 // $pdf->writeHTMLCell('', '', 20, '', '<span style="font-size:16px">' . $note['CAN_IMPROVE']->load() . '</span>', $border, 1, 0, 1, 'L');

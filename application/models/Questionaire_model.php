@@ -138,8 +138,10 @@ class Questionaire_model extends CI_Model
 
     public function get_sum_form_score_by_planid($teamPlanID)
     {
-        $sql = "SELECT SUM(SCORE) as SCORE
-            FROM PIMIS_INSPECTION_SCORE_AUDITOR
+        $sql = "SELECT sum(NVL(a.SCORE, b.LIMIT_SCORE)) as SCORE
+            FROM PIMIS_INSPECTION_SCORE_AUDITOR a
+            INNER JOIN PIMIS_QUESTION b 
+                ON a.QUESTION_ID = b.Q_ID
             WHERE TEAMPLAN_ID = ?";
         $query = $this->oracle->query($sql, array($teamPlanID));
         return $query;
