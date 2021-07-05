@@ -52,7 +52,7 @@
                         questions += `<div class="pl-3 border-left my-2 question">
                                     <div>- ${question.Q_NAME} ?</div>
                                     <div class="pl-5 col-2">
-                                        <input class="auditor-score form-control" type="number" name="score-${question.Q_ID}" value="${question.SCORE}" max="${question.LIMIT_SCORE}" min="0">   
+                                        <input class="auditor-score form-control" type="number" name="score-${question.Q_ID}" value="${question.SCORE}" max="${question.LIMIT_SCORE}" min="0" step="0.01">   
                                         <small class="text-danger">คะแนนสูงสุดไม่เกิน ${textMaxDesc}</small>
                                     </div>
                                 </div>`;
@@ -94,7 +94,7 @@
                         html += `<div class="pl-3 border-left my-2 question">
                                     <div>- ${question.Q_NAME} ?</div>
                                     <div class="pl-5 col-2">
-                                        <input class="auditor-score form-control" type="number" name="score-${question.Q_ID}" value="${question.SCORE}" max="${question.LIMIT_SCORE}" min="0">   
+                                        <input class="auditor-score form-control" type="number" name="score-${question.Q_ID}" value="${question.SCORE}" max="${question.LIMIT_SCORE}" min="0" step="0.01">   
                                         <small class="text-danger">คะแนนสูงสุดไม่เกิน ${textMaxDesc}</small>
                                     </div>
                                 </div>`;
