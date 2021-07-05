@@ -26,24 +26,26 @@ class Summary_model extends CI_Model
     public function get_summaries($teamPlanID)
     {
         $sql = "SELECT a.TEAMPLAN_ID, a.INSPECTION_OPTION_ID ,
-        sum(b.SCORE) AS SCORE, 
-        c.ROW_ID, TO_CHAR(c.TIME_UPDATE, 'YYYY/MM/DD HH24:MI:SS') AS TIME_UPDATE,
-        d.INSPECTION_NAME, d.INSPECTION_ID
-        FROM PIMIS_TEAM_INSPECTION a
-        LEFT JOIN PIMIS_INSPECTION_SCORE_AUDITOR b 
-            ON a.INSPECTION_OPTION_ID = b.INSPECTION_OPTION_ID 
-        	AND b.TEAMPLAN_ID = ?
-        LEFT JOIN PIMIS_INSPECTION_SUMMARY c
-            ON a.TEAMPLAN_ID = c.TEAMPLAN_ID 
-            AND a.INSPECTION_OPTION_ID  = c.INSPECTION_OPTION_ID 
-            And c.STATUS = 'y'
-        INNER JOIN PIMIS_INSPECTION_OPTION d 
-            ON a.INSPECTION_OPTION_ID = d.ROW_ID 
-        WHERE a.TEAMPLAN_ID = ?
-        AND a.STATUS = 'y'
-        GROUP BY a.TEAMPLAN_ID, a.INSPECTION_OPTION_ID, c.ROW_ID, c.TIME_UPDATE, d.INSPECTION_NAME, 
-            d.INSPECTION_ID
-        ORDER BY a.INSPECTION_OPTION_ID";
+            sum(nvl(b.SCORE, e.LIMIT_SCORE)) AS SCORE, 
+            c.ROW_ID, TO_CHAR(c.TIME_UPDATE, 'YYYY/MM/DD HH24:MI:SS') AS TIME_UPDATE,
+            d.INSPECTION_NAME, d.INSPECTION_ID
+            FROM PIMIS_TEAM_INSPECTION a
+            LEFT JOIN PIMIS_INSPECTION_SCORE_AUDITOR b 
+                ON a.INSPECTION_OPTION_ID = b.INSPECTION_OPTION_ID 
+                AND b.TEAMPLAN_ID = ?
+            LEFT JOIN PIMIS_INSPECTION_SUMMARY c
+                ON a.TEAMPLAN_ID = c.TEAMPLAN_ID 
+                AND a.INSPECTION_OPTION_ID  = c.INSPECTION_OPTION_ID 
+                And c.STATUS = 'y'
+            INNER JOIN PIMIS_INSPECTION_OPTION d 
+                ON a.INSPECTION_OPTION_ID = d.ROW_ID 
+            LEFT JOIN PIMIS_QUESTION e 
+	            ON b.QUESTION_ID = e.Q_ID
+            WHERE a.TEAMPLAN_ID = ?
+            AND a.STATUS = 'y'
+            GROUP BY a.TEAMPLAN_ID, a.INSPECTION_OPTION_ID, c.ROW_ID, c.TIME_UPDATE, d.INSPECTION_NAME, 
+                d.INSPECTION_ID
+            ORDER BY a.INSPECTION_OPTION_ID";
         $query = $this->oracle->query($sql, array($teamPlanID, $teamPlanID));
         return $query;
     }
@@ -59,10 +61,10 @@ class Summary_model extends CI_Model
     {
         $date = date("Y-m-d H:i:s");
         if ($array['comment'] == '') {
-            $this->oracle->set('COMMENTION','EMPTY_CLOB()', false);
+            $this->oracle->set('COMMENTION', 'EMPTY_CLOB()', false);
         } else {
             $this->oracle->set('COMMENTION', $array['comment']);
-        }        
+        }
         $this->oracle->set('TIME_UPDATE', "TO_DATE('{$date}','YYYY/MM/DD HH24:MI:SS')", false);
         $this->oracle->set('USER_UPDATE', $array['updator']);
         $this->oracle->where('ROW_ID', $array['summaryID']);
@@ -99,7 +101,7 @@ class Summary_model extends CI_Model
         $query = $this->oracle->query($sql, array($teamPlan));
         return $query;
     }
-    
+
     public function get_header_summary($teamPlan)
     {
         $sql = "SELECT a.ROW_ID, a.PLAN_ID, a.TEAM_ID,
@@ -119,9 +121,12 @@ class Summary_model extends CI_Model
 
     public function summary_score($teamPlanID)
     {
-       $this->oracle->select_sum('SCORE');
-       $this->oracle->where('TEAMPLAN_ID', $teamPlanID);
-       $query = $this->oracle->get('PIMIS_INSPECTION_SCORE_AUDITOR');
-       return $query->row_array();
+        $sql = "SELECT sum(NVL(a.SCORE, b.LIMIT_SCORE)) as SCORE 
+            FROM PIMIS_INSPECTION_SCORE_AUDITOR a
+            INNER JOIN PIMIS_QUESTION b 
+                ON a.QUESTION_ID = b.Q_ID 
+            WHERE a.TEAMPLAN_ID = ?";
+        $query = $this->oracle->query($sql, array($teamPlanID));
+        return $query->row_array();
     }
 }

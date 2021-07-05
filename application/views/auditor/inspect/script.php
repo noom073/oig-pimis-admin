@@ -120,14 +120,13 @@
         const summaryScore = () => {
             let countScore = 0;
             $(".auditor-score").each(function(el) {
-                let score = $(this).val();
-                if (isNaN(score) == false) {
-                    countScore += (+score);
-                } else if (score == 'n') {
-                    countScore += 1;
+                let score = 0;
+                if ($(this).val().trim() == '') {
+                    score = (+$(this).prop('max'));
                 } else {
-                    countScore += 0;
+                    score = (+$(this).val());
                 }
+                countScore += score;
             });
             return countScore;
         };

@@ -132,17 +132,19 @@ class Inspection_notes_model extends CI_Model
             INNER JOIN PER_NPRT_TAB g 
                 ON f.INS_UNIT = g.NPRT_UNIT
             WHERE a.ROW_ID = ?";
-        $query = $this->oracle->query($sql, array($id));        
+        $query = $this->oracle->query($sql, array($id));
         return $query;
     }
-    
+
     public function note_summary_score($noteID)
     {
-        $sql = "SELECT SUM(b.SCORE) as SCORE
+        $sql = "SELECT sum(nvl(b.SCORE, c.LIMIT_SCORE)) as SCORE
             FROM PIMIS_INSPECTION_NOTES a
             LEFT JOIN PIMIS_INSPECTION_SCORE_AUDITOR b
                 ON a.INSPECTION_OPTION_ID = b.INSPECTION_OPTION_ID 
                 AND a.TEAMPLAN_ID = b.TEAMPLAN_ID 
+            INNER JOIN PIMIS_QUESTION c 
+	            ON b.QUESTION_ID = c.Q_ID 
             WHERE a.ROW_ID = ?";
         $query = $this->oracle->query($sql, array($noteID))->row_array();
         return $query;
