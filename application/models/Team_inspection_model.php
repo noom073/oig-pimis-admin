@@ -180,9 +180,10 @@ class Team_inspection_model extends CI_Model
     {
         $sql = "SELECT a.COMMANDER, b.ADT_TITLE||'  '||b.ADT_FIRSTNAME||'  '||b.ADT_LASTNAME AS LEADER , b.POSITION
             FROM PIMIS_AUDITOR_TEAM_IN_PLAN a 
-            INNER JOIN PIMIS_AUDITOR b
+            LEFT JOIN PIMIS_AUDITOR b
                 ON a.TEAM_ID = b.ADT_TEAM 
                 AND b.ADT_TYPE = 1
+                AND b.ADT_STATUS = 'y'
             WHERE a.ROW_ID = ?";
         $query = $this->oracle->query($sql, array($teamPlan));
         return $query;

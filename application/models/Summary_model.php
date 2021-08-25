@@ -121,11 +121,14 @@ class Summary_model extends CI_Model
 
     public function summary_score($teamPlanID)
     {
-        $sql = "SELECT ROUND((sum(a.SCORE)*100)/sum(b.LIMIT_SCORE), 2) as SCORE 
+        $sql = "SELECT ROUND((sum(a.SCORE)*100)/sum(b.LIMIT_SCORE), 2) as SCORE
             FROM PIMIS_INSPECTION_SCORE_AUDITOR a
             INNER JOIN PIMIS_QUESTION b 
                 ON a.QUESTION_ID = b.Q_ID 
-            WHERE a.TEAMPLAN_ID = ?";
+            INNER JOIN PIMIS_INSPECTION_OPTION c
+                ON a.INSPECTION_OPTION_ID =c.ROW_ID 
+            WHERE a.TEAMPLAN_ID = ?
+            AND c.INSPECTION_ID NOT LIKE  11";
         $query = $this->oracle->query($sql, array($teamPlanID));
         return $query->row_array();
     }
