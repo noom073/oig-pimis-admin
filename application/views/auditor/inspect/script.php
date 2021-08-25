@@ -153,6 +153,9 @@
             let userInspectionType = JSON.parse('<?= json_encode($userInspectionType) ?>');
             if (userInspectionType.includes(inspectionID)) {
                 $("#auditor-inspect-form-submit").removeClass('d-none');
+            } else {
+                alert('สิทธิไม่ถูกต้อง ในสายการตรวจนี้');
+                window.history.back();
             }
         });
 
