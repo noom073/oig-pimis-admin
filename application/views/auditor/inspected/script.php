@@ -113,7 +113,8 @@
             $(".auditor-score").each(function(el) {
                 let score = 0;
                 if ($(this).val().trim() == '') {
-                    score = (+$(this).prop('max'));
+                    // score = (+$(this).prop('max'));
+                    score = 0;
                 } else {
                     score = (+$(this).val());
                 }
@@ -124,9 +125,13 @@
 
 
         const showScore = () => {
-            const score = summaryScore();
+            let score = summaryScore();
+            let avgScore = (score * 100) / questionsAmount;
+            let cleanScore = avgScore.toFixed(2);
+            let text = `คะแนนดิบ ${score} คะแนน ; ทั้งหมด ${questionsAmount} คะแนน <br>`
+                +`คะแนนสุทธิ <span class="text-success">${cleanScore}</span> คะแนน `;
             $("#result-auditor-score").removeClass('invisible');
-            $("#total-auditor-score").text(`${score} คะแนน ; ทั้งหมด ${questionsAmount} คะแนน`);
+            $("#total-auditor-score").html(text);
         };
 
 

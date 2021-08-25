@@ -215,7 +215,7 @@ class Auditor extends CI_Controller
 			$data['teamInspections'] 	= $this->team_inspection_model->get_team_inspection($teamPlanID)->result_array();
 			$data['planDetail'] 		= $this->plan_model->get_a_plan_by_id($data['teamPlan']['PLAN_ID'])->row_array();
 			$sumScore 					= $this->questionaire_model->get_sum_form_score_by_planid($teamPlanID)->row_array();
-			$data['sumScore'] 			= $sumScore;
+			$data['sumScore'] 			= $this->summary_model->summary_score($teamPlanID);
 			$data['userInspectionType']	= $this->user_data->get_user_inspection_type($data['teamPlan']['TEAM_ID']);
 
 			$sideBar['name'] 		= $this->user_data->get_name();
@@ -718,8 +718,6 @@ class Auditor extends CI_Controller
 			$noteData = $this->inspection_notes_model->get_inspection_note_report($noteID)->row_array();
 			$noteData['DATE_INSPECT'] = $this->center_services->conv_date_to_thai($noteData['DATE_INSPECT']);
 			$data['note'] = $noteData;
-			$data['sumScore'] = $this->inspection_notes_model->note_summary_score($noteID);
-			// var_dump($data);
 			$this->load->view('pdf_report/inspection_report', $data);
 		}
 	}
@@ -739,7 +737,6 @@ class Auditor extends CI_Controller
 			$data['header']['INS_DATE'] = $this->center_services->conv_date_to_thai($data['header']['INS_DATE'], 's');
 			$data['header']['FINISH_DATE'] = $this->center_services->conv_date_to_thai($data['header']['FINISH_DATE'], 's');
 			$data['sumScore'] = $this->summary_model->summary_score($teamPlan); 
-			// var_dump($data);
 			$this->load->view('pdf_report/summary_inspection_report', $data);
 		}
 		

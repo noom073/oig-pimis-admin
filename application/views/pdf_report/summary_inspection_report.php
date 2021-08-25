@@ -50,15 +50,15 @@ $pdf->ln(5);
 
 $num = 1;
 foreach ($commention as $r) {
-    $h = "$num. {$r['INSPE_NAME']}";
-
-    $pdf->writeHTMLCell('', '', 15, '', '<span style="font-size:16px">' . $h . '</span>', $border, 1, 0, 1, 'L');
-    if ($r['COMMENTION']) {
-        $pdf->writeHTMLCell('', '', 20, '', '<span style="font-size:16px">' . nl2br($r['COMMENTION']->load()) . '</span>', 1, 1, 0, 1, 'L');
+    if ($r['INSPECTION_ID'] != '11') {
+        $h = "$num. {$r['INSPE_NAME']}";    
+        $pdf->writeHTMLCell('', '', 15, '', '<span style="font-size:16px">' . $h . '</span>', $border, 1, 0, 1, 'L');
+        if ($r['COMMENTION']) {
+            $pdf->writeHTMLCell('', '', 20, '', '<span style="font-size:16px">' . nl2br($r['COMMENTION']->load()) . '</span>', 1, 1, 0, 1, 'L');
+        }
+        $pdf->ln(3);    
+        $num++;
     }
-    $pdf->ln(3);
-
-    $num++;
 }
 $pdf->ln(5);
 $policyScore = $header['POLICY_SCORE'] * 0.1;

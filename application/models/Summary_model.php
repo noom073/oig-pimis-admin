@@ -25,8 +25,8 @@ class Summary_model extends CI_Model
 
     public function get_summaries($teamPlanID)
     {
-        $sql = "SELECT a.TEAMPLAN_ID, a.INSPECTION_OPTION_ID ,
-            sum(nvl(b.SCORE, e.LIMIT_SCORE)) AS SCORE, 
+        $sql = "SELECT a.TEAMPLAN_ID, a.INSPECTION_OPTION_ID,
+            ROUND((sum(b.SCORE)*100)/sum(e.LIMIT_SCORE), 2) AS SCORE,
             c.ROW_ID, TO_CHAR(c.TIME_UPDATE, 'YYYY/MM/DD HH24:MI:SS') AS TIME_UPDATE,
             d.INSPECTION_NAME, d.INSPECTION_ID
             FROM PIMIS_TEAM_INSPECTION a
@@ -121,7 +121,7 @@ class Summary_model extends CI_Model
 
     public function summary_score($teamPlanID)
     {
-        $sql = "SELECT sum(NVL(a.SCORE, b.LIMIT_SCORE)) as SCORE 
+        $sql = "SELECT ROUND((sum(a.SCORE)*100)/sum(b.LIMIT_SCORE), 2) as SCORE 
             FROM PIMIS_INSPECTION_SCORE_AUDITOR a
             INNER JOIN PIMIS_QUESTION b 
                 ON a.QUESTION_ID = b.Q_ID 

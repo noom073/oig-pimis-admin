@@ -49,7 +49,7 @@
                                         <button class="btn btn-sm btn-primary d-none" id="form-questionaire-submit" tabindex="-1">บันทึก</button>
                                     </div>
                                     <div id="result-auditor-score" class="invisible">
-                                        รวม <span id="total-auditor-score"></span>
+                                        <span id="total-auditor-score"></span>
                                     </div>
                                 </form>
                             </div>
