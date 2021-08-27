@@ -151,4 +151,11 @@ class User_model extends CI_Model
         $query = $this->oracle->get('PIMIS_USER_PRIVILEGES a');
         return $query;
     }
+
+    public function get_user_by_email($rtarfMail)
+    {
+        $this->oracle->where('EMAIL', $rtarfMail);
+        $query = $this->oracle->get('PIMIS_USER');
+        return $query;
+    }
 }

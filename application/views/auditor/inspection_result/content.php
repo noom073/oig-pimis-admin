@@ -30,7 +30,9 @@
                     <div class="card-text">
                         <div>
                             <button class="btn btn-sm btn-light" onclick="return window.history.back();">ย้อนกลับ</button>
-                            <button class="btn btn-sm btn-primary" id="add-note-btn">เพิ่มบันทึก</button>
+                            <?php if (count($teamInspections)) { ?>
+                                <button class="btn btn-sm btn-primary" id="add-note-btn">เพิ่มบันทึก</button>
+                            <?php } ?>
                         </div>
                         <div>
                             <table class="table" id="note-table">
@@ -208,7 +210,7 @@
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label>ผู้ตรวจ</label>
-                                <div class="form-control"><?= $name ?></div>
+                                <div class="form-control" id="edit-note-form-auditor"></div>
                             </div>
                         </div>
 

@@ -44,7 +44,7 @@ class Inspection_notes_model extends CI_Model
     public function get_inspection_notes_list_by_team_plan_id($id)
     {
         $sql = "SELECT a.ROW_ID, TO_CHAR(a.TIME_UPDATE,'YYYY-MM-DD HH24:MI:SS') as TIME_UPDATE,
-            b.INSPECTION_NAME
+            b.INSPECTION_NAME,  b.INSPECTION_ID 
             FROM PIMIS_INSPECTION_NOTES a
             INNER JOIN PIMIS_INSPECTION_OPTION b
                 ON a.INSPECTION_OPTION_ID = b.ROW_ID 

@@ -100,7 +100,7 @@
             let policyScore = +($("#policy-score-avg").text());
             let prepareScore = +($("#prepare-score-avg").text());
             let allScore = sumScore + policyScore + prepareScore;
-            $("#all-score").text(allScore);
+            $("#all-score").text(allScore.toFixed(2));
         };
         setAllScore();
 

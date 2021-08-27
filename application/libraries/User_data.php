@@ -8,6 +8,7 @@ class User_data
     {
         $this->CI = &get_instance();
         $this->CI->load->model('auth_model');
+        $this->CI->load->model('user_model');
         $this->token = $param['token'];
     }
 
@@ -73,5 +74,11 @@ class User_data
         }, $inspections);
 
         return $data;
+    }
+
+    public function get_username_by_email($rtarfMail)
+    {
+        $userData = $this->CI->user_model->get_user_by_email($rtarfMail)->row_array();
+        return "{$userData['TITLE']} {$userData['FIRSTNAME']}  {$userData['LASTNAME']}";
     }
 }

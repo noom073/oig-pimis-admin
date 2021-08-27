@@ -4,9 +4,13 @@
         $("a#auditor-inspection-subject").addClass('active');
         $("a#auditor-calendar").addClass('active');
 
-        $("#add-note-btn").click(function() {
+
+        $("#add-note-btn").click(async function() {
             $("#create-note-modal").modal();
         });
+
+
+        let userInspectionType = <?= json_encode($userInspectionType) ?>;
 
 
         let noteTable = $("#note-table").DataTable({
@@ -37,7 +41,7 @@
                     className: 'text-center',
                     render: (data, type, row, meta) => {
                         let pdfBtn = `<a class="btn btn-sm btn-danger" 
-                                        href="<?= site_url('auditor/inspection_result_report')?>?note=${data}"
+                                        href="<?= site_url('auditor/inspection_result_report') ?>?note=${data}"
                                         target="_blank">
                                             <i class="far fa-file-pdf" style="font-size:25px"></i>
                                     </a>`;
@@ -48,9 +52,13 @@
                     data: 'ROW_ID',
                     className: 'text-center',
                     render: (data, type, row, meta) => {
-                        let detailBtn = `<button class="btn btn-sm btn-primary detail-btn" data-row-id="${data}">รายละเอียด</button>`;
-                        let deleteBtn = `<button class="btn btn-sm btn-danger delete-btn" data-row-id="${data}">ลบ</button>`;
-                        return `${detailBtn} ${deleteBtn}`;
+                        if (userInspectionType.includes(row.INSPECTION_ID)) {
+                            let detailBtn = `<button class="btn btn-sm btn-primary detail-btn" data-row-id="${data}">รายละเอียด</button>`;
+                            let deleteBtn = `<button class="btn btn-sm btn-danger delete-btn" data-row-id="${data}">ลบ</button>`;
+                            return `${detailBtn} ${deleteBtn}`;
+                        } else {
+                            return '-';
+                        }
                     }
                 }
             ]
@@ -114,6 +122,7 @@
             $("#edit-note-form-date").val(detail.DATE_INSPECT);
             $("#edit-note-form-auditee").val(detail.AUDITEE_NAME);
             $("#edit-note-form-auditee-position").val(detail.AUDITEE_POS);
+            $("#edit-note-form-auditor").text(detail.AUDITOR_NAME);
             $("#edit-note-form-can-improve").text(detail.CAN_IMPROVE);
             $("#edit-note-form-failing").text(detail.FAILING);
             $("#edit-note-form-important-failing").text(detail.IMPORTANT_FAILING);

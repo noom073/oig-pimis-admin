@@ -51,12 +51,15 @@ $pdf->ln(5);
 $num = 1;
 foreach ($commention as $r) {
     if ($r['INSPECTION_ID'] != '11') {
-        $h = "$num. {$r['INSPE_NAME']}";    
+        $scoreIndividual = $this->summary_model->get_score_individual($r['TEAMPLAN_ID'], $r['INSPECTION_ID'])->row_array();
+        $s = $scoreIndividual['SCORE'] ? "{$scoreIndividual['SCORE']} คะแนน" : '';
+        $h = "$num. {$r['INSPE_NAME']} {$s}";
+
         $pdf->writeHTMLCell('', '', 15, '', '<span style="font-size:16px">' . $h . '</span>', $border, 1, 0, 1, 'L');
         if ($r['COMMENTION']) {
             $pdf->writeHTMLCell('', '', 20, '', '<span style="font-size:16px">' . nl2br($r['COMMENTION']->load()) . '</span>', 1, 1, 0, 1, 'L');
         }
-        $pdf->ln(3);    
+        $pdf->ln(3);
         $num++;
     }
 }
@@ -65,15 +68,15 @@ $policyScore = $header['POLICY_SCORE'] * 0.1;
 $prepareScore = $header['PREPARE_SCORE'] * 0.1;
 $inspectionScore = $sumScore['SCORE'] * 0.8;
 $pdf->writeHTMLCell(60, '', 15, '', '<span style="font-size:16px">ผลการปฏิบัติงานตามนโยบาย ผบช.</span>', $border, 0, 0, 1, 'L');
-$pdf->writeHTMLCell('', '', '', '', '<span style="font-size:16px">= ' . $policyScore . ' (ร้อยละ 20 ของ ' . +$header['POLICY_SCORE'] . ')</span>', $border, 1, 0, 1, 'L');
+$pdf->writeHTMLCell('', '', '', '', '<span style="font-size:16px">= ' . round($policyScore, 2) . ' (ร้อยละ 10 ของ ' . +$header['POLICY_SCORE'] . ')</span>', $border, 1, 0, 1, 'L');
 $pdf->writeHTMLCell(60, '', 15, '', '<span style="font-size:16px">ความพร้อมในการเตรียมการรับตรวจ</span>', $border, 0, 0, 1, 'L');
-$pdf->writeHTMLCell('', '', '', '', '<span style="font-size:16px">= ' . $prepareScore . ' (ร้อยละ 20 ของ ' . +$header['PREPARE_SCORE'] . ')</span>', $border, 1, 0, 1, 'L');
+$pdf->writeHTMLCell('', '', '', '', '<span style="font-size:16px">= ' . round($prepareScore, 2) . ' (ร้อยละ 10 ของ ' . +$header['PREPARE_SCORE'] . ')</span>', $border, 1, 0, 1, 'L');
 $pdf->writeHTMLCell(60, '', 15, '', '<span style="font-size:16px">คะแนนรวมทุกสายการตรวจ</span>', $border, 0, 0, 1, 'L');
-$pdf->writeHTMLCell('', '', '', '', '<span style="font-size:16px">= ' . $inspectionScore . ' (ร้อยละ 80 ของ ' . +$sumScore['SCORE'] . ')</span>', $border, 1, 0, 1, 'L');
+$pdf->writeHTMLCell('', '', '', '', '<span style="font-size:16px">= ' . round($inspectionScore, 2) . ' (ร้อยละ 80 ของ ' . +$sumScore['SCORE'] . ')</span>', $border, 1, 0, 1, 'L');
 $pdf->ln(3);
-$summary = ($policyScore+$prepareScore+$inspectionScore);
+$summary = ($policyScore + $prepareScore + $inspectionScore);
 $pdf->writeHTMLCell(60, '', 15, '', '<span style="font-size:16px">ผลคะแนนการตรวจการปฏิบัติราชการ</span>', $border, 0, 0, 1, 'L');
-$pdf->writeHTMLCell('', '', '', '', '<span style="font-size:16px">= ' . $summary . '</span>', $border, 1, 0, 1, 'L');
+$pdf->writeHTMLCell('', '', '', '', '<span style="font-size:16px">= ' . round($summary, 2) . '</span>', $border, 1, 0, 1, 'L');
 // $pdf->writeHTMLCell('', '', 20, '', '<span style="font-size:16px">' . $note['CAN_IMPROVE']->load() . '</span>', $border, 1, 0, 1, 'L');
 // $pdf->ln(5);
 // $pdf->writeHTMLCell(90, '', 20, '', '<span style="font-size:16px">2. ข้อบกพร่อง</span>', $border, 1, 0, 1, 'L');

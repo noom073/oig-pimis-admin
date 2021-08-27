@@ -126,10 +126,37 @@ class Summary_model extends CI_Model
             INNER JOIN PIMIS_QUESTION b 
                 ON a.QUESTION_ID = b.Q_ID 
             INNER JOIN PIMIS_INSPECTION_OPTION c
-                ON a.INSPECTION_OPTION_ID =c.ROW_ID 
+                ON a.INSPECTION_OPTION_ID = c.ROW_ID 
             WHERE a.TEAMPLAN_ID = ?
             AND c.INSPECTION_ID NOT LIKE  11";
         $query = $this->oracle->query($sql, array($teamPlanID));
         return $query->row_array();
+    }
+
+    public function get_score_individual($teamPlanID, $inspectionId)
+    {
+        $sql = "SELECT a.TEAMPLAN_ID, a.INSPECTION_OPTION_ID,
+            ROUND((sum(b.SCORE)*100)/sum(e.LIMIT_SCORE), 2) AS SCORE,
+            c.ROW_ID, TO_CHAR(c.TIME_UPDATE, 'YYYY/MM/DD HH24:MI:SS') AS TIME_UPDATE,
+            d.INSPECTION_NAME, d.INSPECTION_ID
+            FROM PIMIS_TEAM_INSPECTION a
+            LEFT JOIN PIMIS_INSPECTION_SCORE_AUDITOR b 
+                ON a.INSPECTION_OPTION_ID = b.INSPECTION_OPTION_ID 
+                AND b.TEAMPLAN_ID = ?
+            LEFT JOIN PIMIS_INSPECTION_SUMMARY c
+                ON a.TEAMPLAN_ID = c.TEAMPLAN_ID 
+                AND a.INSPECTION_OPTION_ID  = c.INSPECTION_OPTION_ID 
+                And c.STATUS = 'y'
+            INNER JOIN PIMIS_INSPECTION_OPTION d 
+                ON a.INSPECTION_OPTION_ID = d.ROW_ID 
+            LEFT JOIN PIMIS_QUESTION e 
+                ON b.QUESTION_ID = e.Q_ID
+            WHERE a.TEAMPLAN_ID = ?
+                AND d.INSPECTION_ID like ?
+                AND a.STATUS = 'y'
+            GROUP BY a.TEAMPLAN_ID, a.INSPECTION_OPTION_ID, c.ROW_ID, c.TIME_UPDATE, d.INSPECTION_NAME, 
+            d.INSPECTION_ID";
+        $query = $this->oracle->query($sql, array($teamPlanID, $teamPlanID, $inspectionId));
+        return $query;
     }
 }

@@ -183,11 +183,19 @@ class Auditor extends CI_Controller
 			$data['name'] 			= $this->user_data->get_name();
 			$userInspectionType		= $this->user_data->get_user_inspection_type($data['teamPlan']['TEAM_ID']);
 			$teamInspections 		= $this->team_inspection_model->get_team_inspection($teamPlanID)->result_array();
-			$inspectionSelectList = array_filter($teamInspections, function ($r) use ($userInspectionType) {
-				return in_array($r['INSPECTION_ID'], $userInspectionType);
-			});
-			$data['teamInspections'] = array_merge($inspectionSelectList);
+			$notesInDb 				= $this->inspection_notes_model
+				->get_inspection_notes_list_by_team_plan_id($teamPlanID)->result_array();
 
+			$notes = array_map(function ($r) {
+				return $r['INSPECTION_ID'];
+			}, $notesInDb);
+
+			$inspectionSelectList = array_filter($teamInspections, function ($r) use ($userInspectionType, $notes) {
+				return in_array($r['INSPECTION_ID'], $userInspectionType) && !in_array($r['INSPECTION_ID'], $notes);
+			});
+
+			$data['teamInspections'] = array_merge($inspectionSelectList);
+			$data['userInspectionType'] = $userInspectionType;
 			$sideBar['name'] 		= $this->user_data->get_name();
 			$sideBar['userTypes'] 	= $this->userTypes;
 			$script['custom'] 		= $this->load->view('auditor/inspection_result/script', $data, true);
@@ -198,7 +206,6 @@ class Auditor extends CI_Controller
 			$component['controllerSidebar'] = $this->load->view('auditor/component/controller_sidebar', '', true);
 			$component['contentWrapper'] 	= $this->load->view('auditor/inspection_result/content', $data, true);
 			$component['jsScript'] 			= $this->load->view('auditor/component/main_script', $script, true);
-
 			$this->load->view('auditor/template', $component);
 		} else {
 			redirect('auditor/calendar');
@@ -448,6 +455,7 @@ class Auditor extends CI_Controller
 			$result['AUDITEE_NAME'] 	= $data['AUDITEE_NAME'];
 			$result['AUDITEE_POS'] 		= $data['AUDITEE_POS'];
 			$result['AUDITOR_EMAIL'] 	= $data['AUDITOR_EMAIL'];
+			$result['AUDITOR_NAME'] 	= $this->user_data->get_username_by_email($data['AUDITOR_EMAIL']);
 			$result['INSPECTION_SCORE'] = $data['INSPECTION_SCORE'];
 			$result['WORKING_SCORE'] 	= $data['WORKING_SCORE'];
 			$result['CAN_IMPROVE'] 		= $data['CAN_IMPROVE']->load();

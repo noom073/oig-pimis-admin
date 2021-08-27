@@ -92,16 +92,16 @@
 
                             <div>
                                 <div>
-                                    <span>ผลการประเมินแต่ละสายงานเฉลี่ย: (<?= $sumScore['SCORE'] ?> *0.8) =</span>
-                                    <span id="sum-score-avg"><?= $sumScore['SCORE'] * 0.8 ?></span> คะแนน
+                                    <span>ผลการประเมินแต่ละสายงานเฉลี่ย: (<?= round($sumScore['SCORE'], 2) ?> *0.8) =</span>
+                                    <span id="sum-score-avg"><?= round($sumScore['SCORE'] * 0.8, 2) ?></span> คะแนน
                                 </div>
                                 <div>
                                     <span>ผลการปฏิบัติงานตามนโยบาย ผบช.:</span>
-                                    <span id="policy-score-avg"><?= $teamPlan['POLICY_SCORE'] * 0.1 ?></span> คะแนน
+                                    <span id="policy-score-avg"><?= round($teamPlan['POLICY_SCORE'] * 0.1, 2) ?></span> คะแนน
                                 </div>
                                 <div>
                                     <span>ความพร้อมในการเตรียมการรับตรวจ:</span>
-                                    <span id="prepare-score-avg"><?= $teamPlan['PREPARE_SCORE'] * 0.1 ?></span> คะแนน
+                                    <span id="prepare-score-avg"><?= round($teamPlan['PREPARE_SCORE'] * 0.1, 2) ?></span> คะแนน
                                 </div>
                                 <div>
                                     <span>รวม:</span>
